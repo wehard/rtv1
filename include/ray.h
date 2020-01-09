@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 18:43:48 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/09 18:44:56 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/09 23:07:38 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,8 @@ typedef struct	s_ray
 	t_vec3		origin;
 	t_vec3		direction;
 }				t_ray;
+
+t_ray			make_ray(t_vec3 o, t_vec3 d);
+t_vec3			point_on_ray(t_ray *r, float t);
 
 #endif

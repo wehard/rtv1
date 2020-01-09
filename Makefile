@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/01/09 18:27:49 by wkorande         ###   ########.fr        #
+#    Updated: 2020/01/09 22:50:24 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,9 @@ NAME = RTv1
 CFLAGS = -Wall -Wextra -Werror
 
 SRC = rtv1.c\
-	vec3.c
+	mlx_image.c\
+	vec3.c\
+	ray.c
 
 SRCDIR = src
 
@@ -27,13 +29,17 @@ INCL = include
 
 LIBFT = ../libft
 
-FLAGS = #-Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
 $(NAME):
 	make -C $(LIBFT)
 	gcc $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lm -pthread -framework OpenGL -framework AppKit
+
+linux:
+	make -C $(LIBFT)
+	gcc $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lXext -lX11 -lm
 
 clean:
 	#make clean -C $(LIBFT)
