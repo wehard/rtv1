@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 12:57:50 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/10 13:06:17 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,19 @@ int	main(void)
 	ft_printf("%-15s %f\n", "len:", len_vec3(v1));
 	ft_printf("%-15s %f\n", "len normalized:", len_vec3(normalize_vec3(v1)));
 
+	t_shape shapes[3];
 
-	t_shape sphere;
-	sphere.type = SPHERE;
-	sphere.position = make_vec3(0.0, 0.0, 5.0);
-	sphere.radius = 1.0f;
+	shapes[0].type = SPHERE;
+	shapes[0].position = make_vec3(0.0, 0.0, 10.0);
+	shapes[0].radius = 1.0f;
+
+	shapes[1].type = SPHERE;
+	shapes[1].position = make_vec3(-6.0, 0.0, 15.0);
+	shapes[1].radius = 3.5f;
+
+	shapes[2].type = SPHERE;
+	shapes[2].position = make_vec3(60.0, 0.0, 55.0);
+	shapes[2].radius = 13.5f;
 
 	t_ray ray;
 	ray.origin = make_vec3(0.0, 0.0, 0.0);
@@ -104,12 +112,15 @@ int	main(void)
 
 			ray.origin = make_vec3(0.0, 0.0, 0.0);
 			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
-			if (intersects_sphere(&ray, &sphere, &t))
+
+			int i = 0;
+			while (i < 3)
 			{
-				//t_vec3 hit = point_on_ray(&ray, t);
-				//ft_printf("hit: %f, %f, %f\n", hit.x, hit.y, hit.z);
-				mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, 0xFFFFFF);
+				if (intersects_sphere(&ray, &shapes[i], &t))
+					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, 0xFFFFFF);
+				i++;
 			}
+
 			x++;
 		}
 		y++;
