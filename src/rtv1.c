@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 15:56:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/10 16:25:04 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	main(void)
 	t_shape shapes[3];
 
 	shapes[0].type = SPHERE;
-	shapes[0].position = make_vec3(0.0, 5.0, 20.0);
+	shapes[0].position = make_vec3(0.0, 3.0, 15.0);
 	shapes[0].radius = 2.0f;
 	shapes[0].color = make_vec3(1.0f, 0.0f, 0.0f);
 
@@ -107,7 +107,7 @@ int	main(void)
 	shapes[2].color = make_vec3(0.0f, 0.0f, 1.0f);
 
 	t_light light;
-	light.position = make_vec3(0.0f, 20.0f, 20.0f);
+	light.position = make_vec3(-10.0f, 20.0f, 20.0f);
 	light.intensity = 1.0f;
 
 	t_ray ray;
@@ -133,26 +133,46 @@ int	main(void)
 
 			ray.origin = make_vec3(0.0, 0.0, 0.0);
 			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
-
+			float minDist = 1000.0f;
 			int i = 0;
+			t_shape *object = NULL;
 			while (i < 3)
 			{
 				if (intersects_sphere(&ray, &shapes[i], &t))
 				{
-					shadow_ray.origin = point_on_ray(&ray, t);
-					shadow_ray.direction = normalize_vec3(sub_vec3(light.position, shadow_ray.origin));
-					float t2 = -100.0f;
-					int j = 0;
-					while (j < 3)
+					float distance = len_vec3(sub_vec3(point_on_ray(&ray, t), ray.origin));
+					if (distance < minDist)
 					{
-						if (intersects_sphere(&shadow_ray, &shapes[i], &t2))
-							mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(make_vec3(shapes[i].color.x*0.5f, shapes[i].color.y*0.5f, shapes[i].color.z*0.5f)));
-						else
-							mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(shapes[i].color));
-						j++;
+						object = &shapes[i];
+						minDist = distance;
 					}
 				}
 				i++;
+			}
+			int is_shadow = 0;
+			if (object != NULL)
+			{
+				shadow_ray.origin = point_on_ray(&ray, t);
+				shadow_ray.direction = normalize_vec3(sub_vec3(light.position, shadow_ray.origin));
+
+				float t2 = -1000.0f;
+				int j = 0;
+				while (j < 3)
+				{
+					if (intersects_sphere(&shadow_ray, &shapes[j], &t2))
+					{
+						is_shadow = 1;
+						break ;
+					}
+					j++;
+				}
+			}
+			if (object != NULL)
+			{
+				if (!is_shadow)
+					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(make_vec3(object->color.x, object->color.y,object->color.z)));
+				else
+					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(make_vec3(object->color.x*0.2f, object->color.y*0.2f,object->color.z*0.2f)));
 			}
 			x++;
 		}
