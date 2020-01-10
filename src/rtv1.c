@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 13:20:52 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/10 15:56:15 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,26 +92,32 @@ int	main(void)
 	t_shape shapes[3];
 
 	shapes[0].type = SPHERE;
-	shapes[0].position = make_vec3(0.0, 0.0, 10.0);
-	shapes[0].radius = 1.0f;
+	shapes[0].position = make_vec3(0.0, 5.0, 20.0);
+	shapes[0].radius = 2.0f;
 	shapes[0].color = make_vec3(1.0f, 0.0f, 0.0f);
 
 	shapes[1].type = SPHERE;
-	shapes[1].position = make_vec3(-6.0, 0.0, 15.0);
+	shapes[1].position = make_vec3(0.0, 0.0, 20.0);
 	shapes[1].radius = 3.5f;
 	shapes[1].color = make_vec3(0.0f, 1.0f, 0.0f);
 
 	shapes[2].type = SPHERE;
-	shapes[2].position = make_vec3(60.0, 0.0, 55.0);
-	shapes[2].radius = 13.5f;
+	shapes[2].position = make_vec3(5.0, 0.0, 20.0);
+	shapes[2].radius = 1.0f;
 	shapes[2].color = make_vec3(0.0f, 0.0f, 1.0f);
+
+	t_light light;
+	light.position = make_vec3(0.0f, 20.0f, 20.0f);
+	light.intensity = 1.0f;
 
 	t_ray ray;
 	ray.origin = make_vec3(0.0, 0.0, 0.0);
 	ray.direction = make_vec3(0.0, 0.0, 1.0);
 
+	t_ray shadow_ray;
+
 	float t = -100.0f;
-	float fov = 90.0f;
+	float fov = 45.0f;
 	float scale = tan((fov * 0.5f) * M_PI / 180.0f);
     float imageAspectRatio = (float)env->width / (float)env->height;
 
@@ -132,10 +138,22 @@ int	main(void)
 			while (i < 3)
 			{
 				if (intersects_sphere(&ray, &shapes[i], &t))
-					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(shapes[i].color));
+				{
+					shadow_ray.origin = point_on_ray(&ray, t);
+					shadow_ray.direction = normalize_vec3(sub_vec3(light.position, shadow_ray.origin));
+					float t2 = -100.0f;
+					int j = 0;
+					while (j < 3)
+					{
+						if (intersects_sphere(&shadow_ray, &shapes[i], &t2))
+							mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(make_vec3(shapes[i].color.x*0.5f, shapes[i].color.y*0.5f, shapes[i].color.z*0.5f)));
+						else
+							mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(shapes[i].color));
+						j++;
+					}
+				}
 				i++;
 			}
-
 			x++;
 		}
 		y++;

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 13:11:48 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/10 15:32:29 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ typedef enum 		e_shape_type
 	CYLINDER,
 	CONE
 }					t_shape_type;
+
+typedef struct		s_light
+{
+	t_vec3			position;
+	float			intensity;
+}					t_light;
 
 typedef struct		s_shape
 {
