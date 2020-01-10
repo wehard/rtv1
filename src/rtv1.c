@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 13:06:17 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/10 13:20:52 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,18 @@
 #include "ray.h"
 #include "keys.h"
 #include <math.h>
+
+int		ft_get_color(t_vec3 c)
+{
+	int r;
+	int g;
+	int b;
+
+	r = (int)(c.x * 255.0f) << 16;
+	g = (int)(c.y * 255.0f) << 8;
+	b = (int)(c.z * 255.0f);
+	return (r | g | b);
+}
 
 int		key_press(int key, void *param)
 {
@@ -82,14 +94,17 @@ int	main(void)
 	shapes[0].type = SPHERE;
 	shapes[0].position = make_vec3(0.0, 0.0, 10.0);
 	shapes[0].radius = 1.0f;
+	shapes[0].color = make_vec3(1.0f, 0.0f, 0.0f);
 
 	shapes[1].type = SPHERE;
 	shapes[1].position = make_vec3(-6.0, 0.0, 15.0);
 	shapes[1].radius = 3.5f;
+	shapes[1].color = make_vec3(0.0f, 1.0f, 0.0f);
 
 	shapes[2].type = SPHERE;
 	shapes[2].position = make_vec3(60.0, 0.0, 55.0);
 	shapes[2].radius = 13.5f;
+	shapes[2].color = make_vec3(0.0f, 0.0f, 1.0f);
 
 	t_ray ray;
 	ray.origin = make_vec3(0.0, 0.0, 0.0);
@@ -117,7 +132,7 @@ int	main(void)
 			while (i < 3)
 			{
 				if (intersects_sphere(&ray, &shapes[i], &t))
-					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, 0xFFFFFF);
+					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(shapes[i].color));
 				i++;
 			}
 

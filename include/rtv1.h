@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 10:35:03 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/10 13:11:48 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct		s_shape
 	t_vec3			position;
 	t_vec3			rotation;
 	t_vec3			scale;
+	t_vec3			color;
 	float			radius;
 }					t_shape;
 
