@@ -6,19 +6,19 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 13:58:40 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/11 19:17:38 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "rtv1.h"
 #include <stdio.h>
 #include <mlx.h>
 #include <math.h>
 #include <time.h>
-#include "rtv1.h"
+//#include "ray.h"
+//#include "vector.h"
 #include "libft.h"
-#include "vector.h"
 #include "ft_printf.h"
-#include "ray.h"
 #include "keys.h"
 
 int		key_press(int key, void *param)
@@ -45,6 +45,7 @@ int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
 	int hit_found;
 
 	hit_found = 0;
+	hit->distance = 0.0f;
 	if (shape->type == SPHERE)
 		hit_found = intersects_sphere(ray, shape, hit);
 	if (shape->type == PLANE)
@@ -54,9 +55,8 @@ int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
 		hit->point = point_on_ray(ray, hit->t);
 		hit->distance = len_vec3(sub_vec3(hit->point, ray->origin));
 		hit->normal = hit_normal(hit->point, shape);
+		hit->hit_shape = shape;
 	}
-	if (hit_found && hit->distance > MAX_DISTANCE)
-		return (0);
 	return (hit_found);
 }
 
@@ -65,23 +65,23 @@ int	main(void)
 	t_env *env;
 	clock_t start, end;
 	double cpu_time_used;
-	env = init_env(1280, 720, "RTv1");
+	env = init_env(1000, 1000, "RTv1");
 
 	int num_shapes = 5;
 	t_shape shapes[num_shapes];
 	shapes[0].type = PLANE;
-	shapes[0].position = make_vec3(0.0, -3.0, 5.0);
+	shapes[0].position = make_vec3(0.0, -1.0, 5.0);
 	shapes[0].color = make_vec3(0.7f, 0.6f, 0.3f);
 	shapes[0].normal = make_vec3(0.0f, 1.0f, 0.0f);
 
 	shapes[1].type = SPHERE;
-	shapes[1].position = make_vec3(0.0, 4.0, 20.0);
-	shapes[1].radius = 1.0f;
+	shapes[1].position = make_vec3(1.5, 0.0, 20.0);
+	shapes[1].radius = 2.0f;
 	shapes[1].color = make_vec3(1.0f, 0.0f, 0.0f);
 
 	shapes[2].type = SPHERE;
-	shapes[2].position = make_vec3(0.0, 0.0, 20.0);
-	shapes[2].radius = 3.0f;
+	shapes[2].position = make_vec3(-1.5, 0.0, 20.0);
+	shapes[2].radius = 2.0f;
 	shapes[2].color = make_vec3(0.0f, 1.0f, 0.0f);
 
 	shapes[3].type = SPHERE;
@@ -94,10 +94,8 @@ int	main(void)
 	shapes[4].radius = 1.0f;
 	shapes[4].color = make_vec3(1.0f, 1.0f, 0.0f);
 
-
-
 	t_light light;
-	light.position = make_vec3(0.0f, 15.0f, 17.0f);
+	light.position = make_vec3(0.0f, 10.0f, 17.0f);
 	light.intensity = 1.0f;
 
 	t_ray ray;
@@ -113,6 +111,8 @@ int	main(void)
 
 	start = clock();
 
+	mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, 100, 100, 0xFFFFFF, "rendering");
+	clear_mlx_img(env->mlx_img);
 	int y = 0;
 	int x = 0;
 	while (y < env->height)
@@ -125,32 +125,48 @@ int	main(void)
 
 			ray.origin = make_vec3(0.0, 0.0, 0.0);
 			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
-			float minDist = 1000.0f;
-			int i = 0;
-			t_shape *object = NULL;
+
+			float min_dist = INFINITY;
+			t_shape *closest_shape = NULL;
+			t_raycasthit closest_hit;
+			t_vec3	closest_normal;
 			t_raycasthit hit;
+			//hit.hit_shape = NULL;
+			int i = 0;
 			while (i < num_shapes)
 			{
 				if (intersects_shape(&ray, &shapes[i], &hit))
 				{
-					if (hit.distance < minDist)
+					if (hit.distance < min_dist)
 					{
-						object = &shapes[i];
-						minDist = hit.distance;
+						closest_shape = &shapes[i];
+						closest_normal = hit_normal(hit.point, closest_shape);
+						closest_hit = hit;
+						min_dist = hit.distance;
 					}
 				}
 				i++;
 			}
 			int is_shadow = 0;
-			if (object != NULL)
+			if (closest_shape != NULL)
 			{
+				if (x == 450 && y == 500)
+				{
+					ft_printf("closest color: %.3f, %.3f, %.3f\n", closest_shape->color.x, closest_shape->color.y, closest_shape->color.z );
+				}
 				t_raycasthit shadow_hit;
-				shadow_ray.origin = add_vec3(hit.point, mul_vec3(hit.normal, shadow_bias));
+				shadow_ray.origin = add_vec3(closest_hit.point, mul_vec3(closest_normal, shadow_bias));
 				shadow_ray.direction = normalize_vec3(sub_vec3(light.position, shadow_ray.origin));
+				shadow_ray.origin_shape = closest_shape;
 				int j = 0;
-				minDist = INFINITY;
+				min_dist = INFINITY;
 				while (j < num_shapes)
 				{
+					if (shadow_ray.origin_shape == &shapes[j])
+					{
+						j++;
+						continue;
+					}
 					if (intersects_shape(&shadow_ray, &shapes[j], &shadow_hit))
 					{
 						is_shadow = 1;
@@ -159,12 +175,12 @@ int	main(void)
 					j++;
 				}
 			}
-			if (object != NULL)
+			if (closest_shape != NULL)
 			{
-				hit.light_dir = normalize_vec3(sub_vec3(light.position, hit.point));
-				t_vec3 diffuse = mul_vec3(object->color, dot_vec3(hit.normal, hit.light_dir));
+				t_vec3 light_dir = normalize_vec3(sub_vec3(light.position, closest_hit.point));
+				t_vec3 diffuse = mul_vec3(closest_shape->color, dot_vec3(closest_normal, light_dir));
 				if (is_shadow)
-					diffuse = mul_vec3(diffuse, 0.3f);
+					diffuse = mul_vec3(diffuse, 0.4f);
 				put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(diffuse));
 			}
 			x++;

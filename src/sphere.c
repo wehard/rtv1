@@ -6,14 +6,13 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 10:38:10 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/11 18:38:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "rtv1.h"
 #include "vector.h"
-#include "ray.h"
 
 t_shape	make_sphere()
 {

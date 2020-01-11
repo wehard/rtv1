@@ -6,19 +6,18 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 13:52:46 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/11 18:40:08 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
 
-#include "vector.h"
-#include "ray.h"
+# include "vector.h"
 
 # define MAX_DISTANCE 1000
 
-typedef enum 		e_shape_type
+typedef enum		e_shape_type
 {
 	PLANE,
 	SPHERE,
@@ -42,6 +41,25 @@ typedef struct		s_shape
 	float			radius;
 	t_vec3			normal;
 }					t_shape;
+
+typedef struct	s_ray
+{
+	t_vec3		origin;
+	t_vec3		direction;
+	t_shape		*origin_shape;
+}				t_ray;
+
+typedef struct	s_raycasthit
+{
+	t_vec3		point;
+	t_vec3		normal;
+	t_shape		*hit_shape;
+	t_vec3		light_dir;
+	float		t;
+	float		distance;
+}				t_raycasthit;
+
+
 
 typedef struct		s_mlx_img
 {
@@ -80,9 +98,11 @@ int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
 t_shape			make_sphere();
 int				intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit);
 
-t_shape	make_plane();
+t_shape			make_plane();
 
 int				ft_get_color(t_vec3 c);
 int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
+t_ray			make_ray(t_vec3 o, t_vec3 d);
+t_vec3			point_on_ray(t_ray *r, float t);
 
 #endif

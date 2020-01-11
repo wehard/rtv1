@@ -6,12 +6,11 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 18:43:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 13:55:04 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/11 18:37:58 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include "ray.h"
 #include "vector.h"
 
 t_ray	make_ray(t_vec3 o, t_vec3 d)
