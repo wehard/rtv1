@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 15:32:29 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/11 13:52:46 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define RTV1_H
 
 #include "vector.h"
+#include "ray.h"
+
+# define MAX_DISTANCE 1000
 
 typedef enum 		e_shape_type
 {
@@ -37,6 +40,7 @@ typedef struct		s_shape
 	t_vec3			scale;
 	t_vec3			color;
 	float			radius;
+	t_vec3			normal;
 }					t_shape;
 
 typedef struct		s_mlx_img
@@ -64,11 +68,21 @@ typedef struct	s_env
 	int			height;
 }				t_env;
 
-t_env		*init_env(int width, int height, char *title);
-void		del_env_exit(t_env *env);
+t_env			*init_env(int width, int height, char *title);
+void			del_env_exit(t_env *env);
 
-t_mlx_img	*create_mlx_image(t_env *env, int width, int height);
-void		clear_mlx_img(t_mlx_img *img);
-void		put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
+t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
+void			clear_mlx_img(t_mlx_img *img);
+void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
+
+int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
+
+t_shape			make_sphere();
+int				intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit);
+
+t_shape	make_plane();
+
+int				ft_get_color(t_vec3 c);
+int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
 
 #endif

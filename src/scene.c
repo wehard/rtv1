@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray.c                                              :+:      :+:    :+:   */
+/*   scene.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/09 18:43:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 13:55:04 by wkorande         ###   ########.fr       */
+/*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
+/*   Updated: 2020/01/11 12:56:02 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
-#include "ray.h"
-#include "vector.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include "ft_printf.h"
 
-t_ray	make_ray(t_vec3 o, t_vec3 d)
+/*
+**	Reads a scene from file and sets count to number of shapes
+*/
+int	read_scene(char *path, int *shapes, int *count)
 {
-	t_ray r;
+	int fd;
 
-	r.origin = o;
-	r.direction = d;
-	return (r);
-}
-
-t_vec3	point_on_ray(t_ray *r, float t)
-{
-	t_vec3 p;
-
-	p = mul_vec3(normalize_vec3(add_vec3(r->origin, r->direction)), t);
-	return (p);
+	fd = open(path, O_RDWR);
+	if (fd < 3)
+	{
+		ft_printf("error: opening scene file");
+		return (0);
+	}
 }

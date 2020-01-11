@@ -1,32 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray.c                                              :+:      :+:    :+:   */
+/*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/09 18:43:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 13:55:04 by wkorande         ###   ########.fr       */
+/*   Created: 2020/01/11 09:34:47 by wkorande          #+#    #+#             */
+/*   Updated: 2020/01/11 09:35:05 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
-#include "ray.h"
 #include "vector.h"
 
-t_ray	make_ray(t_vec3 o, t_vec3 d)
+int	ft_get_color(t_vec3 c)
 {
-	t_ray r;
+	int r;
+	int g;
+	int b;
 
-	r.origin = o;
-	r.direction = d;
-	return (r);
-}
-
-t_vec3	point_on_ray(t_ray *r, float t)
-{
-	t_vec3 p;
-
-	p = mul_vec3(normalize_vec3(add_vec3(r->origin, r->direction)), t);
-	return (p);
+	r = (int)(c.x * 255.0f) << 16;
+	g = (int)(c.y * 255.0f) << 8;
+	b = (int)(c.z * 255.0f);
+	return (r | g | b);
 }
