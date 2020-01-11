@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/10 16:28:35 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/11 08:19:08 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ int	main(void)
 	t_shape shapes[3];
 
 	shapes[0].type = SPHERE;
-	shapes[0].position = make_vec3(0.0, 3.0, 15.0);
-	shapes[0].radius = 2.0f;
+	shapes[0].position = make_vec3(0.0, 3.0, 20.0);
+	shapes[0].radius = 3.0f;
 	shapes[0].color = make_vec3(1.0f, 0.0f, 0.0f);
 
 	shapes[1].type = SPHERE;
@@ -152,7 +152,8 @@ int	main(void)
 			int is_shadow = 0;
 			if (object != NULL)
 			{
-				shadow_ray.origin = point_on_ray(&ray, t);
+				t_vec3 por = point_on_ray(&ray, t);
+				shadow_ray.origin = add_vec3(por, mul_vec3(sub_vec3(por, object->position), 0.001f));
 				shadow_ray.direction = normalize_vec3(sub_vec3(light.position, shadow_ray.origin));
 
 				float t2 = -1000.0f;
@@ -170,7 +171,7 @@ int	main(void)
 			if (object != NULL)
 			{
 				if (!is_shadow)
-					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(make_vec3(object->color.x, object->color.y,object->color.z)));
+					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(object->color));
 				else
 					mlx_pixel_put(env->mlx->mlx_ptr, env->mlx->win_ptr, x, y, ft_get_color(make_vec3(object->color.x*0.2f, object->color.y*0.2f,object->color.z*0.2f)));
 			}
