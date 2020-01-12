@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 16:47:27 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 19:17:06 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,15 @@ int		key_press(int key, void *param)
 	return (0);
 }
 
-t_vec3	hit_normal(t_vec3 hit_point, t_shape *shape)
+t_vec3	hit_normal(t_raycasthit *hit, t_shape *shape)
 {
 	if (shape->type == PLANE)
 		return (shape->normal);
 	if (shape->type == SPHERE)
-		return (normalize_vec3(sub_vec3(hit_point, shape->position)));
-	return (hit_point);
+		return (normalize_vec3(sub_vec3(hit->point, shape->position)));
+	if (shape->type == BOX)
+		return (hit->normal);
+	return (hit->normal);
 }
 
 int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
@@ -47,15 +49,17 @@ int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
 
 	hit_found = 0;
 	hit->distance = 0.0f;
-	if (shape->type == SPHERE)
-		hit_found = intersects_sphere(ray, shape, hit);
 	if (shape->type == PLANE)
 		hit_found = intersects_plane(ray, shape, hit);
+	if (shape->type == SPHERE)
+		hit_found = intersects_sphere(ray, shape, hit);
+	if (shape->type == BOX)
+		hit_found = intersects_box(ray, shape, hit);
 	if (hit_found)
 	{
 		hit->point = point_on_ray(ray, hit->t);
 		hit->distance = len_vec3(sub_vec3(hit->point, ray->origin));
-		hit->normal = hit_normal(hit->point, shape);
+		hit->normal = hit_normal(hit, shape);
 		hit->hit_shape = shape;
 	}
 	return (hit_found);
@@ -85,13 +89,13 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 
-	env = init_env(1280, 720, "RTv1");
+	env = init_env(WIN_W, WIN_H, "RTv1");
 
 
 	shapes = read_scene(argv[1], &num_shapes);
 
 	t_light light;
-	light.position = make_vec3(0.0f, 30.0f, 30.0f);
+	light.position = make_vec3(0.0f, 20.0f, 5.0f);
 	light.intensity = 1.0f;
 
 	t_ray ray;
@@ -107,7 +111,7 @@ int	main(int argc, char **argv)
 
 	start = clock();
 
-	mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, 100, 100, 0xFFFFFF, "rendering");
+	mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, WIN_W/2, WIN_H/2, 0xFFFFFF, "rendering");
 	clear_mlx_img(env->mlx_img);
 	int y = 0;
 	int x = 0;
@@ -136,7 +140,7 @@ int	main(int argc, char **argv)
 					if (hit.distance < min_dist)
 					{
 						closest_shape = &shapes[i];
-						closest_normal = hit_normal(hit.point, closest_shape);
+						closest_normal = hit_normal(&hit, closest_shape);
 						closest_hit = hit;
 						min_dist = hit.distance;
 					}

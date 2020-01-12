@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:47:41 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/09 22:27:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 18:31:37 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ t_vec3			div_vec3(t_vec3 v, float t);
 float			len_vec3(t_vec3 v1);
 float			dot_vec3(t_vec3 v1, t_vec3 v2);
 t_vec3			normalize_vec3(t_vec3 v);
+t_vec3			invert_vec3(t_vec3 v);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 14:44:08 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 19:14:13 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "vector.h"
 
+# define WIN_W 1280
+# define WIN_H 720
 # define MAX_DISTANCE 1000
 
 typedef enum		e_shape_type
@@ -22,7 +24,8 @@ typedef enum		e_shape_type
 	PLANE,
 	SPHERE,
 	CYLINDER,
-	CONE
+	CONE,
+	BOX
 }					t_shape_type;
 
 typedef struct		s_light
@@ -56,6 +59,7 @@ typedef struct	s_raycasthit
 	t_shape		*hit_shape;
 	t_vec3		light_dir;
 	float		t;
+	float		t2;
 	float		distance;
 }				t_raycasthit;
 
@@ -104,6 +108,10 @@ t_shape			make_plane();
 
 int				ft_get_color(t_vec3 c);
 int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
+
+t_shape			make_box();
+int				intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit);
+
 t_ray			make_ray(t_vec3 o, t_vec3 d);
 t_vec3			point_on_ray(t_ray *r, float t);
 

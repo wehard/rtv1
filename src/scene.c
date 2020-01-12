@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 16:42:35 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 18:18:29 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static t_shape_type parse_shape_type(char *line)
 		return CYLINDER;
 	if (ft_strequ(line, "CONE"))
 		return CONE;
+	if (ft_strequ(line, "BOX"))
+		return BOX;
 	return (-1);
 }
 
