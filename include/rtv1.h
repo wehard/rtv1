@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 18:40:08 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 14:44:08 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ typedef struct	s_env
 
 t_env			*init_env(int width, int height, char *title);
 void			del_env_exit(t_env *env);
+
+t_shape			*read_scene(char *path, int *count);
 
 t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);

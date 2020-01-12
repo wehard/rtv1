@@ -6,12 +6,14 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:37:20 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/03 13:48:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 11:52:08 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef KEYS_H
 # define KEYS_H
+
+#ifndef __linux__
 
 # define KEY_ESC		53
 # define KEY_NUM_MULT	67
@@ -30,5 +32,11 @@
 # define KEY_3			20
 # define KEY_L			37
 # define KEY_P			35
+
+#else
+
+# define KEY_ESC		65307
+
+#endif
 
 #endif

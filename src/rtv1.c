@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 19:17:38 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 16:19:55 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		key_press(int key, void *param)
 	t_env *env;
 
 	env = (t_env*)param;
+	ft_printf("key: %d\n", key);
 	if (key == KEY_ESC)
 		del_env_exit(env);
 	return (0);
@@ -60,6 +61,16 @@ int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
 	return (hit_found);
 }
 
+static void print_shape_info(t_shape *shape)
+{
+	ft_printf("type: %d\n", shape->type);
+	ft_printf("pos: %.3f, %.3f, %.3f\n", shape->position.x, shape->position.y, shape->position.z);
+	ft_printf("rot: %.3f, %.3f, %.3f\n", shape->rotation.x, shape->rotation.y, shape->rotation.z);
+	ft_printf("scale: %.3f, %.3f, %.3f\n", shape->scale.x, shape->scale.y, shape->scale.z);
+	ft_printf("color: %.3f, %.3f, %.3f\n", shape->color.x, shape->color.y, shape->color.z);
+	ft_printf("radius: %.3f\n\n", shape->radius);
+}
+
 int	main(void)
 {
 	t_env *env;
@@ -67,10 +78,19 @@ int	main(void)
 	double cpu_time_used;
 	env = init_env(1000, 1000, "RTv1");
 
-	int num_shapes = 5;
-	t_shape shapes[num_shapes];
+	int num_shapes;
+	t_shape *shapes;
+
+	shapes = read_scene("scenes/test.rt", &num_shapes);
+	for (int i = 0; i < num_shapes; i++)
+	{
+		print_shape_info(&shapes[i]);
+
+	}
+	ft_printf("----\n");
+	/*
 	shapes[0].type = PLANE;
-	shapes[0].position = make_vec3(0.0, -1.0, 5.0);
+	shapes[0].position = make_vec3(0.0, -2.0, 5.0);
 	shapes[0].color = make_vec3(0.7f, 0.6f, 0.3f);
 	shapes[0].normal = make_vec3(0.0f, 1.0f, 0.0f);
 
@@ -90,12 +110,12 @@ int	main(void)
 	shapes[3].color = make_vec3(0.0f, 0.0f, 1.0f);
 
 	shapes[4].type = SPHERE;
-	shapes[4].position = make_vec3(-5.0, -1.0, 20.0);
-	shapes[4].radius = 1.0f;
-	shapes[4].color = make_vec3(1.0f, 1.0f, 0.0f);
-
+	shapes[4].position = make_vec3(0.0, 80.0, 200.0);
+	shapes[4].radius = 80.0f;
+	shapes[4].color = make_vec3(0.3f, 0.3f, 0.3f);
+	*/
 	t_light light;
-	light.position = make_vec3(0.0f, 10.0f, 17.0f);
+	light.position = make_vec3(0.0f, 100.0f, 17.0f);
 	light.intensity = 1.0f;
 
 	t_ray ray;
@@ -193,7 +213,7 @@ int	main(void)
 
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
 
-	mlx_hook(env->mlx->win_ptr, 2, 0, key_press, (void*)env);
+	mlx_hook(env->mlx->win_ptr, 2, (1L<<0), key_press, (void*)env);
 	mlx_loop(env->mlx->mlx_ptr);
 	return (0);
 }
