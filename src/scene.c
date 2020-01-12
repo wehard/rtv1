@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 16:21:27 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 16:42:35 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,17 @@ static t_vec3 parse_vec3(char *line)
 	return (v);
 }
 
+static void init_shape(t_shape *shape)
+{
+	shape->type = 0;
+	shape->position = make_vec3(0.0, 0.0, 0.0);
+	shape->rotation = make_vec3(0.0, 0.0, 0.0);
+	shape->scale = make_vec3(0.0, 0.0, 0.0);
+	shape->normal = make_vec3(0.0, 0.0, 0.0);
+	shape->color = make_vec3(0.0, 0.0, 0.0);
+	shape->radius = 0.0;
+}
+
 static int parse_shape(int fd, t_shape_type type, t_shape *shape)
 {
 	char *line;
@@ -52,6 +63,7 @@ static int parse_shape(int fd, t_shape_type type, t_shape *shape)
 	{
 		ft_printf("type error\n");
 	}
+	init_shape(shape);
 	while(ft_get_next_line(fd, &line))
 	{
 		if (line[0] == '#' || line[0] == '\0')

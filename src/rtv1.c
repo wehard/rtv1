@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 16:19:55 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 16:47:27 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
 	return (hit_found);
 }
 
-static void print_shape_info(t_shape *shape)
+void print_shape_info(t_shape *shape)
 {
 	ft_printf("type: %d\n", shape->type);
 	ft_printf("pos: %.3f, %.3f, %.3f\n", shape->position.x, shape->position.y, shape->position.z);
@@ -71,51 +71,27 @@ static void print_shape_info(t_shape *shape)
 	ft_printf("radius: %.3f\n\n", shape->radius);
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_env *env;
 	clock_t start, end;
 	double cpu_time_used;
-	env = init_env(1000, 1000, "RTv1");
-
 	int num_shapes;
 	t_shape *shapes;
 
-	shapes = read_scene("scenes/test.rt", &num_shapes);
-	for (int i = 0; i < num_shapes; i++)
+	if (argc != 2)
 	{
-		print_shape_info(&shapes[i]);
-
+		ft_printf("usage: ./RTv1 <scene file>\n");
+		return (1);
 	}
-	ft_printf("----\n");
-	/*
-	shapes[0].type = PLANE;
-	shapes[0].position = make_vec3(0.0, -2.0, 5.0);
-	shapes[0].color = make_vec3(0.7f, 0.6f, 0.3f);
-	shapes[0].normal = make_vec3(0.0f, 1.0f, 0.0f);
 
-	shapes[1].type = SPHERE;
-	shapes[1].position = make_vec3(1.5, 0.0, 20.0);
-	shapes[1].radius = 2.0f;
-	shapes[1].color = make_vec3(1.0f, 0.0f, 0.0f);
+	env = init_env(1280, 720, "RTv1");
 
-	shapes[2].type = SPHERE;
-	shapes[2].position = make_vec3(-1.5, 0.0, 20.0);
-	shapes[2].radius = 2.0f;
-	shapes[2].color = make_vec3(0.0f, 1.0f, 0.0f);
 
-	shapes[3].type = SPHERE;
-	shapes[3].position = make_vec3(5.0, -1.0, 20.0);
-	shapes[3].radius = 1.0f;
-	shapes[3].color = make_vec3(0.0f, 0.0f, 1.0f);
+	shapes = read_scene(argv[1], &num_shapes);
 
-	shapes[4].type = SPHERE;
-	shapes[4].position = make_vec3(0.0, 80.0, 200.0);
-	shapes[4].radius = 80.0f;
-	shapes[4].color = make_vec3(0.3f, 0.3f, 0.3f);
-	*/
 	t_light light;
-	light.position = make_vec3(0.0f, 100.0f, 17.0f);
+	light.position = make_vec3(0.0f, 30.0f, 30.0f);
 	light.intensity = 1.0f;
 
 	t_ray ray;
