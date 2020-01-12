@@ -7,9 +7,9 @@ normal 0 1 0
 col 0.3 0.3 0.3
 #
 BOX
-pos -3 0 15
+pos -0.5 -1 10
 rot 0 0 0
-scale 1 1 1
+scale 2.0 2.0 2.0
 normal 0.0 0.0 0.0
 col 1.0 0.2 0.3
 #

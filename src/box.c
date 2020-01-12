@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 17:57:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 19:18:26 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/12 19:31:17 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,6 @@ t_shape	make_box()
 	t_shape s;
 	s.type = BOX;
 	return (s);
-}
-/*
-static void ft_swap_d(double *d1, double *d2)
-{
-	double t;
-
-	t = *d1;
-	*d1 = *d2;
-	*d2 = t;
-}
-*/
-
-static void ft_swap_f(float *f1, float *f2)
-{
-	float t;
-
-	t = *f1;
-	*f1 = *f2;
-	*f2 = t;
 }
 
 t_vec3 get_hit_normal_box(t_ray *ray, t_raycasthit *hit)
@@ -62,8 +43,8 @@ t_vec3 get_hit_normal_box(t_ray *ray, t_raycasthit *hit)
 
 int		intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit)
 {
-	t_vec3 min = add_vec3(box->position, invert_vec3(box->scale));
-	t_vec3 max = add_vec3(box->position, make_vec3(1, 1, 1));
+	t_vec3 min = add_vec3(box->position, make_vec3(0,0,0));
+	t_vec3 max = add_vec3(box->position, make_vec3(1,1,1));
 
 	float tmin = (min.x - ray->origin.x) / ray->direction.x;
 	float tmax = (max.x - ray->origin.x) / ray->direction.x;
