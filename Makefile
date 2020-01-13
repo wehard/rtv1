@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/01/12 18:17:40 by wkorande         ###   ########.fr        #
+#    Updated: 2020/01/13 16:34:41 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ SRC = rtv1.c\
 	sphere.c\
 	plane.c\
 	box.c\
-	color.c
+	color.c\
+	shape.c
 
 SRCDIR = src
 
@@ -42,6 +43,9 @@ all: $(NAME)
 $(NAME):
 	make -C $(LIBFT)
 	gcc $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lm -pthread -framework OpenGL -framework AppKit
+
+debug:
+	gcc -g $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lm -pthread -framework OpenGL -framework AppKit
 
 linux:
 	make -C $(LIBFT)

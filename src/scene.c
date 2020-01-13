@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 18:18:29 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 17:12:08 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static void init_shape(t_shape *shape)
 	shape->normal = make_vec3(0.0, 0.0, 0.0);
 	shape->color = make_vec3(0.0, 0.0, 0.0);
 	shape->radius = 0.0;
+	shape->reflect = 0.0;
 }
 
 static int parse_shape(int fd, t_shape_type type, t_shape *shape)
@@ -68,36 +69,31 @@ static int parse_shape(int fd, t_shape_type type, t_shape *shape)
 	init_shape(shape);
 	while(ft_get_next_line(fd, &line))
 	{
-		if (line[0] == '#' || line[0] == '\0')
-		{
-			free(line);
-			ft_printf("type: %d\n", shape->type);
-			ft_printf("pos: %.3f, %.3f, %.3f\n", shape->position.x, shape->position.y, shape->position.z);
-			ft_printf("rot: %.3f, %.3f, %.3f\n", shape->rotation.x, shape->rotation.y, shape->rotation.z);
-			ft_printf("scale: %.3f, %.3f, %.3f\n", shape->scale.x, shape->scale.y, shape->scale.z);
-			ft_printf("color: %.3f, %.3f, %.3f\n", shape->color.x, shape->color.y, shape->color.z);
-			ft_printf("normal: %.3f, %.3f, %.3f\n", shape->normal.x, shape->normal.y, shape->normal.z);
-			ft_printf("radius: %.3f\n", shape->radius);
-			ft_printf("shape done.\n\n");
-			return (0);
-		}
 		shape->type = type;
 		if (ft_strnequ(line, "pos", 3))
-			shape->position = parse_vec3(line + 3);
-		if (ft_strnequ(line, "rot", 3))
-			shape->rotation = parse_vec3(line + 3);
-		if (ft_strnequ(line, "scale", 5))
-			shape->scale = parse_vec3(line + 5);
-		if (ft_strnequ(line, "col", 3))
-			shape->color = parse_vec3(line + 3);
-		if (ft_strnequ(line, "normal", 6))
-			shape->normal = parse_vec3(line + 6);
-		if (ft_strnequ(line, "radius", 6))
-			shape->radius = ft_strtod(line + 7);
+			shape->position = parse_vec3(line + 4);
+		else if (ft_strnequ(line, "rot", 3))
+			shape->rotation = parse_vec3(line + 4);
+		else if (ft_strnequ(line, "sca", 3))
+			shape->scale = parse_vec3(line + 4);
+		else if (ft_strnequ(line, "col", 3))
+			shape->color = parse_vec3(line + 4);
+		else if (ft_strnequ(line, "nor", 3))
+			shape->normal = parse_vec3(line + 4);
+		else if (ft_strnequ(line, "rad", 3))
+			shape->radius = ft_strtod(line + 4);
+		else if (ft_strnequ(line, "ref", 3))
+			shape->reflect = ft_strtod(line + 4);
+		else if (line[0] == '#')
+		{
+			free(line);
+			print_shape_info(shape);
+			ft_printf("shape done.\n\n");
+			return (1);
+		}
 		free(line);
 	}
-
-	return (1);
+	return (0);
 }
 
 /*
@@ -119,20 +115,17 @@ t_shape	*read_scene(char *path, int *count)
 	}
 	num_shapes = 0;
 	i = 0;
-	while(1)
+	while(ft_get_next_line(fd, &line))
 	{
 		if (!num_shapes)
 		{
-			if (ft_get_next_line(fd, &line))
-			{
-				num_shapes = ft_atoi(line);
-				free(line);
-			}
+			num_shapes = ft_atoi(line);
+			free(line);
 			shapes = (t_shape*)malloc(sizeof(t_shape) * num_shapes);
 			ft_printf("created %d shapes\n", num_shapes);
 			*count = num_shapes;
 		}
-		if (ft_get_next_line(fd, &line))
+		else
 		{
 			t_shape_type type = parse_shape_type(line);
 			ft_printf("shape: %d %s\n", type, line);
@@ -140,8 +133,6 @@ t_shape	*read_scene(char *path, int *count)
 			parse_shape(fd, type, &shapes[i]);
 			i++;
 		}
-		else
-			break ;
 	}
 	close(fd);
 	return (shapes);

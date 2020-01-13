@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:47:45 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 18:31:25 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 20:08:48 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,13 @@ t_vec3	invert_vec3(t_vec3 v)
 	v.y = -v.y;
 	v.z = -v.z;
 	return (v);
+}
+
+t_vec3	reflect_vec3(t_vec3 v, t_vec3 n)
+{
+	t_vec3 r;
+
+	n = normalize_vec3(n);
+	r =  sub_vec3(v, mul_vec3(n, 2.0f * dot_vec3(v, n)));
+	return (r);
 }

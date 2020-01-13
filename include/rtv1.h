@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 19:14:13 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 19:20:13 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,15 @@ typedef struct		s_shape
 	t_vec3			color;
 	float			radius;
 	t_vec3			normal;
+	float			reflect;
 }					t_shape;
 
 typedef struct	s_ray
 {
 	t_vec3		origin;
 	t_vec3		direction;
+	int			is_shadow_ray;
+	float		shadow_bias;
 	t_shape		*origin_shape;
 }				t_ray;
 
@@ -63,7 +66,12 @@ typedef struct	s_raycasthit
 	float		distance;
 }				t_raycasthit;
 
-
+typedef struct	s_scene
+{
+	t_light		light;
+	t_shape		*shapes;
+	int			num_shapes;
+}				t_scene;
 
 typedef struct		s_mlx_img
 {
@@ -114,5 +122,9 @@ int				intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);
 t_vec3			point_on_ray(t_ray *r, float t);
+
+void			print_shape_info(t_shape *shape);
+t_vec3			hit_normal(t_raycasthit *hit, t_shape *shape);
+int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
 
 #endif

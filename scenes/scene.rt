@@ -2,14 +2,16 @@
 PLANE
 pos 0 -7 5
 rot 0 0 0
-scale 0 0 0
-normal 0 1 0
+sca 0 0 0
+nor 0 1 0
 col 0.3 0.3 0.3
+ref 0
 #
 SPHERE
-pos 0 0 60
+pos 0 -3 60
 rot 0 0 0
-scale 0 0 0
+sca 0 0 0
 col 1 0 0
-radius 30
+rad 5
+ref 1
 #

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 19:17:06 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 20:19:27 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,87 +32,80 @@ int		key_press(int key, void *param)
 	return (0);
 }
 
-t_vec3	hit_normal(t_raycasthit *hit, t_shape *shape)
+int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *closest_hit)
 {
-	if (shape->type == PLANE)
-		return (shape->normal);
-	if (shape->type == SPHERE)
-		return (normalize_vec3(sub_vec3(hit->point, shape->position)));
-	if (shape->type == BOX)
-		return (hit->normal);
-	return (hit->normal);
-}
-
-int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
-{
-	int hit_found;
-
-	hit_found = 0;
-	hit->distance = 0.0f;
-	if (shape->type == PLANE)
-		hit_found = intersects_plane(ray, shape, hit);
-	if (shape->type == SPHERE)
-		hit_found = intersects_sphere(ray, shape, hit);
-	if (shape->type == BOX)
-		hit_found = intersects_box(ray, shape, hit);
-	if (hit_found)
+	//t_ray shadow_ray;
+	//float shadow_bias = 0.0001f;
+	float min_dist = INFINITY;
+	t_shape *current_shape;
+	t_raycasthit hit;
+	int hitfound = 0;
+	int i = 0;
+	while (i < scene->num_shapes)
 	{
-		hit->point = point_on_ray(ray, hit->t);
-		hit->distance = len_vec3(sub_vec3(hit->point, ray->origin));
-		hit->normal = hit_normal(hit, shape);
-		hit->hit_shape = shape;
+		current_shape = &scene->shapes[i];
+		if (ray->is_shadow_ray && ray->origin_shape == current_shape)
+		{
+			i++;
+			continue;
+		}
+		if (intersects_shape(ray, current_shape, &hit))
+		{
+			hitfound = 1;
+			if (ray->is_shadow_ray)
+				return (hitfound);
+			if (hit.distance < min_dist)
+			{
+				*closest_hit = hit;
+				min_dist = hit.distance;
+			}
+		}
+		i++;
 	}
-	return (hit_found);
-}
-
-void print_shape_info(t_shape *shape)
-{
-	ft_printf("type: %d\n", shape->type);
-	ft_printf("pos: %.3f, %.3f, %.3f\n", shape->position.x, shape->position.y, shape->position.z);
-	ft_printf("rot: %.3f, %.3f, %.3f\n", shape->rotation.x, shape->rotation.y, shape->rotation.z);
-	ft_printf("scale: %.3f, %.3f, %.3f\n", shape->scale.x, shape->scale.y, shape->scale.z);
-	ft_printf("color: %.3f, %.3f, %.3f\n", shape->color.x, shape->color.y, shape->color.z);
-	ft_printf("radius: %.3f\n\n", shape->radius);
-}
-
-int	main(int argc, char **argv)
-{
-	t_env *env;
-	clock_t start, end;
-	double cpu_time_used;
-	int num_shapes;
-	t_shape *shapes;
-
-	if (argc != 2)
+	/*
+	int is_shadow = 0;
+	if (closest_shape != NULL)
 	{
-		ft_printf("usage: ./RTv1 <scene file>\n");
-		return (1);
+		t_raycasthit shadow_hit;
+
+		int j = 0;
+		min_dist = INFINITY;
+		while (j < scene->num_shapes)
+		{
+			if (shadow_ray.origin_shape == &scene->shapes[j])
+			{
+				j++;
+				continue;
+			}
+			if (intersects_shape(&shadow_ray, &scene->shapes[j], &shadow_hit))
+			{
+				is_shadow = 1;
+				break ;
+			}
+			j++;
+		}
+		t_vec3 light_dir = normalize_vec3(sub_vec3(scene->light.position, closest_hit.point));
+		diffuse = mul_vec3(closest_shape->color, dot_vec3(closest_normal, light_dir));
+		if (is_shadow)
+			diffuse = mul_vec3(diffuse, 0.4f);
 	}
+	*/
+	return (hitfound);
+}
 
-	env = init_env(WIN_W, WIN_H, "RTv1");
-
-
-	shapes = read_scene(argv[1], &num_shapes);
-
-	t_light light;
-	light.position = make_vec3(0.0f, 20.0f, 5.0f);
-	light.intensity = 1.0f;
-
+void render_scene(t_env *env, t_scene *scene)
+{
 	t_ray ray;
-	ray.origin = make_vec3(0.0, 0.0, 0.0);
-	ray.direction = make_vec3(0.0, 0.0, 1.0);
+	t_raycasthit hit;
+	t_vec3 color = make_vec3(0,0,0);
 
-	t_ray shadow_ray;
-	float shadow_bias = 0.0001f;
+	scene->light.position = make_vec3(-5.0f, 20.0f, 5.0f);
+	scene->light.intensity = 1.0f;
 
-	float fov = 45.0f;
+	float fov = 60.0f;
 	float scale = tan((fov * 0.5f) * M_PI / 180.0f);
     float imageAspectRatio = (float)env->width / (float)env->height;
 
-	start = clock();
-
-	mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, WIN_W/2, WIN_H/2, 0xFFFFFF, "rendering");
-	clear_mlx_img(env->mlx_img);
 	int y = 0;
 	int x = 0;
 	while (y < env->height)
@@ -123,70 +116,67 @@ int	main(int argc, char **argv)
 			float rx = (2 * (x + 0.5) / (float)env->width - 1) * imageAspectRatio * scale;
             float ry = (1 - 2 * (y + 0.5) / (float)env->height) * scale;
 
+			ray.is_shadow_ray = 0;
 			ray.origin = make_vec3(0.0, 0.0, 0.0);
 			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
 
-			float min_dist = INFINITY;
-			t_shape *closest_shape = NULL;
-			t_raycasthit closest_hit;
-			t_vec3	closest_normal;
-			t_raycasthit hit;
-			//hit.hit_shape = NULL;
-			int i = 0;
-			while (i < num_shapes)
+			if (raycast(&ray, scene, &hit))
 			{
-				if (intersects_shape(&ray, &shapes[i], &hit))
-				{
-					if (hit.distance < min_dist)
-					{
-						closest_shape = &shapes[i];
-						closest_normal = hit_normal(&hit, closest_shape);
-						closest_hit = hit;
-						min_dist = hit.distance;
-					}
-				}
-				i++;
-			}
-			int is_shadow = 0;
-			if (closest_shape != NULL)
-			{
-				if (x == 450 && y == 500)
-				{
-					ft_printf("closest color: %.3f, %.3f, %.3f\n", closest_shape->color.x, closest_shape->color.y, closest_shape->color.z );
-				}
+				t_vec3 light_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
+				color = mul_vec3(hit.hit_shape->color, dot_vec3(hit.normal, light_dir));
+
+				t_ray shadow_ray;
 				t_raycasthit shadow_hit;
-				shadow_ray.origin = add_vec3(closest_hit.point, mul_vec3(closest_normal, shadow_bias));
-				shadow_ray.direction = normalize_vec3(sub_vec3(light.position, shadow_ray.origin));
-				shadow_ray.origin_shape = closest_shape;
-				int j = 0;
-				min_dist = INFINITY;
-				while (j < num_shapes)
+				float shadow_bias = 0.001f;
+				shadow_ray.origin = add_vec3(hit.point, mul_vec3(hit.normal, shadow_bias));
+				shadow_ray.direction = normalize_vec3(sub_vec3(scene->light.position, shadow_ray.origin));
+				shadow_ray.origin_shape = hit.hit_shape;
+				shadow_ray.is_shadow_ray = 1;
+				if (raycast(&shadow_ray, scene, &shadow_hit))
+					color = mul_vec3(color, 0.4f);
+				if (hit.hit_shape->reflect > 0.0)
 				{
-					if (shadow_ray.origin_shape == &shapes[j])
+					t_ray reflect_ray;
+					t_raycasthit reflect_hit;
+					reflect_ray.origin = shadow_ray.origin;
+					reflect_ray.direction = reflect_vec3(ray.direction, hit.normal);
+					if (raycast(&reflect_ray, scene, &reflect_hit))
 					{
-						j++;
-						continue;
+						color = add_vec3(color, mul_vec3(reflect_hit.hit_shape->color, hit.hit_shape->reflect));
 					}
-					if (intersects_shape(&shadow_ray, &shapes[j], &shadow_hit))
-					{
-						is_shadow = 1;
-						break ;
-					}
-					j++;
 				}
-			}
-			if (closest_shape != NULL)
-			{
-				t_vec3 light_dir = normalize_vec3(sub_vec3(light.position, closest_hit.point));
-				t_vec3 diffuse = mul_vec3(closest_shape->color, dot_vec3(closest_normal, light_dir));
-				if (is_shadow)
-					diffuse = mul_vec3(diffuse, 0.4f);
-				put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(diffuse));
+				put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
 			}
 			x++;
 		}
 		y++;
 	}
+}
+
+int	main(int argc, char **argv)
+{
+	t_env *env;
+	clock_t start, end;
+	double cpu_time_used;
+
+	if (argc != 2)
+	{
+		ft_printf("usage: ./RTv1 <scene file>\n");
+		return (1);
+	}
+
+	env = init_env(WIN_W, WIN_H, "RTv1");
+
+	t_scene scene;
+	scene.shapes = read_scene(argv[1], &scene.num_shapes);
+
+	start = clock();
+
+	mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, WIN_W/2, WIN_H/2, 0xFFFFFF, "rendering");
+	clear_mlx_img(env->mlx_img);
+
+	render_scene(env, &scene);
+
 	end = clock();
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 	ft_printf("rendered in: %fs\n", cpu_time_used);

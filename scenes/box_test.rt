@@ -9,7 +9,7 @@ col 0.3 0.3 0.3
 BOX
 pos -0.5 -1 10
 rot 0 0 0
-scale 2.0 2.0 2.0
+scale 5.0 2.0 2.0
 normal 0.0 0.0 0.0
 col 1.0 0.2 0.3
 #
