@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:47:45 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 20:08:48 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 22:02:24 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@ t_vec3	mul_vec3(t_vec3 v, float t)
 	new.y = v.y * t;
 	new.z = v.z * t;
 	return (new);
+}
+
+t_vec3	mul_vec3_vec3(t_vec3 v1, t_vec3 v2)
+{
+	v1.x *= v2.x;
+	v1.y *= v2.y;
+	v1.z *= v2.z;
+	return (v1);
 }
 
 t_vec3	div_vec3(t_vec3 v, float t)

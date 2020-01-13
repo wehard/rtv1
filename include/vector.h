@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:47:41 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 20:09:20 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 22:02:59 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void			set_vec3(t_vec3 *v, float x, float y, float z);
 t_vec3			add_vec3(t_vec3 v1, t_vec3 v2);
 t_vec3			sub_vec3(t_vec3 v1, t_vec3 v2);
 t_vec3			mul_vec3(t_vec3 v, float t);
+t_vec3			mul_vec3_vec3(t_vec3 v1, t_vec3 v2);
 t_vec3			div_vec3(t_vec3 v, float t);
 float			len_vec3(t_vec3 v1);
 float			dot_vec3(t_vec3 v1, t_vec3 v2);

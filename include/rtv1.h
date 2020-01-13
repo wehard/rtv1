@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 19:20:13 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:58:22 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include "vector.h"
 
-# define WIN_W 1280
-# define WIN_H 720
+# define WIN_W 2500
+# define WIN_H 1500
 # define MAX_DISTANCE 1000
 
 typedef enum		e_shape_type
