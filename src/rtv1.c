@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 20:19:27 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:17:25 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,18 @@ void render_scene(t_env *env, t_scene *scene)
 			{
 				t_vec3 light_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
 				color = mul_vec3(hit.hit_shape->color, dot_vec3(hit.normal, light_dir));
-
+				if (hit.hit_shape->reflect > 0.0)
+				{
+					t_ray reflect_ray;
+					t_raycasthit reflect_hit;
+					reflect_ray.origin = add_vec3(hit.point, mul_vec3(hit.normal, 0.001f));
+					reflect_ray.direction = reflect_vec3(ray.direction, hit.normal);
+					reflect_ray.is_shadow_ray = 0;
+					if (raycast(&reflect_ray, scene, &reflect_hit))
+					{
+						color = add_vec3(color, mul_vec3(reflect_hit.hit_shape->color, hit.hit_shape->reflect));
+					}
+				}
 				t_ray shadow_ray;
 				t_raycasthit shadow_hit;
 				float shadow_bias = 0.001f;
@@ -134,17 +145,7 @@ void render_scene(t_env *env, t_scene *scene)
 				shadow_ray.is_shadow_ray = 1;
 				if (raycast(&shadow_ray, scene, &shadow_hit))
 					color = mul_vec3(color, 0.4f);
-				if (hit.hit_shape->reflect > 0.0)
-				{
-					t_ray reflect_ray;
-					t_raycasthit reflect_hit;
-					reflect_ray.origin = shadow_ray.origin;
-					reflect_ray.direction = reflect_vec3(ray.direction, hit.normal);
-					if (raycast(&reflect_ray, scene, &reflect_hit))
-					{
-						color = add_vec3(color, mul_vec3(reflect_hit.hit_shape->color, hit.hit_shape->reflect));
-					}
-				}
+
 				put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
 			}
 			x++;

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:34:47 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 17:24:40 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:08:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@ int	ft_get_color(t_vec3 c)
 	int r;
 	int g;
 	int b;
+
+	if (c.x > 1.0)
+		c.x = 1.0;
+	if (c.y > 1.0)
+		c.y = 1.0;
+	if (c.z > 1.0)
+		c.z = 1.0;
 
 	r = ((int)(c.x * 255.0f) << 16);
 	g = ((int)(c.y * 255.0f) << 8);

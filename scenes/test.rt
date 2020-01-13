@@ -1,12 +1,4 @@
-4 SHAPES
-PLANE
-pos 0 -10 5
-rot 0 0 0
-sca 0 0 0
-nor 0 1 0
-col 0.7 0.6 0.3
-ref 0.1
-#
+3 SHAPES
 SPHERE
 pos -5 5 70
 rot 0 0 0
@@ -22,13 +14,14 @@ sca 0 0 0
 nor 0 1 0
 col 1.0 0.6 0.5
 rad 7.0
+ref 0.5
 #
 SPHERE
-pos 13 4 70
+pos 27 4 70
 rot 0 0 0
 sca 0 0 0
 nor 0 1 0
 col 1.0 0.1 0.1
-rad 10.0
-ref 0.1
+rad 20.0
+ref 0.8
 #
