@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/14 11:46:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/14 19:09:40 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,75 +32,50 @@ int		key_press(int key, void *param)
 	return (0);
 }
 
-int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *closest_hit)
+int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *closest_hit, int shadow_ray)
 {
-	//t_ray shadow_ray;
-	//float shadow_bias = 0.0001f;
-	float min_dist = INFINITY;
-	t_shape *current_shape;
-	t_raycasthit hit;
-	int hitfound = 0;
-	int i = 0;
+	float			min_dist = INFINITY;
+	t_shape			*cur_shape;
+	t_raycasthit	cur_hit;
+	int 			hit_found;
+	int				i;
+
+	hit_found = 0;
+	i = 0;
 	while (i < scene->num_shapes)
 	{
-		current_shape = &scene->shapes[i];
-		if (ray->is_shadow_ray && ray->origin_shape == current_shape)
+		cur_shape = &scene->shapes[i];
+		if (shadow_ray && ray->origin_shape == cur_shape)
 		{
 			i++;
 			continue;
 		}
-		if (intersects_shape(ray, current_shape, &hit))
+		if (intersects_shape(ray, cur_shape, &cur_hit))
 		{
-			hitfound = 1;
-			if (ray->is_shadow_ray)
-				return (hitfound);
-			if (hit.distance < min_dist)
+			hit_found = 1;
+			if (cur_hit.distance < min_dist)
 			{
-				*closest_hit = hit;
-				min_dist = hit.distance;
+				*closest_hit = cur_hit;
+				if (shadow_ray)
+					return (hit_found);
+				min_dist = cur_hit.distance;
 			}
 		}
 		i++;
 	}
-	/*
-	int is_shadow = 0;
-	if (closest_shape != NULL)
-	{
-		t_raycasthit shadow_hit;
-
-		int j = 0;
-		min_dist = INFINITY;
-		while (j < scene->num_shapes)
-		{
-			if (shadow_ray.origin_shape == &scene->shapes[j])
-			{
-				j++;
-				continue;
-			}
-			if (intersects_shape(&shadow_ray, &scene->shapes[j], &shadow_hit))
-			{
-				is_shadow = 1;
-				break ;
-			}
-			j++;
-		}
-		t_vec3 light_dir = normalize_vec3(sub_vec3(scene->light.position, closest_hit.point));
-		diffuse = mul_vec3(closest_shape->color, dot_vec3(closest_normal, light_dir));
-		if (is_shadow)
-			diffuse = mul_vec3(diffuse, 0.4f);
-	}
-	*/
-	return (hitfound);
+	return (hit_found);
 }
 
 void render_scene(t_env *env, t_scene *scene)
 {
 	t_ray ray;
 	t_raycasthit hit;
-	t_vec3 color = make_vec3(0.6,0.6,1.0);
+	t_vec3 diffuse = make_vec3(0.6,0.6,1.0);
 
 	scene->light.position = make_vec3(-1.0f, 20.0f, 5.0f);
 	scene->light.intensity = 1.0f;
+	scene->light.color = make_vec3(1.0, 1.0, 1.0);
+	scene->ambient_color = make_vec3(0.5, 0.5, 0.5);
 
 	float fov = 90.0f;
 	float scale = tan((fov * 0.5f) * M_PI / 180.0f);
@@ -116,24 +91,22 @@ void render_scene(t_env *env, t_scene *scene)
 			float rx = (2 * (x + 0.5) / (float)env->width - 1) * imageAspectRatio * scale;
             float ry = (1 - 2 * (y + 0.5) / (float)env->height) * scale;
 
-			ray.is_shadow_ray = 0;
 			ray.origin = make_vec3(0.0, 0.0, 0.0);
 			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
 
-			if (raycast(&ray, scene, &hit))
+			if (raycast(&ray, scene, &hit, FALSE))
 			{
 				t_vec3 light_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
-				color = mul_vec3(hit.hit_shape->color, dot_vec3(hit.normal, light_dir));
+				diffuse = mul_vec3(hit.hit_shape->color, dot_vec3(hit.normal, light_dir));
 				if (hit.hit_shape->reflect > 0.0)
 				{
 					t_ray reflect_ray;
 					t_raycasthit reflect_hit;
 					reflect_ray.origin = add_vec3(hit.point, mul_vec3(hit.normal, 0.001f));
 					reflect_ray.direction = reflect_vec3(ray.direction, hit.normal);
-					reflect_ray.is_shadow_ray = 0;
-					if (raycast(&reflect_ray, scene, &reflect_hit))
+					if (raycast(&reflect_ray, scene, &reflect_hit, FALSE))
 					{
-						color = add_vec3(color, mul_vec3(reflect_hit.hit_shape->color, hit.hit_shape->reflect));
+						diffuse = add_vec3(diffuse, mul_vec3(reflect_hit.hit_shape->color, hit.hit_shape->reflect));
 					}
 				}
 				t_ray shadow_ray;
@@ -142,10 +115,11 @@ void render_scene(t_env *env, t_scene *scene)
 				shadow_ray.origin = add_vec3(hit.point, mul_vec3(hit.normal, shadow_bias));
 				shadow_ray.direction = normalize_vec3(sub_vec3(scene->light.position, shadow_ray.origin));
 				shadow_ray.origin_shape = hit.hit_shape;
-				shadow_ray.is_shadow_ray = 1;
-				if (raycast(&shadow_ray, scene, &shadow_hit))
-					color = mul_vec3(color, 0.4f);
-
+				if (raycast(&shadow_ray, scene, &shadow_hit, TRUE))
+					diffuse = mul_vec3(diffuse, 0.4f);
+				float specular = ft_max_d(0.0, dot_vec3(light_dir, reflect_vec3(ray.direction, hit.normal))) * 0.5;
+				diffuse = add_vec3(diffuse, make_vec3(specular, specular, specular));
+				t_vec3 color = diffuse;
 				put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
 			}
 			x++;

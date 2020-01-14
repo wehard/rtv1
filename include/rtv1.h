@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/14 10:48:28 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/14 18:26:32 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # define WIN_W 1280
 # define WIN_H 720
 # define MAX_DISTANCE 1000
+# define TRUE 1
+# define FALSE 0
 
 typedef enum		e_shape_type
 {
@@ -32,6 +34,7 @@ typedef struct		s_light
 {
 	t_vec3			position;
 	float			intensity;
+	t_vec3			color;
 }					t_light;
 
 typedef struct		s_shape
@@ -50,8 +53,6 @@ typedef struct	s_ray
 {
 	t_vec3		origin;
 	t_vec3		direction;
-	int			is_shadow_ray;
-	float		shadow_bias;
 	t_shape		*origin_shape;
 }				t_ray;
 
@@ -71,6 +72,7 @@ typedef struct	s_scene
 	t_light		light;
 	t_shape		*shapes;
 	int			num_shapes;
+	t_vec3		ambient_color;
 }				t_scene;
 
 typedef struct		s_mlx_img
