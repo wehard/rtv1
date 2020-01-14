@@ -1,24 +1,32 @@
-3 SHAPES
+4 SHAPES
+PLANE
+pos 0 -5 5
+rot 0 0 0
+sca 0 0 0
+nor 0 1 0
+col 0.8 0.8 1.0
+ref 0
+#
 SPHERE
-pos -5 8 70
+pos -7 20 70
 rot 0 0 0
 sca 1 1 1
 nor 0 1 0
 col 1 1 0
-rad 5
+rad 7
 ref 0
 #
 SPHERE
-pos -7 -5 70
+pos -7 0 70
 rot 0 0 0
 sca 0 0 0
 nor 0 1 0
 col 0.0 1.0 0.0
-rad 7.0
-ref 0.2
+rad 9.0
+ref 0
 #
 SPHERE
-pos 27 4 70
+pos 34 10 70
 rot 0 0 0
 sca 0 0 0
 nor 0 1 0

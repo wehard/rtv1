@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 21:58:22 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/14 10:48:28 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include "vector.h"
 
-# define WIN_W 2500
-# define WIN_H 1500
+# define WIN_W 1280
+# define WIN_H 720
 # define MAX_DISTANCE 1000
 
 typedef enum		e_shape_type
@@ -119,6 +119,7 @@ int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
 
 t_shape			make_box();
 int				intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit);
+t_vec3 			get_hit_normal_box(t_ray *ray, t_raycasthit *hit);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);
 t_vec3			point_on_ray(t_ray *r, float t);

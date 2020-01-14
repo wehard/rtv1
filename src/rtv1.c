@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 22:06:01 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/14 11:46:47 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,12 @@ void render_scene(t_env *env, t_scene *scene)
 {
 	t_ray ray;
 	t_raycasthit hit;
-	t_vec3 color = make_vec3(0,0,0);
+	t_vec3 color = make_vec3(0.6,0.6,1.0);
 
-	scene->light.position = make_vec3(-5.0f, 20.0f, 5.0f);
+	scene->light.position = make_vec3(-1.0f, 20.0f, 5.0f);
 	scene->light.intensity = 1.0f;
 
-	float fov = 60.0f;
+	float fov = 90.0f;
 	float scale = tan((fov * 0.5f) * M_PI / 180.0f);
     float imageAspectRatio = (float)env->width / (float)env->height;
 

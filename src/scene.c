@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 21:56:57 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/14 10:36:04 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,14 @@ static t_shape_type parse_shape_type(char *line)
 
 static t_vec3 parse_vec3(char *line)
 {
-	char *token;
+	char **split;
 	t_vec3 v;
 
-	token = ft_strtok(line, " ");
-	v.x = ft_strtod(token);
-	token = ft_strtok(NULL, " ");
-	v.y = ft_strtod(token);
-	token = ft_strtok(NULL, " ");
-	v.z = ft_strtod(token);
+	split = ft_strsplit(line, ' ');
+
+	v.x = ft_strtod(split[1]);
+	v.y = ft_strtod(split[2]);
+	v.z = ft_strtod(split[3]);
 	return (v);
 }
 
@@ -71,15 +70,15 @@ static int parse_shape(int fd, t_shape_type type, t_shape *shape)
 	{
 		shape->type = type;
 		if (ft_strnequ(line, "pos", 3))
-			shape->position = parse_vec3(line + 4);
+			shape->position = parse_vec3(line);
 		else if (ft_strnequ(line, "rot", 3))
-			shape->rotation = parse_vec3(line + 4);
+			shape->rotation = parse_vec3(line);
 		else if (ft_strnequ(line, "sca", 3))
-			shape->scale = parse_vec3(line + 4);
+			shape->scale = parse_vec3(line);
 		else if (ft_strnequ(line, "col", 3))
-			shape->color = parse_vec3(line + 4);
+			shape->color = parse_vec3(line);
 		else if (ft_strnequ(line, "nor", 3))
-			shape->normal = parse_vec3(line + 4);
+			shape->normal = parse_vec3(line);
 		else if (ft_strnequ(line, "rad", 3))
 			shape->radius = ft_strtod(line + 4);
 		else if (ft_strnequ(line, "ref", 3))

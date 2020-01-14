@@ -1,15 +1,17 @@
 2 SHAPES
 PLANE
-pos 0 -2 5
+pos 0 -1 5
 rot 0 0 0
 sca 0 0 0
-nor 1 0 0
+nor 0 1 0
 col 0.3 0.3 0.3
 #
 BOX
-pos -0.5 -1 10
+pos 0 1.5 2
 rot 0 0 0
-scale 5.0 2.0 2.0
-normal 0.0 1.0 0.0
-col 1.0 0.2 0.3
+sca 2.0 2.0 2.0
+nor 0.0 0.0 1.0
+col 1.0 0.0 0.0
+rad 1.0
+ref 0.0
 #
