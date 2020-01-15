@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 11:01:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 12:26:07 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_env		*init_env(int width, int height, char *title)
 	env->mlx->mlx_ptr = mlx_init();
 	env->mlx->win_ptr = mlx_new_window(env->mlx->mlx_ptr, width, height, title);
 	env->mlx_img = create_mlx_image(env, width, height);
+	env->scene = (t_scene*)malloc(sizeof(t_scene));
 	return (env);
 }
 

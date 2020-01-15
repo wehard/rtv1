@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 17:57:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 19:31:17 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 15:36:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_shape	make_box()
 	return (s);
 }
 
-t_vec3 get_hit_normal_box(t_ray *ray, t_raycasthit *hit)
+t_vec3 calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit)
 {
 	t_vec3 normal;
 	t_vec3 near = point_on_ray(ray, hit->t);
@@ -84,8 +84,7 @@ int		intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit)
 
 	hit->t = tmin;
 	hit->t2 = tmax;
-	hit->normal = get_hit_normal_box(ray, hit);
-	hit->hit_shape = box;
+	hit->normal = calculate_hit_normal_box(ray, hit);
 	return (1);
 }
 

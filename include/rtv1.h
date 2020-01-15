@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/14 18:26:32 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 16:58:06 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 # define RTV1_H
 
 # include "vector.h"
+# include "time.h"
 
 # define WIN_W 1280
 # define WIN_H 720
-# define MAX_DISTANCE 1000
+# define MAX_RAY_DEPTH 5
+# define MAX_DISTANCE 200
+# define SHADOW_BIAS 0.01
 # define TRUE 1
 # define FALSE 0
 
@@ -60,7 +63,7 @@ typedef struct	s_raycasthit
 {
 	t_vec3		point;
 	t_vec3		normal;
-	t_shape		*hit_shape;
+	t_shape		*shape;
 	t_vec3		light_dir;
 	float		t;
 	float		t2;
@@ -69,6 +72,9 @@ typedef struct	s_raycasthit
 
 typedef struct	s_scene
 {
+	char		*path;
+	int			fd;
+	time_t		mod_time;
 	t_light		light;
 	t_shape		*shapes;
 	int			num_shapes;
@@ -96,6 +102,7 @@ typedef struct	s_env
 {
 	t_mlx		*mlx;
 	t_mlx_img	*mlx_img;
+	t_scene		*scene;
 	int			width;
 	int			height;
 }				t_env;
@@ -103,7 +110,9 @@ typedef struct	s_env
 t_env			*init_env(int width, int height, char *title);
 void			del_env_exit(t_env *env);
 
-t_shape			*read_scene(char *path, int *count);
+int				read_scene(t_scene *scene, char *path);
+void 			render(t_env *env, t_scene *scene);
+int				update(void *param);
 
 t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
@@ -121,13 +130,14 @@ int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
 
 t_shape			make_box();
 int				intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit);
-t_vec3 			get_hit_normal_box(t_ray *ray, t_raycasthit *hit);
+t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);
 t_vec3			point_on_ray(t_ray *r, float t);
 
 void			print_shape_info(t_shape *shape);
-t_vec3			hit_normal(t_raycasthit *hit, t_shape *shape);
+t_vec3			calculate_hit_normal(t_raycasthit *hit);
 int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
+time_t			check_mod_time(char *path);
 
 #endif

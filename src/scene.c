@@ -6,12 +6,14 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/14 10:36:04 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 15:56:26 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "rtv1.h"
 #include "ft_printf.h"
 #include "ft_get_next_line.h"
@@ -98,41 +100,55 @@ static int parse_shape(int fd, t_shape_type type, t_shape *shape)
 /*
 **	Reads a scene from file and sets count to number of shapes
 */
-t_shape	*read_scene(char *path, int *count)
+int		read_scene(t_scene *scene, char *path)
 {
 	int fd;
 	char *line;
-	int		num_shapes;
 	int i;
-	t_shape *shapes;
 
+	scene->path = path;
 	fd = open(path, O_RDWR);
+	if (!scene)
+		ft_putendl("null");
+	scene->mod_time = check_mod_time(scene->path);
 	if (fd < 3)
 	{
 		ft_printf("error: opening scene file");
 		return (0);
 	}
-	num_shapes = 0;
+	scene->num_shapes = 0;
 	i = 0;
 	while(ft_get_next_line(fd, &line))
 	{
-		if (!num_shapes)
+		if (!scene->num_shapes)
 		{
-			num_shapes = ft_atoi(line);
+			scene->num_shapes = ft_atoi(line);
 			free(line);
-			shapes = (t_shape*)malloc(sizeof(t_shape) * num_shapes);
-			ft_printf("created %d shapes\n", num_shapes);
-			*count = num_shapes;
+			scene->shapes = (t_shape*)malloc(sizeof(t_shape) * scene->num_shapes);
+			ft_printf("created %d shapes\n", scene->num_shapes);
 		}
+		else if (ft_strnequ(line, "LIGHT", 5))
+			scene->light.position = parse_vec3(line);
+		else if (ft_strnequ(line, "COLOR", 5))
+			scene->ambient_color = parse_vec3(line);
 		else
 		{
 			t_shape_type type = parse_shape_type(line);
 			ft_printf("shape: %d %s\n", type, line);
 			free (line);
-			parse_shape(fd, type, &shapes[i]);
+			parse_shape(fd, type, &(scene->shapes)[i]);
 			i++;
 		}
 	}
 	close(fd);
-	return (shapes);
+	return (1);
+}
+
+time_t	check_mod_time(char *path)
+{
+	struct stat stat_info;
+
+	stat(path, &stat_info);
+	//ft_printf("mod time: %d\n", stat_info.st_mtime);
+	return (stat_info.st_mtime);
 }

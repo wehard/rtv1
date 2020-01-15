@@ -6,13 +6,14 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/14 13:01:35 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 17:51:52 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include <math.h>
 #include "libft.h"
+#include "ft_printf.h"
 
 t_shape	make_plane()
 {
@@ -29,14 +30,8 @@ t_shape	make_plane()
 
 int		intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit)
 {
-	float d = dot_vec3(plane->normal, ray->direction);
-	if (ft_abs_d(d) > 0.001f)
-	{
-		hit->t = dot_vec3(sub_vec3(plane->position, ray->origin), plane->normal) / d;
-		if (hit->t > 0)
-		{
-			return (1);
-		}
-	}
+	hit->t = dot_vec3(sub_vec3(plane->position, ray->origin), plane->normal) / dot_vec3(ray->direction, plane->normal);
+	if (hit->t > 0)
+		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/13 15:34:42 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/14 10:55:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 17:25:44 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,15 @@ void print_shape_info(t_shape *shape)
 	ft_printf("reflect: %.3f\n", shape->reflect);
 }
 
-t_vec3	hit_normal(t_raycasthit *hit, t_shape *shape)
+t_vec3	calculate_hit_normal(t_raycasthit *hit)
 {
-	if (shape->type == PLANE)
-		return (shape->normal);
-	if (shape->type == SPHERE)
-		return (normalize_vec3(sub_vec3(hit->point, shape->position)));
-	if (shape->type == BOX)
+	if (!hit || !hit->shape)
+		return (make_vec3(0, 0, 0));
+	if (hit->shape->type == PLANE)
+		return (hit->shape->normal);
+	if (hit->shape->type == SPHERE)
+		return (normalize_vec3(sub_vec3(hit->point, hit->shape->position)));
+	if (hit->shape->type == BOX)
 		return (hit->normal);
 	return (hit->normal);
 }
@@ -50,10 +52,10 @@ int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
 		hit_found = intersects_box(ray, shape, hit);
 	if (hit_found)
 	{
+		hit->shape = shape;
 		hit->point = point_on_ray(ray, hit->t);
-		hit->distance = len_vec3(add_vec3(ray->origin, hit->point));
-		hit->normal = hit_normal(hit, shape);
-		hit->hit_shape = shape;
+		hit->distance = hit->t; //len_vec3(add_vec3(ray->origin, hit->point));
+		hit->normal = normalize_vec3(calculate_hit_normal(hit));
 	}
 	return (hit_found);
 }
