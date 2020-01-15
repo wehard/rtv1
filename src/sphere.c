@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 18:38:12 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 22:15:50 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,24 @@ t_shape	make_sphere()
 
 int		intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit)
 {
-	float t0;
-	float t1;
-	float sradius2;
+	double t0;
+	double t1;
+	double sradius2;
 
 	sradius2 = sphere->radius * sphere->radius;
 
 	t_vec3 L = sub_vec3(sphere->position, ray->origin);
-	float tca = dot_vec3(L, ray->direction);
-	float d2 = dot_vec3(L, L) - tca * tca;
+	double tca = dot_vec3(L, ray->direction);
+	double d2 = dot_vec3(L, L) - tca * tca;
 	if (d2 > sradius2)
 		return (0);
-	float thc = sqrtf(sradius2 - d2);
+	double thc = sqrtf(sradius2 - d2);
 	t0 = tca - thc;
 	t1 = tca + thc;
 
 	if (t0 > t1)
 	{
-		float temp = t0;
+		double temp = t0;
 		t0 = t1;
 		t1 = temp;
 	}

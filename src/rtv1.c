@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 17:20:16 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 22:15:34 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int		key_press(int key, void *param)
 	ft_printf("key: %d\n", key);
 	if (key == KEY_ESC)
 		del_env_exit(env);
+	if (key == KEY_SPACE)
+		update(param);
 	return (0);
 }
 
@@ -43,21 +45,23 @@ int	raycast_shadow(t_scene *scene, t_raycasthit *origin)
 	i = 0;
 	while (i < scene->num_shapes)
 	{
-		if (origin->shape != &scene->shapes[i] && intersects_shape(&ray, &scene->shapes[i], &hit))
+		if (/*origin->shape != &scene->shapes[i] && */intersects_shape(&ray, &scene->shapes[i], &hit))
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
-t_vec3	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 {
-	t_vec3			color;
-	float			min_dist = INFINITY;
+	double			min_dist = INFINITY;
 	t_shape			*cur_shape;
 	t_raycasthit	cur_hit;
 	int 			hit_found;
 	int				i;
+
+	if (depth > MAX_RAY_DEPTH)
+		return (0);
 
 	hit_found = 0;
 	i = 0;
@@ -78,13 +82,20 @@ t_vec3	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	}
 	if (hit_found)
 	{
-		color = hit->shape->color;
+		hit->hit_color = hit->shape->color;
+		if (hit->shape->reflect > 0)
+		{
+			t_ray reflect_ray;
+			t_raycasthit reflect_hit;
+			reflect_ray.origin = add_vec3(hit->point, mul_vec3(hit->normal, 0.001f));
+			reflect_ray.direction = reflect_vec3(ray->direction, hit->normal);
+			if (raycast(&reflect_ray, scene, &reflect_hit, depth + 1))
+				hit->hit_color = mul_vec3(reflect_hit.hit_color, 1.0 - hit->shape->reflect);
+		}
 		if (raycast_shadow(scene, hit))
-			color = mul_vec3(hit->shape->color, 0.2);
+			hit->hit_color = mul_vec3(hit->hit_color, 0.8);
 	}
-	else
-		color = scene->ambient_color;
-	return (color);
+	return (hit_found);
 }
 
 int	update(void *param)
@@ -112,14 +123,15 @@ void render(t_env *env, t_scene *scene)
 	t_ray ray;
 	t_raycasthit hit;
 
+
 	clear_mlx_img(env->mlx_img);
 
 	scene->light.intensity = 1.0f;
 	scene->light.color = make_vec3(1.0, 1.0, 1.0);
 
-	float fov = 90.0f;
-	float scale = tan((fov * 0.5f) * M_PI / 180.0f);
-    float aspect_ratio = (float)env->width / (float)env->height;
+	double fov = 60.0f;
+	double scale = tan((fov * 0.5f) * M_PI / 180.0f);
+    double aspect_ratio = (double)env->width / (double)env->height;
 
 	start = clock();
 	int y = 0;
@@ -129,34 +141,22 @@ void render(t_env *env, t_scene *scene)
 		x = 0;
 		while (x < env->width)
 		{
-			float rx = (2 * (x + 0.5) / (float)env->width - 1) * aspect_ratio * scale;
-            float ry = (1 - 2 * (y + 0.5) / (float)env->height) * scale;
+			double rx = (2 * (x + 0.5) / (double)env->width - 1) * aspect_ratio * scale;
+            double ry = (1 - 2 * (y + 0.5) / (double)env->height) * scale;
 
-			ray.origin = make_vec3(0.0, 0.0, 0.0);
+			ray.origin = make_vec3(0.0, 0, 0.0);
 			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
-
 			t_vec3 color;
-			color = raycast(&ray, scene, &hit);
-			t_vec3 l_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
-			float ratio = dot_vec3(l_dir, hit.normal); //-raydir.dot(nhit);
-        	float fresnel =  ft_lerp_f(pow(ratio, 3), 1, 0.144);
-
-			color = mul_vec3(color, fresnel);
-			//t_vec3 light_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
-			//diffuse = mul_vec3(hit.shape->color, dot_vec3(hit.normal, light_dir));
-			//if (raycast_shadow(scene, &hit))
-			//	diffuse = mul_vec3(diffuse, 0.1);
-			//if (hit.shape->reflect > 0.0)
-			//{
-			//	t_ray reflect_ray;
-			//	t_raycasthit reflect_hit;
-			//	reflect_ray.origin = add_vec3(hit.point, mul_vec3(hit.normal, 0.001f));
-			//	reflect_ray.direction = reflect_vec3(ray.direction, hit.normal);
-			//	if (raycast(&reflect_ray, scene, &reflect_hit, FALSE))
-			//		diffuse = add_vec3(diffuse, mul_vec3(reflect_hit.shape->color, hit.shape->reflect));
-			//}
-			//float specular = ft_max_d(0.0, dot_vec3(light_dir, reflect_vec3(ray.direction, hit.normal))) * 0.5;
-			//diffuse = add_vec3(diffuse, make_vec3(specular, specular, specular));
+			if (raycast(&ray, scene, &hit, 0))
+			{
+				t_vec3 l_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
+				double ratio = dot_vec3(l_dir, hit.normal); //-raydir.dot(nhit);
+				double fresnel = ft_lerp_f(pow(ratio, 200), 1, 0.5);
+				color = mul_vec3(hit.hit_color, -dot_vec3(hit.normal, ray.direction));
+				color = mul_vec3(color, fresnel);
+			}
+			else
+				color = scene->ambient_color;
 			put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
 			x++;
 		}

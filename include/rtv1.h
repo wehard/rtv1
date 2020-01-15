@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 16:58:06 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 22:16:14 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef enum		e_shape_type
 typedef struct		s_light
 {
 	t_vec3			position;
-	float			intensity;
+	double			intensity;
 	t_vec3			color;
 }					t_light;
 
@@ -47,9 +47,9 @@ typedef struct		s_shape
 	t_vec3			rotation;
 	t_vec3			scale;
 	t_vec3			color;
-	float			radius;
+	double			radius;
 	t_vec3			normal;
-	float			reflect;
+	double			reflect;
 }					t_shape;
 
 typedef struct	s_ray
@@ -65,9 +65,10 @@ typedef struct	s_raycasthit
 	t_vec3		normal;
 	t_shape		*shape;
 	t_vec3		light_dir;
-	float		t;
-	float		t2;
-	float		distance;
+	double		t;
+	double		t2;
+	double		distance;
+	t_vec3		hit_color;
 }				t_raycasthit;
 
 typedef struct	s_scene
@@ -133,7 +134,7 @@ int				intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit);
 t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);
-t_vec3			point_on_ray(t_ray *r, float t);
+t_vec3			point_on_ray(t_ray *r, double t);
 
 void			print_shape_info(t_shape *shape);
 t_vec3			calculate_hit_normal(t_raycasthit *hit);

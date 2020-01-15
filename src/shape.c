@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/13 15:34:42 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 17:25:44 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 21:00:37 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_vec3	calculate_hit_normal(t_raycasthit *hit)
 	if (hit->shape->type == SPHERE)
 		return (normalize_vec3(sub_vec3(hit->point, hit->shape->position)));
 	if (hit->shape->type == BOX)
-		return (hit->normal);
+		return (normalize_vec3(sub_vec3(hit->point, hit->shape->position)));
 	return (hit->normal);
 }
 
@@ -54,8 +54,8 @@ int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
 	{
 		hit->shape = shape;
 		hit->point = point_on_ray(ray, hit->t);
-		hit->distance = hit->t; //len_vec3(add_vec3(ray->origin, hit->point));
-		hit->normal = normalize_vec3(calculate_hit_normal(hit));
+		hit->distance = hit->t;
+		hit->normal = calculate_hit_normal(hit);
 	}
 	return (hit_found);
 }

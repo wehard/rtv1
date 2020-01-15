@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:37:20 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/12 11:52:08 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 20:34:27 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 #else
 
 # define KEY_ESC		65307
+# define KEY_SPACE		32
 
 #endif
 

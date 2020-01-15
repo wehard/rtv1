@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 18:43:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/11 18:37:58 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 22:14:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_ray	make_ray(t_vec3 o, t_vec3 d)
 	return (r);
 }
 
-t_vec3	point_on_ray(t_ray *r, float t)
+t_vec3	point_on_ray(t_ray *r, double t)
 {
 	t_vec3 p;
 

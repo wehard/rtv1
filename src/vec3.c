@@ -6,14 +6,14 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:47:45 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/13 22:02:24 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/15 22:15:03 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
 #include <math.h>
 
-t_vec3	make_vec3(float x, float y, float z)
+t_vec3	make_vec3(double x, double y, double z)
 {
 	t_vec3 v;
 
@@ -23,7 +23,7 @@ t_vec3	make_vec3(float x, float y, float z)
 	return v;
 }
 
-void	set_vec3(t_vec3 *v, float x, float y, float z)
+void	set_vec3(t_vec3 *v, double x, double y, double z)
 {
 	v->x = x;
 	v->y = y;
@@ -46,7 +46,7 @@ t_vec3	sub_vec3(t_vec3 v1, t_vec3 v2)
 	return (v1);
 }
 
-t_vec3	mul_vec3(t_vec3 v, float t)
+t_vec3	mul_vec3(t_vec3 v, double t)
 {
 	t_vec3 new;
 
@@ -64,7 +64,7 @@ t_vec3	mul_vec3_vec3(t_vec3 v1, t_vec3 v2)
 	return (v1);
 }
 
-t_vec3	div_vec3(t_vec3 v, float t)
+t_vec3	div_vec3(t_vec3 v, double t)
 {
 	t_vec3 new;
 
@@ -76,9 +76,9 @@ t_vec3	div_vec3(t_vec3 v, float t)
 	return (new);
 }
 
-float	len_vec3(t_vec3 v)
+double	len_vec3(t_vec3 v)
 {
-	float l;
+	double l;
 
 	if (v.x == 0.0f && v.y == 0.0f && v.z == 0.0f)
 		return (0.0f);
@@ -87,9 +87,9 @@ float	len_vec3(t_vec3 v)
 }
 
 
-float	dot_vec3(t_vec3 v1, t_vec3 v2)
+double	dot_vec3(t_vec3 v1, t_vec3 v2)
 {
-	float dot;
+	double dot;
 
 	dot = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 	return (dot);
@@ -98,7 +98,7 @@ float	dot_vec3(t_vec3 v1, t_vec3 v2)
 t_vec3	normalize_vec3(t_vec3 v)
 {
 	t_vec3 new;
-	float l;
+	double l;
 
 	l = len_vec3(v);
 	new = div_vec3(v, l);
