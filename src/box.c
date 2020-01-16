@@ -6,16 +6,16 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 17:57:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:13:05 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:21:24 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
 
-t_shape	make_box()
+t_object	make_box()
 {
-	t_shape s;
+	t_object s;
 	s.type = BOX;
 	return (s);
 }
@@ -41,7 +41,7 @@ t_vec3 calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit)
 	return (normal);
 }
 
-int		intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit)
+int		intersects_box(t_ray *ray, t_object *box, t_raycasthit *hit)
 {
 	t_vec3 min = ft_add_vec3(box->position, ft_make_vec3(0,0,0));
 	t_vec3 max = ft_add_vec3(box->position, ft_make_vec3(1,1,1));

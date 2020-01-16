@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 17:07:30 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:20:49 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include "libft.h"
 #include "ft_printf.h"
 
-t_shape	make_plane()
+t_object	make_plane()
 {
-	t_shape t;
+	t_object t;
 	t.type = PLANE;
 	t.position = ft_make_vec3(0.0, 0.0, 0.0);
 	t.radius = 1.0;
@@ -28,7 +28,7 @@ t_shape	make_plane()
 	return  (t);
 }
 
-int		intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit)
+int		intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
 {
 	hit->t = ft_dot_vec3(ft_sub_vec3(plane->position, ray->origin), plane->normal) / ft_dot_vec3(ray->direction, plane->normal);
 	if (plane->scale.x > 0 && plane->scale.y > 0 && plane->scale.z > 0)

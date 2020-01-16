@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 18:43:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:56:52 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:20:38 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	init_raycasthit(t_raycasthit *hit)
 {
 	hit->point = ft_make_vec3(0, 0, 0);
 	hit->normal = ft_make_vec3(0, 0, 0);
-	hit->shape = NULL;
+	hit->object = NULL;
 	hit->t = 0.0;
 	hit->t2 = 0.0;
 	hit->distance = 0.0;

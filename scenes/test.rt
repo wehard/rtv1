@@ -1,7 +1,17 @@
-4 SHAPES
+OBJECTS 4
+LIGHTS 2
 FOV 80.0
-LIGHT -10 30 3
 COLOR 0.3 0 0.5
+LIGHT
+pos -10 20 10
+col 1 1 1
+int 1
+#
+LIGHT
+pos 10 20 10
+col 1 1 1
+int 1
+#
 SPHERE
 pos -6.5 5 23
 rot 0 0 0

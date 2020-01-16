@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:14:13 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:43:38 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "ft_get_next_line.h"
 #include <stdio.h>
 
-static t_shape_type parse_shape_type(char *line)
+static t_object_type parse_object_type(char *line)
 {
 	if (ft_strequ(line, "PLANE"))
 		return PLANE;
@@ -31,6 +31,8 @@ static t_shape_type parse_shape_type(char *line)
 		return CONE;
 	if (ft_strequ(line, "BOX"))
 		return BOX;
+	if (ft_strequ(line, "LIGHT"))
+		return LIGHT;
 	return (-1);
 }
 
@@ -63,49 +65,75 @@ static t_rgba parse_rgba(char *line)
 		v.a = ft_strtod(split[4]);
 	return (v);
 }
-static void init_shape(t_shape *shape)
+static void init_object(t_object *object)
 {
-	shape->type = 0;
-	shape->position = ft_make_vec3(0.0, 0.0, 0.0);
-	shape->rotation = ft_make_vec3(0.0, 0.0, 0.0);
-	shape->scale = ft_make_vec3(0.0, 0.0, 0.0);
-	shape->normal = ft_make_vec3(0.0, 0.0, 0.0);
-	shape->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
-	shape->radius = 0.0;
-	shape->reflect = 0.0;
+	object->type = 0;
+	object->position = ft_make_vec3(0.0, 0.0, 0.0);
+	object->rotation = ft_make_vec3(0.0, 0.0, 0.0);
+	object->scale = ft_make_vec3(0.0, 0.0, 0.0);
+	object->normal = ft_make_vec3(0.0, 0.0, 0.0);
+	object->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
+	object->radius = 0.0;
+	object->reflect = 0.0;
 }
 
-static int parse_shape(int fd, t_shape_type type, t_shape *shape)
+static int	parse_light(int fd, t_object_type type, t_light *light)
 {
 	char *line;
 
-	if (type < 0 || !shape)
-	{
-		ft_printf("type error\n");
-	}
-	init_shape(shape);
+	if (type != LIGHT || !light)
+		ft_printf("error: parsing light object!\n");
+	light->position = ft_make_vec3(0,0,0);
+	light->color = ft_make_rgba(1,1,1,1);
+	light->intensity = 1.0;
 	while(ft_get_next_line(fd, &line))
 	{
-		shape->type = type;
 		if (ft_strnequ(line, "pos", 3))
-			shape->position = parse_vec3(line);
-		else if (ft_strnequ(line, "rot", 3))
-			shape->rotation = parse_vec3(line);
-		else if (ft_strnequ(line, "sca", 3))
-			shape->scale = parse_vec3(line);
+			light->position = parse_vec3(line);
 		else if (ft_strnequ(line, "col", 3))
-			shape->color = parse_rgba(line);
-		else if (ft_strnequ(line, "nor", 3))
-			shape->normal = parse_vec3(line);
-		else if (ft_strnequ(line, "rad", 3))
-			shape->radius = ft_strtod(line + 4);
-		else if (ft_strnequ(line, "ref", 3))
-			shape->reflect = ft_strtod(line + 4);
+			light->color = parse_rgba(line);
+		else if (ft_strnequ(line, "int", 3))
+			light->intensity = ft_strtod(line + 4);
 		else if (line[0] == '#')
 		{
 			free(line);
-			print_shape_info(shape);
-			ft_printf("shape done.\n\n");
+			ft_printf("light done.\n\n");
+			return (1);
+		}
+		free(line);
+	}
+	return (0);
+}
+
+static int parse_object(int fd, t_object_type type, t_object *object)
+{
+	char *line;
+
+	if (type < 0 || !object)
+		ft_printf("object type error\n");
+	init_object(object);
+	while(ft_get_next_line(fd, &line))
+	{
+		object->type = type;
+		if (ft_strnequ(line, "pos", 3))
+			object->position = parse_vec3(line);
+		else if (ft_strnequ(line, "rot", 3))
+			object->rotation = parse_vec3(line);
+		else if (ft_strnequ(line, "sca", 3))
+			object->scale = parse_vec3(line);
+		else if (ft_strnequ(line, "col", 3))
+			object->color = parse_rgba(line);
+		else if (ft_strnequ(line, "nor", 3))
+			object->normal = parse_vec3(line);
+		else if (ft_strnequ(line, "rad", 3))
+			object->radius = ft_strtod(line + 4);
+		else if (ft_strnequ(line, "ref", 3))
+			object->reflect = ft_strtod(line + 4);
+		else if (line[0] == '#')
+		{
+			free(line);
+			//print_object_info(object);
+			//ft_printf("object done.\n\n");
 			return (1);
 		}
 		free(line);
@@ -114,13 +142,14 @@ static int parse_shape(int fd, t_shape_type type, t_shape *shape)
 }
 
 /*
-**	Reads a scene from file and sets count to number of shapes
+**	Reads a scene from file and sets count to number of objects
 */
 int		read_scene(t_scene *scene, char *path)
 {
 	int fd;
 	char *line;
-	int i;
+	int obj_index;
+	int light_index;
 
 	scene->path = path;
 	fd = open(path, O_RDWR);
@@ -132,31 +161,42 @@ int		read_scene(t_scene *scene, char *path)
 		ft_printf("error: opening scene file\n");
 		return (0);
 	}
-	scene->num_shapes = 0;
-	i = 0;
+	scene->num_objects = 0;
+	scene->num_lights = 0;
+	obj_index = 0;
+	light_index = 0;
 	while(ft_get_next_line(fd, &line))
 	{
-		if (!scene->num_shapes)
+		if (ft_strnequ(line, "OBJECTS", 6) && !scene->num_objects)
 		{
-			scene->num_shapes = ft_atoi(line);
-			free(line);
-			scene->shapes = (t_shape*)malloc(sizeof(t_shape) * scene->num_shapes);
-			ft_printf("created %d shapes\n", scene->num_shapes);
+			scene->num_objects = ft_atoi(line + 7);
+			scene->objects = (t_object*)malloc(sizeof(t_object) * scene->num_objects);
 		}
-		else if (ft_strnequ(line, "LIGHT", 5))
-			scene->light.position = parse_vec3(line);
+		else if (ft_strnequ(line, "LIGHTS", 5) && !scene->num_lights)
+		{
+			scene->num_lights = ft_atoi(line + 6);
+			scene->lights = (t_light*)malloc(sizeof(t_light) * scene->num_lights);
+			ft_printf("lights: %d\n", scene->num_lights);
+		}
 		else if (ft_strnequ(line, "COLOR", 5))
 			scene->ambient_color = parse_rgba(line);
 		else if (ft_strnequ(line, "FOV", 3))
 			scene->fov = ft_strtod(line + 3);
 		else
 		{
-			t_shape_type type = parse_shape_type(line);
-			ft_printf("shape: %d %s\n", type, line);
-			free (line);
-			parse_shape(fd, type, &(scene->shapes)[i]);
-			i++;
+			t_object_type type = parse_object_type(line);
+			if (type == LIGHT)
+			{
+				parse_light(fd, type, &(scene->lights)[light_index]);
+				light_index++;
+			}
+			else
+			{
+				parse_object(fd, type, &(scene->objects)[obj_index]);
+				obj_index++;
+			}
 		}
+		free(line);
 	}
 	close(fd);
 	return (1);
@@ -167,6 +207,5 @@ time_t	check_mod_time(char *path)
 	struct stat stat_info;
 
 	stat(path, &stat_info);
-	//ft_printf("mod time: %d\n", stat_info.st_mtime);
 	return (stat_info.st_mtime);
 }

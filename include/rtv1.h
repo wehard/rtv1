@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 17:39:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:37:46 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,16 @@
 # define TRUE 1
 # define FALSE 0
 
-typedef enum		e_shape_type
+typedef enum		e_object_type
 {
 	PLANE,
 	SPHERE,
 	CYLINDER,
 	CONE,
-	BOX
-}					t_shape_type;
+	BOX,
+	LIGHT
+}					t_object_type;
 
-typedef struct		s_light
-{
-	t_vec3			position;
-	double			intensity;
-	t_vec3			color;
-}					t_light;
 
 typedef struct		s_rgba
 {
@@ -49,9 +44,16 @@ typedef struct		s_rgba
 	double			a;
 }					t_rgba;
 
-typedef struct		s_shape
+typedef struct		s_light
 {
-	t_shape_type	type;
+	t_vec3			position;
+	double			intensity;
+	t_rgba			color;
+}					t_light;
+
+typedef struct		s_object
+{
+	t_object_type	type;
 	t_vec3			position;
 	t_vec3			rotation;
 	t_vec3			scale;
@@ -59,20 +61,20 @@ typedef struct		s_shape
 	double			radius;
 	t_vec3			normal;
 	double			reflect;
-}					t_shape;
+}					t_object;
 
 typedef struct	s_ray
 {
 	t_vec3		origin;
 	t_vec3		direction;
-	t_shape		*origin_shape;
+	t_object	*origin_object;
 }				t_ray;
 
 typedef struct	s_raycasthit
 {
 	t_vec3		point;
 	t_vec3		normal;
-	t_shape		*shape;
+	t_object	*object;
 	t_vec3		light_dir;
 	double		t;
 	double		t2;
@@ -85,9 +87,10 @@ typedef struct	s_scene
 	char		*path;
 	int			fd;
 	time_t		mod_time;
-	t_light		light;
-	t_shape		*shapes;
-	int			num_shapes;
+	t_object	*objects;
+	t_light		*lights;
+	int			num_lights;
+	int			num_objects;
 	t_rgba		ambient_color;
 	double		fov;
 }				t_scene;
@@ -129,14 +132,14 @@ t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
-int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
+int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
 
-t_shape			make_plane();
-t_shape			make_sphere();
-t_shape			make_box();
-int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
-int				intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit);
-int				intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit);
+t_object			make_plane();
+t_object			make_sphere();
+t_object			make_box();
+int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
+int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
+int				intersects_box(t_ray *ray, t_object *box, t_raycasthit *hit);
 
 t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
 
@@ -149,9 +152,9 @@ t_vec3			point_on_ray(t_ray *r, double t);
 void			init_raycasthit(t_raycasthit *hit);
 
 
-void			print_shape_info(t_shape *shape);
+void			print_object_info(t_object *object);
 t_vec3			calculate_hit_normal(t_raycasthit *hit);
-int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
+int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
 time_t			check_mod_time(char *path);
 
 /*

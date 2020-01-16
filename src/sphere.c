@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:13:39 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:21:56 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "rtv1.h"
 #include "vector.h"
 
-t_shape	make_sphere()
+t_object	make_sphere()
 {
-	t_shape t;
+	t_object t;
 	t.type = SPHERE;
 	t.position = ft_make_vec3(0.0, 0.0, 0.0);
 	t.radius = 1.0;
@@ -26,7 +26,7 @@ t_shape	make_sphere()
 	return (t);
 }
 
-int		intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit)
+int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 {
 	double t0;
 	double t1;

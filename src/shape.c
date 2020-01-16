@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shape.c                                            :+:      :+:    :+:   */
+/*   object.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,46 +13,46 @@
 #include "rtv1.h"
 #include "ft_printf.h"
 
-void print_shape_info(t_shape *shape)
+void print_object_info(t_object *object)
 {
-	ft_printf("type: %d\n", shape->type);
-	ft_printf("pos: %.3f, %.3f, %.3f\n", shape->position.x, shape->position.y, shape->position.z);
-	ft_printf("rot: %.3f, %.3f, %.3f\n", shape->rotation.x, shape->rotation.y, shape->rotation.z);
-	ft_printf("scale: %.3f, %.3f, %.3f\n", shape->scale.x, shape->scale.y, shape->scale.z);
-	ft_printf("normal: %.3f, %.3f, %.3f\n", shape->normal.x, shape->normal.y, shape->normal.z);
-	ft_printf("color: %.3f, %.3f, %.3f, %.3f\n", shape->color.r, shape->color.g, shape->color.b, shape->color.a);
-	ft_printf("radius: %.3f\n", shape->radius);
-	ft_printf("reflect: %.3f\n", shape->reflect);
+	ft_printf("type: %d\n", object->type);
+	ft_printf("pos: %.3f, %.3f, %.3f\n", object->position.x, object->position.y, object->position.z);
+	ft_printf("rot: %.3f, %.3f, %.3f\n", object->rotation.x, object->rotation.y, object->rotation.z);
+	ft_printf("scale: %.3f, %.3f, %.3f\n", object->scale.x, object->scale.y, object->scale.z);
+	ft_printf("normal: %.3f, %.3f, %.3f\n", object->normal.x, object->normal.y, object->normal.z);
+	ft_printf("color: %.3f, %.3f, %.3f, %.3f\n", object->color.r, object->color.g, object->color.b, object->color.a);
+	ft_printf("radius: %.3f\n", object->radius);
+	ft_printf("reflect: %.3f\n", object->reflect);
 }
 
 t_vec3	calculate_hit_normal(t_raycasthit *hit)
 {
-	if (!hit || !hit->shape)
+	if (!hit || !hit->object)
 		return (ft_make_vec3(0, 0, 0));
-	if (hit->shape->type == PLANE)
-		return (hit->shape->normal);
-	if (hit->shape->type == SPHERE)
-		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->shape->position)));
-	if (hit->shape->type == BOX)
-		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->shape->position)));
+	if (hit->object->type == PLANE)
+		return (hit->object->normal);
+	if (hit->object->type == SPHERE)
+		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->object->position)));
+	if (hit->object->type == BOX)
+		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->object->position)));
 	return (hit->normal);
 }
 
-int	intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit)
+int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 {
 	int hit_found;
 
 	hit_found = 0;
 	hit->distance = 0.0f;
-	if (shape->type == PLANE)
-		hit_found = intersects_plane(ray, shape, hit);
-	if (shape->type == SPHERE)
-		hit_found = intersects_sphere(ray, shape, hit);
-	if (shape->type == BOX)
-		hit_found = intersects_box(ray, shape, hit);
+	if (object->type == PLANE)
+		hit_found = intersects_plane(ray, object, hit);
+	if (object->type == SPHERE)
+		hit_found = intersects_sphere(ray, object, hit);
+	if (object->type == BOX)
+		hit_found = intersects_box(ray, object, hit);
 	if (hit_found)
 	{
-		hit->shape = shape;
+		hit->object = object;
 		hit->point = point_on_ray(ray, hit->t);
 		hit->distance = hit->t;
 		hit->normal = calculate_hit_normal(hit);

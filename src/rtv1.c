@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 17:42:46 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:55:33 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	main(int argc, char **argv)
 {
 	t_env *env;
 	char window_title[50];
-
+	ft_bzero(window_title, 50);
 	if (argc != 2)
 	{
 		ft_printf("usage: ./RTv1 <scene file>\n");

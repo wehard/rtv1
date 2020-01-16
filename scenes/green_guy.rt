@@ -1,7 +1,17 @@
-7 SHAPES
+OBJECTS 8
+LIGHTS 2
 FOV 80.0
-LIGHT -10 30 -20
 COLOR 0 0 0
+LIGHT
+pos -10 20 10
+col 1 1 1
+int 1
+#
+LIGHT
+pos 10 20 10
+col 1 1 1
+int 1
+#
 PLANE
 pos 0 -5 30
 rot 0 0 0
@@ -58,3 +68,4 @@ col 0 0 0
 rad 0.6
 ref 0
 #
+
