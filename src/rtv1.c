@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:14:59 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 17:42:46 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,76 +33,6 @@ int		key_press(int key, void *param)
 	return (0);
 }
 
-int	raycast_shadow(t_scene *scene, t_raycasthit *origin)
-{
-	t_ray			ray;
-	t_raycasthit	hit;
-	int				i;
-
-	ray.origin = ft_add_vec3(origin->point, ft_mul_vec3(origin->normal, SHADOW_BIAS));
-	ray.direction = ft_normalize_vec3(ft_sub_vec3(scene->light.position, ray.origin));
-	i = 0;
-	while (i < scene->num_shapes)
-	{
-		if (origin->shape != &scene->shapes[i] && intersects_shape(&ray, &scene->shapes[i], &hit))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
-{
-	double			min_dist = INFINITY;
-	t_shape			*cur_shape;
-	t_raycasthit	cur_hit;
-	int 			hit_found;
-	int				i;
-
-	if (depth > MAX_RAY_DEPTH)
-	{
-		hit->hit_color = scene->ambient_color;
-		return (0);
-	}
-
-	hit_found = 0;
-	i = 0;
-	while (i < scene->num_shapes)
-	{
-		cur_shape = &scene->shapes[i];
-
-		if (intersects_shape(ray, cur_shape, &cur_hit))
-		{
-			hit_found = 1;
-			if (cur_hit.distance < min_dist)
-			{
-				*hit = cur_hit;
-				min_dist = cur_hit.distance;
-			}
-		}
-		i++;
-	}
-	if (hit_found)
-	{
-		hit->hit_color = hit->shape->color;
-		if (depth == 0 && raycast_shadow(scene, hit))
-			hit->hit_color = ft_mul_rgba(hit->hit_color, 0.3);
-		if (hit->shape->reflect > 0)
-		{
-			t_ray reflect_ray;
-			t_raycasthit reflect_hit;
-			reflect_ray.origin = ft_add_vec3(hit->point, ft_mul_vec3(hit->normal, 0.001f));
-			reflect_ray.direction = ft_reflect_vec3(ray->direction, hit->normal);
-			if (raycast(&reflect_ray, scene, &reflect_hit, depth + 1))
-				hit->hit_color = ft_lerp_rgba(hit->hit_color, reflect_hit.hit_color, hit->shape->reflect);
-		}
-
-	}
-	else
-		hit->hit_color = scene->ambient_color;
-	return (hit_found);
-}
-
 int	update(void *param)
 {
 	t_env *env;
@@ -114,9 +44,11 @@ int	update(void *param)
 	if (env->scene->mod_time < newtime)
 	{
 		env->scene->mod_time = newtime;
-		ft_putendl("scene modified");
-		read_scene(env->scene, env->scene->path);
-		render(env, env->scene);
+		ft_printf("scene modified\n");
+		if (read_scene(env->scene, env->scene->path))
+			render(env, env->scene);
+		else
+			ft_printf("error: failed to read scene!\n");
 	}
 	return (0);
 }
@@ -128,12 +60,10 @@ void render(t_env *env, t_scene *scene)
 	t_ray ray;
 	t_raycasthit hit;
 
-
 	clear_mlx_img(env->mlx_img);
 
-
-	double scale = tan((scene->fov * 0.5f) * M_PI / 180.0f);
-    double aspect_ratio = (double)env->width / (double)env->height;
+	double scale = tan((scene->fov * 0.5) * M_PI / 180.0);
+	double aspect_ratio = (double)env->width / (double)env->height;
 
 	start = clock();
 	int y = 0;
@@ -151,17 +81,11 @@ void render(t_env *env, t_scene *scene)
 			t_rgba color;
 			if (raycast(&ray, scene, &hit, 0))
 			{
-				color = scene->ambient_color;
-				t_vec3 l_dir = ft_normalize_vec3(ft_sub_vec3(scene->light.position, hit.point));
-				double light_dot_normal = ft_dot_vec3(l_dir, hit.normal); //-raydir.dot(nhit);
-				double ray_dot_normal = ft_dot_vec3(ray.direction, hit.normal);
-				double specular = ft_lerp_f(pow(light_dot_normal, 200), 1, 0.5);
-				color = ft_lerp_rgba(scene->ambient_color, hit.hit_color, ft_max_d(0.0, ray_dot_normal));
-				color = ft_lerp_rgba(color, hit.hit_color, ft_max_d(0.0, light_dot_normal));
-				color = ft_mul_rgba(color, specular);
+				color = hit.color;
+
 			}
 			else
-				color = hit.hit_color;
+				color = hit.color;
 			put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
 			x++;
 		}

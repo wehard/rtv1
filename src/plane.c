@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:13:24 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 17:07:30 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,17 @@ t_shape	make_plane()
 int		intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit)
 {
 	hit->t = ft_dot_vec3(ft_sub_vec3(plane->position, ray->origin), plane->normal) / ft_dot_vec3(ray->direction, plane->normal);
+	if (plane->scale.x > 0 && plane->scale.y > 0 && plane->scale.z > 0)
+	{
+		t_vec3 p = point_on_ray(ray, hit->t);
+		if (p.x > plane->position.x + (plane->scale.x / 2.0) || p.x < plane->position.x - (plane->scale.x / 2.0))
+			return (0);
+		if (p.z > plane->position.z + (plane->scale.z / 2.0) || p.z < plane->position.z - (plane->scale.z / 2.0))
+			return (0);
+		if (p.y > plane->position.y + (plane->scale.y / 2.0) || p.y < plane->position.y - (plane->scale.y / 2.0))
+			return (0);
+	}
+
 	if (hit->t > 0)
 		return (1);
 	return (0);

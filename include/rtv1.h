@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:09:57 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 17:39:15 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 # define WIN_H 720
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 200
-# define SHADOW_BIAS 0.01
+# define SHADOW_BIAS 0.0001
+# define REFLECT_BIAS 0.0001
 # define TRUE 1
 # define FALSE 0
 
@@ -76,7 +77,7 @@ typedef struct	s_raycasthit
 	double		t;
 	double		t2;
 	double		distance;
-	t_rgba		hit_color;
+	t_rgba		color;
 }				t_raycasthit;
 
 typedef struct	s_scene
@@ -130,19 +131,23 @@ void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
 int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
 
-t_shape			make_sphere();
-int				intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit);
-
 t_shape			make_plane();
-
-int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
-
+t_shape			make_sphere();
 t_shape			make_box();
+int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
+int				intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit);
 int				intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit);
+
 t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
+
+int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
+int				raycast_shadow(t_scene *scene, t_raycasthit *origin);
+int				trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);
 t_vec3			point_on_ray(t_ray *r, double t);
+void			init_raycasthit(t_raycasthit *hit);
+
 
 void			print_shape_info(t_shape *shape);
 t_vec3			calculate_hit_normal(t_raycasthit *hit);
@@ -156,5 +161,7 @@ t_rgba			ft_make_rgba(double r, double g, double b, double a);
 t_rgba			ft_mul_rgba(t_rgba c, double t);
 t_rgba			ft_lerp_rgba(t_rgba c1, t_rgba c2, double t);
 int				ft_get_color(t_rgba c);
+
+
 
 #endif

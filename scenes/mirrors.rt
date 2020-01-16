@@ -1,0 +1,54 @@
+7 SHAPES
+FOV 60.0
+LIGHT 0 0 -10
+COLOR 0.0 0 0
+PLANE
+pos 4 0 15
+rot 0 0 0
+sca 8 8 8
+nor -1 0 0
+col 1 1 1
+ref 0.5
+#
+PLANE
+pos -4 0 15
+rot 0 0 0
+sca 8 8 8
+nor 1 0 0
+col 1 1 1
+ref 0.5
+#
+PLANE
+pos 0 -4 15
+rot 0 0 0
+sca 8 8 8
+nor 0 1 0
+col 1 1 1
+ref 0.5
+#
+PLANE
+pos 0 4 15
+rot 0 0 0
+sca 8 8 8
+nor 0 -1 0
+col 1 1 1
+ref 0.5
+# red
+SPHERE
+pos -2.5 0 15
+col 1 0 0
+rad 1.2
+ref 0
+# green
+SPHERE
+pos 0 0 15
+col 0 1 0
+rad 1.2
+ref 0
+# blue
+SPHERE
+pos 2.5 0 15
+col 0 0 1
+rad 1.2
+ref 0
+#

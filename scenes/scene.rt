@@ -1,42 +1,42 @@
 6 SHAPES
-FOV 80.0
-LIGHT -10 10 -5
-COLOR 0 0 0
+FOV 45.0
+LIGHT -1 10 -5
+COLOR 0.0 0.1 0.1
 PLANE
-pos 0 -1 35
+pos 0 -2.5 25
 rot 0 0 0
-sca 0 0 0
+sca 20 20 20
 nor 0 1 0
 col 0.3 0.6 1
-ref 0.3
+ref 0
 # red
 SPHERE
-pos -2.5 0 5
+pos -2.5 0 15
 col 1 0 0
 rad 1.0
-ref 0
+ref 0.3
 # green
 SPHERE
-pos 0 0 5
+pos 0 0 15
 col 0 1 0
 rad 1.0
-ref 0
+ref 0.3
 # blue
 SPHERE
-pos 2.5 0 5
+pos 2.5 0 15
 col 0 0 1
 rad 1.0
-ref 0
+ref 0.3
 # yellow
 SPHERE
-pos 1.25 2 5
+pos 1.5 2 15
 col 1 1 0
 rad 1.0
-ref 0
+ref 0.3
 # pink
 SPHERE
-pos -1.25 2 5
+pos -1.5 2 15
 col 1 0 1
 rad 1.0
-ref 0
+ref 0.3
 #

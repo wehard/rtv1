@@ -1,14 +1,14 @@
 7 SHAPES
 FOV 80.0
-LIGHT 10 50 -20
-COLOR 0.1 0.1 0.1
+LIGHT -10 30 -20
+COLOR 0 0 0
 PLANE
-pos 0 -5 35
+pos 0 -5 30
 rot 0 0 0
-sca 0 0 0
+sca 40 40 60
 nor 0 1 0
-col 0.1 0.1 0.1
-ref 0
+col 0.7 0.7 0.7
+ref 0.3
 # head
 SPHERE
 pos 0 4 30
