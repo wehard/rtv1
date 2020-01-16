@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 17:57:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 22:17:45 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:13:05 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,24 @@ t_vec3 calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit)
 	t_vec3 far = point_on_ray(ray, hit->t2);
 	double eps = 0.001;
 	if (ft_abs_d(hit->t - near.x) < eps)
-		normal = make_vec3(-1,0,0);
+		normal = ft_make_vec3(-1,0,0);
 	if (ft_abs_d(hit->t - far.x) < eps)
-		normal = make_vec3(1,0,0);
+		normal = ft_make_vec3(1,0,0);
 	if (ft_abs_d(hit->t - near.y) < eps)
-		normal = make_vec3(0,-1,0);
+		normal = ft_make_vec3(0,-1,0);
 	if (ft_abs_d(hit->t - far.y) < eps)
-		normal = make_vec3(0,1,0);
+		normal = ft_make_vec3(0,1,0);
 	if (ft_abs_d(hit->t - near.z) < eps)
-		normal = make_vec3(0,0,-1);
+		normal = ft_make_vec3(0,0,-1);
 	if (ft_abs_d(hit->t - far.z) < eps)
-		normal = make_vec3(0,0,1);
+		normal = ft_make_vec3(0,0,1);
 	return (normal);
 }
 
 int		intersects_box(t_ray *ray, t_shape *box, t_raycasthit *hit)
 {
-	t_vec3 min = add_vec3(box->position, make_vec3(0,0,0));
-	t_vec3 max = add_vec3(box->position, make_vec3(1,1,1));
+	t_vec3 min = ft_add_vec3(box->position, ft_make_vec3(0,0,0));
+	t_vec3 max = ft_add_vec3(box->position, ft_make_vec3(1,1,1));
 
 	double tmin = (min.x - ray->origin.x) / ray->direction.x;
 	double tmax = (max.x - ray->origin.x) / ray->direction.x;

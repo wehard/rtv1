@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 18:43:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 22:14:39 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:13:51 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ t_vec3	point_on_ray(t_ray *r, double t)
 {
 	t_vec3 p;
 
-	p = mul_vec3(normalize_vec3(add_vec3(r->origin, r->direction)), t);
+	p = ft_mul_vec3(ft_normalize_vec3(ft_add_vec3(r->origin, r->direction)), t);
 	return (p);
 }

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 12:08:08 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:14:13 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ static t_rgba parse_rgba(char *line)
 static void init_shape(t_shape *shape)
 {
 	shape->type = 0;
-	shape->position = make_vec3(0.0, 0.0, 0.0);
-	shape->rotation = make_vec3(0.0, 0.0, 0.0);
-	shape->scale = make_vec3(0.0, 0.0, 0.0);
-	shape->normal = make_vec3(0.0, 0.0, 0.0);
+	shape->position = ft_make_vec3(0.0, 0.0, 0.0);
+	shape->rotation = ft_make_vec3(0.0, 0.0, 0.0);
+	shape->scale = ft_make_vec3(0.0, 0.0, 0.0);
+	shape->normal = ft_make_vec3(0.0, 0.0, 0.0);
 	shape->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
 	shape->radius = 0.0;
 	shape->reflect = 0.0;
@@ -147,6 +147,8 @@ int		read_scene(t_scene *scene, char *path)
 			scene->light.position = parse_vec3(line);
 		else if (ft_strnequ(line, "COLOR", 5))
 			scene->ambient_color = parse_rgba(line);
+		else if (ft_strnequ(line, "FOV", 3))
+			scene->fov = ft_strtod(line + 3);
 		else
 		{
 			t_shape_type type = parse_shape_type(line);

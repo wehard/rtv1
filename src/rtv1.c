@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 12:47:02 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:14:59 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,10 @@
 #include <mlx.h>
 #include <math.h>
 #include <time.h>
-//#include "ray.h"
-//#include "vector.h"
 #include "libft.h"
 #include "ft_printf.h"
 #include "keys.h"
+#include "vector.h"
 
 int		key_press(int key, void *param)
 {
@@ -40,8 +39,8 @@ int	raycast_shadow(t_scene *scene, t_raycasthit *origin)
 	t_raycasthit	hit;
 	int				i;
 
-	ray.origin = add_vec3(origin->point, mul_vec3(origin->normal, SHADOW_BIAS));
-	ray.direction = normalize_vec3(sub_vec3(scene->light.position, ray.origin));
+	ray.origin = ft_add_vec3(origin->point, ft_mul_vec3(origin->normal, SHADOW_BIAS));
+	ray.direction = ft_normalize_vec3(ft_sub_vec3(scene->light.position, ray.origin));
 	i = 0;
 	while (i < scene->num_shapes)
 	{
@@ -87,13 +86,13 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	{
 		hit->hit_color = hit->shape->color;
 		if (depth == 0 && raycast_shadow(scene, hit))
-			hit->hit_color = ft_mul_rgba(hit->hit_color, 0.8);
+			hit->hit_color = ft_mul_rgba(hit->hit_color, 0.3);
 		if (hit->shape->reflect > 0)
 		{
 			t_ray reflect_ray;
 			t_raycasthit reflect_hit;
-			reflect_ray.origin = add_vec3(hit->point, mul_vec3(hit->normal, 0.001f));
-			reflect_ray.direction = reflect_vec3(ray->direction, hit->normal);
+			reflect_ray.origin = ft_add_vec3(hit->point, ft_mul_vec3(hit->normal, 0.001f));
+			reflect_ray.direction = ft_reflect_vec3(ray->direction, hit->normal);
 			if (raycast(&reflect_ray, scene, &reflect_hit, depth + 1))
 				hit->hit_color = ft_lerp_rgba(hit->hit_color, reflect_hit.hit_color, hit->shape->reflect);
 		}
@@ -132,11 +131,8 @@ void render(t_env *env, t_scene *scene)
 
 	clear_mlx_img(env->mlx_img);
 
-	scene->light.intensity = 1.0f;
-	scene->light.color = make_vec3(1.0, 1.0, 1.0);
 
-	double fov = 60.0f;
-	double scale = tan((fov * 0.5f) * M_PI / 180.0f);
+	double scale = tan((scene->fov * 0.5f) * M_PI / 180.0f);
     double aspect_ratio = (double)env->width / (double)env->height;
 
 	start = clock();
@@ -150,16 +146,19 @@ void render(t_env *env, t_scene *scene)
 			double rx = (2 * (x + 0.5) / (double)env->width - 1) * aspect_ratio * scale;
             double ry = (1 - 2 * (y + 0.5) / (double)env->height) * scale;
 
-			ray.origin = make_vec3(0.0, 0, 0.0);
-			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
+			ray.origin = ft_make_vec3(0.0, 0, 0.0);
+			ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_make_vec3(rx, ry, 1.0), ray.origin));
 			t_rgba color;
 			if (raycast(&ray, scene, &hit, 0))
 			{
-				t_vec3 l_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
-				double ratio = dot_vec3(l_dir, hit.normal); //-raydir.dot(nhit);
-				double fresnel = ft_lerp_f(pow(ratio, 200), 1, 0.5);
-				color = ft_lerp_rgba( scene->ambient_color, hit.hit_color, -dot_vec3(hit.normal, ray.direction));
-				color = ft_mul_rgba(color, fresnel);
+				color = scene->ambient_color;
+				t_vec3 l_dir = ft_normalize_vec3(ft_sub_vec3(scene->light.position, hit.point));
+				double light_dot_normal = ft_dot_vec3(l_dir, hit.normal); //-raydir.dot(nhit);
+				double ray_dot_normal = ft_dot_vec3(ray.direction, hit.normal);
+				double specular = ft_lerp_f(pow(light_dot_normal, 200), 1, 0.5);
+				color = ft_lerp_rgba(scene->ambient_color, hit.hit_color, ft_max_d(0.0, ray_dot_normal));
+				color = ft_lerp_rgba(color, hit.hit_color, ft_max_d(0.0, light_dot_normal));
+				color = ft_mul_rgba(color, specular);
 			}
 			else
 				color = hit.hit_color;

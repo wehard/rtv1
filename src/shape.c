@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/13 15:34:42 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 12:08:48 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:12:31 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ void print_shape_info(t_shape *shape)
 t_vec3	calculate_hit_normal(t_raycasthit *hit)
 {
 	if (!hit || !hit->shape)
-		return (make_vec3(0, 0, 0));
+		return (ft_make_vec3(0, 0, 0));
 	if (hit->shape->type == PLANE)
 		return (hit->shape->normal);
 	if (hit->shape->type == SPHERE)
-		return (normalize_vec3(sub_vec3(hit->point, hit->shape->position)));
+		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->shape->position)));
 	if (hit->shape->type == BOX)
-		return (normalize_vec3(sub_vec3(hit->point, hit->shape->position)));
+		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->shape->position)));
 	return (hit->normal);
 }
 

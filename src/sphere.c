@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 12:13:17 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 15:13:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ t_shape	make_sphere()
 {
 	t_shape t;
 	t.type = SPHERE;
-	t.position = make_vec3(0.0, 0.0, 0.0);
+	t.position = ft_make_vec3(0.0, 0.0, 0.0);
 	t.radius = 1.0;
-	t.rotation = make_vec3(0.0, 0.0, 0.0);
-	t.scale = make_vec3(1.0, 1.0, 1.0);
+	t.rotation = ft_make_vec3(0.0, 0.0, 0.0);
+	t.scale = ft_make_vec3(1.0, 1.0, 1.0);
 	t.color = ft_make_rgba(1.0, 1.0, 1.0, 1.0);
 	return (t);
 }
@@ -34,9 +34,9 @@ int		intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit)
 
 	sradius2 = sphere->radius * sphere->radius;
 
-	t_vec3 L = sub_vec3(sphere->position, ray->origin);
-	double tca = dot_vec3(L, ray->direction);
-	double d2 = dot_vec3(L, L) - tca * tca;
+	t_vec3 L = ft_sub_vec3(sphere->position, ray->origin);
+	double tca = ft_dot_vec3(L, ray->direction);
+	double d2 = ft_dot_vec3(L, L) - tca * tca;
 	if (d2 > sradius2)
 		return (0);
 	double thc = sqrtf(sradius2 - d2);
