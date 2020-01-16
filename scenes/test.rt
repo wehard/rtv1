@@ -1,13 +1,14 @@
 4 SHAPES
-LIGHT 0 10 3
+LIGHT -10 30 3
+COLOR 0 0 0
 SPHERE
-pos -3.5 4 23
+pos -6.5 5 23
 rot 0 0 0
 sca 1 1 1
 nor 0 1 0
 col 1 1 0
 rad 2.0
-ref 1
+ref 0.1
 #
 SPHERE
 pos -5 0 30
@@ -25,14 +26,14 @@ sca 0 0 0
 nor 0 1 0
 col 1.0 0.1 0.1
 rad 10.0
-ref 0.7
+ref 0.5
 #
 SPHERE
-pos 10 5 10
+pos 1 2 10
 rot 0 0 0
 sca 0 0 0
 nor 0 1 0
 col 0.0 0.0 1.0
-rad 2.0
+rad 0.0
 ref 0
 #

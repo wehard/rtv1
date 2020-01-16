@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 22:16:14 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 12:03:46 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,21 @@ typedef struct		s_light
 	t_vec3			color;
 }					t_light;
 
+typedef struct		s_rgba
+{
+	double			r;
+	double			g;
+	double			b;
+	double			a;
+}					t_rgba;
+
 typedef struct		s_shape
 {
 	t_shape_type	type;
 	t_vec3			position;
 	t_vec3			rotation;
 	t_vec3			scale;
-	t_vec3			color;
+	t_rgba			color;
 	double			radius;
 	t_vec3			normal;
 	double			reflect;
@@ -68,7 +76,7 @@ typedef struct	s_raycasthit
 	double		t;
 	double		t2;
 	double		distance;
-	t_vec3		hit_color;
+	t_rgba		hit_color;
 }				t_raycasthit;
 
 typedef struct	s_scene
@@ -79,7 +87,7 @@ typedef struct	s_scene
 	t_light		light;
 	t_shape		*shapes;
 	int			num_shapes;
-	t_vec3		ambient_color;
+	t_rgba		ambient_color;
 }				t_scene;
 
 typedef struct		s_mlx_img
@@ -126,7 +134,6 @@ int				intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit);
 
 t_shape			make_plane();
 
-int				ft_get_color(t_vec3 c);
 int				intersects_plane(t_ray *ray, t_shape *plane, t_raycasthit *hit);
 
 t_shape			make_box();
@@ -140,5 +147,13 @@ void			print_shape_info(t_shape *shape);
 t_vec3			calculate_hit_normal(t_raycasthit *hit);
 int				intersects_shape(t_ray *ray, t_shape *shape, t_raycasthit *hit);
 time_t			check_mod_time(char *path);
+
+/*
+** colors
+*/
+t_rgba			ft_make_rgba(double r, double g, double b, double a);
+t_rgba			ft_mul_rgba(t_rgba c, double t);
+t_rgba			ft_lerp_rgba(t_rgba c1, t_rgba c2, double t);
+int				ft_get_color(t_rgba c);
 
 #endif

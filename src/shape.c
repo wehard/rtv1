@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/13 15:34:42 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 21:00:37 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 12:08:48 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void print_shape_info(t_shape *shape)
 	ft_printf("rot: %.3f, %.3f, %.3f\n", shape->rotation.x, shape->rotation.y, shape->rotation.z);
 	ft_printf("scale: %.3f, %.3f, %.3f\n", shape->scale.x, shape->scale.y, shape->scale.z);
 	ft_printf("normal: %.3f, %.3f, %.3f\n", shape->normal.x, shape->normal.y, shape->normal.z);
-	ft_printf("color: %.3f, %.3f, %.3f\n", shape->color.x, shape->color.y, shape->color.z);
+	ft_printf("color: %.3f, %.3f, %.3f, %.3f\n", shape->color.r, shape->color.g, shape->color.b, shape->color.a);
 	ft_printf("radius: %.3f\n", shape->radius);
 	ft_printf("reflect: %.3f\n", shape->reflect);
 }

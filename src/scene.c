@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 15:56:26 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 12:08:08 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,22 @@ static t_vec3 parse_vec3(char *line)
 	return (v);
 }
 
+static t_rgba parse_rgba(char *line)
+{
+	char **split;
+	t_rgba v;
+
+	split = ft_strsplit(line, ' ');
+
+	v.r = ft_strtod(split[1]);
+	v.g = ft_strtod(split[2]);
+	v.b = ft_strtod(split[3]);
+	if (!split[4])
+		v.a = 1.0;
+	else
+		v.a = ft_strtod(split[4]);
+	return (v);
+}
 static void init_shape(t_shape *shape)
 {
 	shape->type = 0;
@@ -54,7 +70,7 @@ static void init_shape(t_shape *shape)
 	shape->rotation = make_vec3(0.0, 0.0, 0.0);
 	shape->scale = make_vec3(0.0, 0.0, 0.0);
 	shape->normal = make_vec3(0.0, 0.0, 0.0);
-	shape->color = make_vec3(0.0, 0.0, 0.0);
+	shape->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
 	shape->radius = 0.0;
 	shape->reflect = 0.0;
 }
@@ -78,7 +94,7 @@ static int parse_shape(int fd, t_shape_type type, t_shape *shape)
 		else if (ft_strnequ(line, "sca", 3))
 			shape->scale = parse_vec3(line);
 		else if (ft_strnequ(line, "col", 3))
-			shape->color = parse_vec3(line);
+			shape->color = parse_rgba(line);
 		else if (ft_strnequ(line, "nor", 3))
 			shape->normal = parse_vec3(line);
 		else if (ft_strnequ(line, "rad", 3))
@@ -113,7 +129,7 @@ int		read_scene(t_scene *scene, char *path)
 	scene->mod_time = check_mod_time(scene->path);
 	if (fd < 3)
 	{
-		ft_printf("error: opening scene file");
+		ft_printf("error: opening scene file\n");
 		return (0);
 	}
 	scene->num_shapes = 0;
@@ -130,7 +146,7 @@ int		read_scene(t_scene *scene, char *path)
 		else if (ft_strnequ(line, "LIGHT", 5))
 			scene->light.position = parse_vec3(line);
 		else if (ft_strnequ(line, "COLOR", 5))
-			scene->ambient_color = parse_vec3(line);
+			scene->ambient_color = parse_rgba(line);
 		else
 		{
 			t_shape_type type = parse_shape_type(line);

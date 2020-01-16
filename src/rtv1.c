@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 22:15:34 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 12:47:02 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	raycast_shadow(t_scene *scene, t_raycasthit *origin)
 	i = 0;
 	while (i < scene->num_shapes)
 	{
-		if (/*origin->shape != &scene->shapes[i] && */intersects_shape(&ray, &scene->shapes[i], &hit))
+		if (origin->shape != &scene->shapes[i] && intersects_shape(&ray, &scene->shapes[i], &hit))
 			return (1);
 		i++;
 	}
@@ -61,7 +61,10 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	int				i;
 
 	if (depth > MAX_RAY_DEPTH)
+	{
+		hit->hit_color = scene->ambient_color;
 		return (0);
+	}
 
 	hit_found = 0;
 	i = 0;
@@ -83,6 +86,8 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	if (hit_found)
 	{
 		hit->hit_color = hit->shape->color;
+		if (depth == 0 && raycast_shadow(scene, hit))
+			hit->hit_color = ft_mul_rgba(hit->hit_color, 0.8);
 		if (hit->shape->reflect > 0)
 		{
 			t_ray reflect_ray;
@@ -90,11 +95,12 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 			reflect_ray.origin = add_vec3(hit->point, mul_vec3(hit->normal, 0.001f));
 			reflect_ray.direction = reflect_vec3(ray->direction, hit->normal);
 			if (raycast(&reflect_ray, scene, &reflect_hit, depth + 1))
-				hit->hit_color = mul_vec3(reflect_hit.hit_color, 1.0 - hit->shape->reflect);
+				hit->hit_color = ft_lerp_rgba(hit->hit_color, reflect_hit.hit_color, hit->shape->reflect);
 		}
-		if (raycast_shadow(scene, hit))
-			hit->hit_color = mul_vec3(hit->hit_color, 0.8);
+
 	}
+	else
+		hit->hit_color = scene->ambient_color;
 	return (hit_found);
 }
 
@@ -146,17 +152,17 @@ void render(t_env *env, t_scene *scene)
 
 			ray.origin = make_vec3(0.0, 0, 0.0);
 			ray.direction = normalize_vec3(sub_vec3(make_vec3(rx, ry, 1.0), ray.origin));
-			t_vec3 color;
+			t_rgba color;
 			if (raycast(&ray, scene, &hit, 0))
 			{
 				t_vec3 l_dir = normalize_vec3(sub_vec3(scene->light.position, hit.point));
 				double ratio = dot_vec3(l_dir, hit.normal); //-raydir.dot(nhit);
 				double fresnel = ft_lerp_f(pow(ratio, 200), 1, 0.5);
-				color = mul_vec3(hit.hit_color, -dot_vec3(hit.normal, ray.direction));
-				color = mul_vec3(color, fresnel);
+				color = ft_lerp_rgba( scene->ambient_color, hit.hit_color, -dot_vec3(hit.normal, ray.direction));
+				color = ft_mul_rgba(color, fresnel);
 			}
 			else
-				color = scene->ambient_color;
+				color = hit.hit_color;
 			put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
 			x++;
 		}
@@ -171,14 +177,17 @@ void render(t_env *env, t_scene *scene)
 int	main(int argc, char **argv)
 {
 	t_env *env;
+	char window_title[50];
 
 	if (argc != 2)
 	{
 		ft_printf("usage: ./RTv1 <scene file>\n");
 		return (1);
 	}
-	env = init_env(WIN_W, WIN_H, "RTv1");
-	read_scene(env->scene, argv[1]);
+	ft_sprintf(window_title, "RTv1 - %s", argv[1]);
+	env = init_env(WIN_W, WIN_H, window_title);
+	if (!read_scene(env->scene, argv[1]))
+		return (1);
 	mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, WIN_W/2, WIN_H/2, 0xFFFFFF, "rendering");
 	render(env, env->scene);
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);

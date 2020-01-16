@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 22:15:50 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/16 12:13:17 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ t_shape	make_sphere()
 {
 	t_shape t;
 	t.type = SPHERE;
-	t.position = make_vec3(0.0f, 0.0f, 0.0f);
-	t.radius = 1.0f;
-	t.rotation = make_vec3(0.0f, 0.0f, 0.0f);
-	t.scale = make_vec3(1.0f, 1.0f, 1.0f);
-	t.color = make_vec3(1.0f, 1.0f, 1.0f);
-	return  (t);
+	t.position = make_vec3(0.0, 0.0, 0.0);
+	t.radius = 1.0;
+	t.rotation = make_vec3(0.0, 0.0, 0.0);
+	t.scale = make_vec3(1.0, 1.0, 1.0);
+	t.color = ft_make_rgba(1.0, 1.0, 1.0, 1.0);
+	return (t);
 }
 
 int		intersects_sphere(t_ray *ray, t_shape *sphere, t_raycasthit *hit)

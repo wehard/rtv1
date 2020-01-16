@@ -1,0 +1,59 @@
+7 SHAPES
+LIGHT 10 50 -20
+COLOR 0.1 0.1 0.1
+PLANE
+pos 0 -5 35
+rot 0 0 0
+sca 0 0 0
+nor 0 1 0
+col 0.1 0.1 0.1
+ref 0
+# head
+SPHERE
+pos 0 4 30
+rot 0 0 0
+sca 0 0 0
+col 0.2 0.6 0.2
+rad 10
+ref 0
+# nose
+SPHERE
+pos 0 2 20
+rot 0 0 0
+sca 0 0 0
+col 0.6 0.2 0.2
+rad 2
+ref 0
+# left
+SPHERE
+pos -4 4 19.5
+rot 0 0 0
+sca 0 0 0
+col 1 1 1
+rad 2
+ref 0
+# left pupil
+SPHERE
+pos -4 3.5 17.8
+rot 0 0 0
+sca 0 0 0
+col 0 0 0
+rad 0.6
+ref 0
+# right
+SPHERE
+pos 4 4 19.5
+rot 0 0 0
+sca 0 0 0
+col 1 1 1
+rad 2
+ref 0
+# right pupil
+SPHERE
+pos 4 3.5 17.8
+rot 0 0 0
+sca 0 0 0
+col 0 0 0
+rad 0.6
+ref 0
+#
