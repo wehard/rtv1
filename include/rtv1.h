@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/17 21:52:29 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/17 22:07:28 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "vector.h"
 # include "time.h"
 
-# define WIN_W 1280
-# define WIN_H 720
+# define WIN_W 1200
+# define WIN_H 800
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 200
 # define SHADOW_BIAS 0.001
