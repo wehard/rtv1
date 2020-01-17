@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 20:37:46 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/17 21:52:29 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define WIN_H 720
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 200
-# define SHADOW_BIAS 0.0001
+# define SHADOW_BIAS 0.001
 # define REFLECT_BIAS 0.0001
 # define TRUE 1
 # define FALSE 0
@@ -144,7 +144,7 @@ int				intersects_box(t_ray *ray, t_object *box, t_raycasthit *hit);
 t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
 
 int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
-int				raycast_shadow(t_scene *scene, t_raycasthit *origin);
+double			raycast_shadow(t_scene *scene, t_raycasthit *origin);
 int				trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);

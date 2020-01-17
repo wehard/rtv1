@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 20:55:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/17 21:32:24 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,9 @@ void render(t_env *env, t_scene *scene)
 			ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_make_vec3(rx, ry, 1.0), ray.origin));
 			t_rgba color;
 			if (raycast(&ray, scene, &hit, 0))
-			{
 				color = hit.color;
-
-			}
 			else
-				color = hit.color;
+				color = scene->ambient_color;
 			put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
 			x++;
 		}
