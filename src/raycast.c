@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/17 21:48:54 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 13:08:32 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,6 @@
 #include "vector.h"
 #include "libft.h"
 #include <math.h>
-
-static double	ft_clamp_d(double d, double min, double max)
-{
-	if (d < min)
-		d = min;
-	if (d > max)
-		d = max;
-	return (d);
-}
 
 int	trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 {
@@ -49,7 +40,7 @@ int	trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	return (hit_found);
 }
 
-double	calculate_light_contribution(t_scene *scene, t_raycasthit *hit)
+static double	calculate_light_contribution(t_scene *scene, t_raycasthit *hit)
 {
 	int i;
 
@@ -63,6 +54,37 @@ double	calculate_light_contribution(t_scene *scene, t_raycasthit *hit)
 		i++;
 	}
 	return (light_contribution);
+}
+
+static double	calculate_shadow_contribution(t_scene *scene, t_raycasthit *origin)
+{
+	t_ray			ray;
+	t_raycasthit	hit;
+	int				i;
+	int				l;
+	double			shadow_strength;
+	double			s_increment;
+
+	s_increment = 1.0 / scene->num_lights;
+	shadow_strength = 1.0;
+	ray.origin = ft_add_vec3(origin->point, ft_mul_vec3(origin->normal, SHADOW_BIAS));
+	l = 0;
+	while (l < scene->num_lights)
+	{
+		i = 0;
+		while (i < scene->num_objects)
+		{
+			ray.direction = ft_normalize_vec3(ft_sub_vec3(scene->lights[l].position, ray.origin));
+			if (origin->object != &scene->objects[i] && intersects_object(&ray, &scene->objects[i], &hit))
+			{
+				shadow_strength -= (s_increment * scene->lights[l].intensity);
+				break ;
+			}
+			i++;
+		}
+		l++;
+	}
+	return (shadow_strength);
 }
 
 int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
@@ -80,7 +102,7 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 		hit->color = hit->object->color;
 
 		double light_contribution = ft_clamp_d(calculate_light_contribution(scene, hit), 0.0, 1.0);
-		double shadow = raycast_shadow(scene, hit);
+		double shadow = calculate_shadow_contribution(scene, hit);
 		hit->color = ft_mul_rgba(hit->color, light_contribution);
 		hit->color = ft_mul_rgba(hit->color, shadow);
 		if (hit->object->reflect > 0)
@@ -103,36 +125,6 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	return (hit_found);
 }
 
-double	raycast_shadow(t_scene *scene, t_raycasthit *origin)
-{
-	t_ray			ray;
-	t_raycasthit	hit;
-	int				i;
-	int				l;
-	double			shadow_strength;
-	double			s_increment;
 
-	s_increment = 1.0 / scene->num_lights;
-
-	shadow_strength = 1.0;
-	ray.origin = ft_add_vec3(origin->point, ft_mul_vec3(origin->normal, SHADOW_BIAS));
-	l = 0;
-	while (l < scene->num_lights)
-	{
-		i = 0;
-		while (i < scene->num_objects)
-		{
-			ray.direction = ft_normalize_vec3(ft_sub_vec3(scene->lights[l].position, ray.origin));
-			if (origin->object != &scene->objects[i] && intersects_object(&ray, &scene->objects[i], &hit))
-			{
-				shadow_strength -= (s_increment * scene->lights[l].intensity);
-				break ;
-			}
-			i++;
-		}
-		l++;
-	}
-	return (shadow_strength);
-}
 
 

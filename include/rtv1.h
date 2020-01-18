@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 02:01:05 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 13:05:44 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
 
 int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
-double			raycast_shadow(t_scene *scene, t_raycasthit *origin);
 int				trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);
