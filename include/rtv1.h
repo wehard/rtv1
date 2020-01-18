@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/17 22:07:28 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 02:01:05 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,12 +134,13 @@ void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
 int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
 
-t_object			make_plane();
-t_object			make_sphere();
-t_object			make_box();
+t_object		make_plane();
+t_object		make_sphere();
+t_object		make_box();
 int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
 int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_box(t_ray *ray, t_object *box, t_raycasthit *hit);
+int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 
 t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
 

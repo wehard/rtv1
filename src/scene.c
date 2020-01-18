@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 20:43:38 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 01:01:22 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ static int	parse_light(int fd, t_object_type type, t_light *light)
 		else if (line[0] == '#')
 		{
 			free(line);
-			ft_printf("light done.\n\n");
 			return (1);
 		}
 		free(line);
@@ -132,8 +131,6 @@ static int parse_object(int fd, t_object_type type, t_object *object)
 		else if (line[0] == '#')
 		{
 			free(line);
-			//print_object_info(object);
-			//ft_printf("object done.\n\n");
 			return (1);
 		}
 		free(line);
@@ -142,7 +139,7 @@ static int parse_object(int fd, t_object_type type, t_object *object)
 }
 
 /*
-**	Reads a scene from file and sets count to number of objects
+**	Reads a scene from file
 */
 int		read_scene(t_scene *scene, char *path)
 {

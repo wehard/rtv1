@@ -1,0 +1,23 @@
+OBJECTS 2
+LIGHTS 1
+FOV 95.0
+COLOR 0 0 0
+LIGHT
+pos 10 20 0
+col 1 1 1
+int .5
+#
+CYLINDER
+pos 0 0 0
+col 1 0 1
+rad 1.0
+nor 1 0 1
+ref 0
+#
+SPHERE
+pos 0 0 10
+col 1 0 0
+rad 1.0
+nor 1 0 -1
+ref 0
+#
