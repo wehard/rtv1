@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 01:01:22 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 18:23:03 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ static t_object_type parse_object_type(char *line)
 {
 	if (ft_strequ(line, "PLANE"))
 		return PLANE;
+	if (ft_strequ(line, "DISC"))
+		return DISC;
 	if (ft_strequ(line, "SPHERE"))
 		return SPHERE;
 	if (ft_strequ(line, "CYLINDER"))
@@ -178,20 +180,14 @@ int		read_scene(t_scene *scene, char *path)
 		else if (ft_strnequ(line, "COLOR", 5))
 			scene->ambient_color = parse_rgba(line);
 		else if (ft_strnequ(line, "FOV", 3))
-			scene->fov = ft_strtod(line + 3);
+			scene->options.fov = ft_strtod(line + 3);
 		else
 		{
 			t_object_type type = parse_object_type(line);
 			if (type == LIGHT)
-			{
-				parse_light(fd, type, &(scene->lights)[light_index]);
-				light_index++;
-			}
+				parse_light(fd, type, &(scene->lights)[light_index++]);
 			else
-			{
-				parse_object(fd, type, &(scene->objects)[obj_index]);
-				obj_index++;
-			}
+				parse_object(fd, type, &(scene->objects)[obj_index++]);
 		}
 		free(line);
 	}

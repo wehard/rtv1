@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 13:08:32 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 13:31:26 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,23 @@
 #include "libft.h"
 #include <math.h>
 
-int	trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+int				trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit, int ignore_origin_obj)
 {
 	t_raycasthit	cur_hit;
-	double	min_dist = INFINITY;
-	int i;
-	int hit_found;
+	double			min_dist;
+	int				i;
+	int				hit_found;
 
+	min_dist = INFINITY;
 	hit_found = 0;
 	i = 0;
 	while (i < scene->num_objects)
 	{
+		if (ignore_origin_obj && ray->origin_object == &scene->objects[i])
+		{
+			i++;
+			continue ;
+		}
 		if (intersects_object(ray, &scene->objects[i], &cur_hit))
 		{
 			hit_found = TRUE;
@@ -40,51 +46,46 @@ int	trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	return (hit_found);
 }
 
-static double	calculate_light_contribution(t_scene *scene, t_raycasthit *hit)
+static double	calc_light_contrib(t_scene *scene, t_raycasthit *hit)
 {
-	int i;
+	t_vec3	light_dir;
+	double	light_contrib;
+	double 	ldn;
+	int		i;
 
-	double light_contribution = 0.0;
+	light_contrib = 0.0;
 	i = 0;
 	while (i < scene->num_lights)
 	{
-		t_vec3 light_dir = ft_normalize_vec3(ft_sub_vec3(scene->lights[i].position, hit->point));
-		double light_dot_normal = ft_dot_vec3(light_dir, hit->normal);
-		light_contribution += light_dot_normal * scene->lights[i].intensity;
+		light_dir = ft_normalize_vec3(ft_sub_vec3(scene->lights[i].position, hit->point));
+		ldn = ft_dot_vec3(light_dir, hit->normal);
+		light_contrib += ldn * scene->lights[i].intensity;
 		i++;
 	}
-	return (light_contribution);
+	return (light_contrib);
 }
 
-static double	calculate_shadow_contribution(t_scene *scene, t_raycasthit *origin)
+static double	calc_shadow_contrib(t_scene *scene, t_raycasthit *origin)
 {
 	t_ray			ray;
 	t_raycasthit	hit;
 	int				i;
-	int				l;
-	double			shadow_strength;
+	double			shadow;
 	double			s_increment;
 
 	s_increment = 1.0 / scene->num_lights;
-	shadow_strength = 1.0;
+	shadow = 1.0;
 	ray.origin = ft_add_vec3(origin->point, ft_mul_vec3(origin->normal, SHADOW_BIAS));
-	l = 0;
-	while (l < scene->num_lights)
+	ray.origin_object = origin->object;
+	i = 0;
+	while (i < scene->num_lights)
 	{
-		i = 0;
-		while (i < scene->num_objects)
-		{
-			ray.direction = ft_normalize_vec3(ft_sub_vec3(scene->lights[l].position, ray.origin));
-			if (origin->object != &scene->objects[i] && intersects_object(&ray, &scene->objects[i], &hit))
-			{
-				shadow_strength -= (s_increment * scene->lights[l].intensity);
-				break ;
-			}
-			i++;
-		}
-		l++;
+		ray.direction = ft_normalize_vec3(ft_sub_vec3(scene->lights[i].position, ray.origin));
+		if (trace_ray(&ray, scene, &hit, TRUE))
+			shadow -= (s_increment * scene->lights[i].intensity);
+		i++;
 	}
-	return (shadow_strength);
+	return (shadow);
 }
 
 int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
@@ -96,13 +97,13 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 		hit->color = scene->ambient_color;
 		return (0);
 	}
-	hit_found = trace_ray(ray, scene, hit);
+	hit_found = trace_ray(ray, scene, hit, FALSE);
 	if (hit_found)
 	{
 		hit->color = hit->object->color;
 
-		double light_contribution = ft_clamp_d(calculate_light_contribution(scene, hit), 0.0, 1.0);
-		double shadow = calculate_shadow_contribution(scene, hit);
+		double light_contribution = ft_clamp_d(calc_light_contrib(scene, hit), 0.0, 1.0);
+		double shadow = ft_clamp_d(calc_shadow_contrib(scene, hit), 0.0, 1.0);
 		hit->color = ft_mul_rgba(hit->color, light_contribution);
 		hit->color = ft_mul_rgba(hit->color, shadow);
 		if (hit->object->reflect > 0)
@@ -124,7 +125,3 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 		hit->color = scene->ambient_color;
 	return (hit_found);
 }
-
-
-
-

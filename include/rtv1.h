@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 13:05:44 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 19:47:31 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 typedef enum		e_object_type
 {
 	PLANE,
+	DISC,
 	SPHERE,
 	CYLINDER,
 	CONE,
@@ -82,6 +83,13 @@ typedef struct	s_raycasthit
 	t_rgba		color;
 }				t_raycasthit;
 
+typedef struct	s_options
+{
+	double		fov;
+	double		scale;
+	double		aspect;
+}				t_options;
+
 typedef struct	s_scene
 {
 	char		*path;
@@ -92,7 +100,7 @@ typedef struct	s_scene
 	int			num_lights;
 	int			num_objects;
 	t_rgba		ambient_color;
-	double		fov;
+	t_options	options;
 }				t_scene;
 
 typedef struct		s_mlx_img
@@ -141,11 +149,11 @@ int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
 int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_box(t_ray *ray, t_object *box, t_raycasthit *hit);
 int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
-
-t_vec3 			calculate_hit_normal_box(t_ray *ray, t_raycasthit *hit);
+int				intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit);
+int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
 
 int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
-int				trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit);
+int				trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit, int ignore_origin_obj);
 
 t_ray			make_ray(t_vec3 o, t_vec3 d);
 t_vec3			point_on_ray(t_ray *r, double t);

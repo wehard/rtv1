@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 20:20:49 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 18:25:52 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ int		intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
 	}
 
 	if (hit->t > 0)
+	{
+		hit->point = point_on_ray(ray, hit->t);
 		return (1);
+	}
 	return (0);
 }

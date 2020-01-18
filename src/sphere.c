@@ -6,12 +6,13 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 20:21:56 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 18:44:30 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "rtv1.h"
+#include "libft.h"
 #include "vector.h"
 
 t_object	make_sphere()
@@ -39,16 +40,12 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 	double d2 = ft_dot_vec3(L, L) - tca * tca;
 	if (d2 > sradius2)
 		return (0);
-	double thc = sqrtf(sradius2 - d2);
+	double thc = sqrt(sradius2 - d2);
 	t0 = tca - thc;
 	t1 = tca + thc;
 
 	if (t0 > t1)
-	{
-		double temp = t0;
-		t0 = t1;
-		t1 = temp;
-	}
+		ft_swap_d(&t0, &t1);
 	if (t0 < 0)
 	{
 		t0 = t1;

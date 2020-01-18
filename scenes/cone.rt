@@ -1,23 +1,25 @@
 OBJECTS 2
 LIGHTS 1
 FOV 95.0
-COLOR 0 0 0
+COLOR .2 .1 .3
 LIGHT
 pos 10 20 0
 col 1 1 1
 int .5
 #
-CYLINDER
-pos 0 0 0
+CONE
+pos 0 0 5
 col .5 0 .5
-rad 1.0
-nor 1 1 0
-ref 0
+sca 1 20 1
+rad 20.0
+nor 0 1 0
+ref 1
 #
 SPHERE
 pos 0 0 10
 col 1 0 0
+sca 1 20 1
 rad 1.0
-nor 1 0 -1
+nor -1 0 -1
 ref 0
 #

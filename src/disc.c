@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cylinder.c                                         :+:      :+:    :+:   */
+/*   disc.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 18:08:58 by wkorande         ###   ########.fr       */
+/*   Created: 2020/01/18 18:09:06 by wkorande          #+#    #+#             */
+/*   Updated: 2020/01/18 18:27:21 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,17 @@
 #include "libft.h"
 #include <math.h>
 
-int	intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
+int	intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit)
 {
-	double a;
-
-	a = ft_dot_vec3(ray->direction, cyl->normal);
-	if (a < cyl->radius)
+	if (intersects_plane(ray, disc, hit))
 	{
-		hit->object = cyl;
-		return (1);
+		t_vec3 dir = ft_sub_vec3(disc->position, hit->point);
+		double d2 = ft_dot_vec3(dir, dir);
+		if (sqrt(d2) <= disc->radius)
+		{
+			hit->object = disc;
+			return (TRUE);
+		}
 	}
-	return (0);
+	return (FALSE);
 }

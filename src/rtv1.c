@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 02:23:31 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/18 18:57:26 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,29 @@ int		key_press(int key, void *param)
 	if (key == KEY_SPACE)
 		update(param);
 	return (0);
+}
+
+int		mouse_press(int button, int x, int y, void *param)
+{
+	t_env *env;
+	t_ray ray;
+	t_raycasthit hit;
+	t_vec2 r;
+
+	env = (t_env*)param;
+	if (button == 1)
+	{
+		r.x = (2 * (x + 0.5) / (double)env->width - 1) * env->scene->options.aspect * env->scene->options.scale;
+		r.y = (1 - 2 * (y + 0.5) / (double)env->height) * env->scene->options.scale;
+		ray.origin = ft_make_vec3(0.0, 0.0, 0.0);
+		ray.direction = ft_normalize_vec3(ft_add_vec3(ray.origin, ft_make_vec3(r.x, r.y, 1.0)));
+		if (raycast(&ray, env->scene, &hit, 0))
+		{
+			print_object_info(hit.object);
+			ft_putchar('\n');
+		}
+	}
+	return (1);
 }
 
 int	update(void *param)
@@ -59,39 +82,33 @@ void render(t_env *env, t_scene *scene)
 	double cpu_time_used;
 	t_ray ray;
 	t_raycasthit hit;
+	t_vec2i cur;
+	t_vec2 r;
 
 	clear_mlx_img(env->mlx_img);
-
-	double scale = tan((scene->fov * 0.5) * M_PI / 180.0);
-	double aspect_ratio = (double)env->width / (double)env->height;
-
+	scene->options.scale = tan((scene->options.fov * 0.5) * M_PI / 180.0);
+	scene->options.aspect = (double)env->width / (double)env->height;
 	start = clock();
-	int y = 0;
-	int x = 0;
-	while (y < env->height)
+	cur.y = 0;
+	while (cur.y < env->height)
 	{
-		x = 0;
-		while (x < env->width)
+		cur.x = 0;
+		while (cur.x < env->width)
 		{
-			double rx = (2 * (x + 0.5) / (double)env->width - 1) * aspect_ratio * scale;
-            double ry = (1 - 2 * (y + 0.5) / (double)env->height) * scale;
-
-			ray.origin = ft_make_vec3(0.0, 0, 0.0);
-			ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_make_vec3(rx, ry, 1.0), ray.origin));
-			t_rgba color;
-			if (raycast(&ray, scene, &hit, 0))
-				color = hit.color;
-			else
-				color = scene->ambient_color;
-			put_pixel_mlx_img(env->mlx_img, x, y, ft_get_color(color));
-			x++;
+			r.x = (2 * (cur.x + 0.5) / (double)env->width - 1) * scene->options.aspect * scene->options.scale;
+			r.y = (1 - 2 * (cur.y + 0.5) / (double)env->height) * scene->options.scale;
+			ray.origin = ft_make_vec3(0.0, 0.0, 0.0);
+			ray.direction = ft_normalize_vec3(ft_add_vec3(ray.origin, ft_make_vec3(r.x, r.y, 1.0)));
+			raycast(&ray, scene, &hit, 0);
+			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(hit.color));
+			cur.x++;
 		}
-		y++;
+		cur.y++;
 	}
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
 	end = clock();
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	ft_printf("rendered in: %fs\n", cpu_time_used);
+	ft_printf("scene rendered in: %fs\n", cpu_time_used);
 }
 
 int	main(int argc, char **argv)
@@ -112,6 +129,7 @@ int	main(int argc, char **argv)
 	render(env, env->scene);
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);
 	mlx_expose_hook(env->mlx->win_ptr, update, (void*)env);
+	mlx_hook(env->mlx->win_ptr, 4, 0, mouse_press, (void*)env);
 	mlx_loop(env->mlx->mlx_ptr);
 	return (0);
 }
