@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 13:31:26 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/21 17:14:06 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,13 @@ static double	calc_shadow_contrib(t_scene *scene, t_raycasthit *origin)
 	s_increment = 1.0 / scene->num_lights;
 	shadow = 1.0;
 	ray.origin = ft_add_vec3(origin->point, ft_mul_vec3(origin->normal, SHADOW_BIAS));
+	//ray.origin = ft_mul_vec3_mat4(ray.origin, scene->camera_to_world);
 	ray.origin_object = origin->object;
 	i = 0;
 	while (i < scene->num_lights)
 	{
 		ray.direction = ft_normalize_vec3(ft_sub_vec3(scene->lights[i].position, ray.origin));
+		//ray.direction = ft_normalize_vec3(ft_mul_dir_vec3_mat4(ray.direction, scene->camera_to_world));
 		if (trace_ray(&ray, scene, &hit, TRUE))
 			shadow -= (s_increment * scene->lights[i].intensity);
 		i++;

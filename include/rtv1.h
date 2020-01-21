@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/21 12:34:09 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/21 16:35:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "vector.h"
 # include "time.h"
+# include "matrix.h"
 
 # define WIN_W 1200
 # define WIN_H 800
@@ -108,6 +109,7 @@ typedef struct	s_scene
 	t_rgba		ambient_color;
 	t_options	options;
 	t_camera	camera;
+	t_mat4x4	camera_to_world;
 }				t_scene;
 
 typedef struct		s_mlx_img

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/21 12:40:38 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/21 16:04:59 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,8 @@ int		read_scene(t_scene *scene, char *path)
 			scene->options.fov = ft_strtod(line + 3);
 		else if (ft_strnequ(line, "CAM", 3))
 			scene->camera.pos = parse_vec3(line);
+		else if (ft_strnequ(line, "DIR", 3))
+			scene->camera.look_at = parse_vec3(line);
 		else
 		{
 			t_object_type type = parse_object_type(line);
