@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 19:47:31 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/21 12:34:09 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,12 @@ typedef struct	s_options
 	double		aspect;
 }				t_options;
 
+typedef struct	s_camera
+{
+	t_vec3		pos;
+	t_vec3		look_at;
+}				t_camera;
+
 typedef struct	s_scene
 {
 	char		*path;
@@ -101,6 +107,7 @@ typedef struct	s_scene
 	int			num_objects;
 	t_rgba		ambient_color;
 	t_options	options;
+	t_camera	camera;
 }				t_scene;
 
 typedef struct		s_mlx_img

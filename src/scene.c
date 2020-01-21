@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 18:23:03 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/21 12:40:38 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,8 @@ int		read_scene(t_scene *scene, char *path)
 			scene->ambient_color = parse_rgba(line);
 		else if (ft_strnequ(line, "FOV", 3))
 			scene->options.fov = ft_strtod(line + 3);
+		else if (ft_strnequ(line, "CAM", 3))
+			scene->camera.pos = parse_vec3(line);
 		else
 		{
 			t_object_type type = parse_object_type(line);
