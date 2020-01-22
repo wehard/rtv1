@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/21 17:14:06 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/22 13:05:10 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ static double	calc_shadow_contrib(t_scene *scene, t_raycasthit *origin)
 int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 {
 	int hit_found;
+	double light_contrib;
+	double shadow_contrib;
 
 	if (depth > MAX_RAY_DEPTH)
 	{
@@ -104,10 +106,10 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	{
 		hit->color = hit->object->color;
 
-		double light_contribution = ft_clamp_d(calc_light_contrib(scene, hit), 0.0, 1.0);
-		double shadow = ft_clamp_d(calc_shadow_contrib(scene, hit), 0.0, 1.0);
-		hit->color = ft_mul_rgba(hit->color, light_contribution);
-		hit->color = ft_mul_rgba(hit->color, shadow);
+		light_contrib = ft_clamp_d(calc_light_contrib(scene, hit), 0.0, 1.0);
+		shadow_contrib = ft_clamp_d(calc_shadow_contrib(scene, hit), 0.0, 1.0);
+		hit->color = ft_mul_rgba(hit->color, light_contrib);
+		hit->color = ft_mul_rgba(hit->color, shadow_contrib);
 		if (hit->object->reflect > 0)
 		{
 			t_ray reflect_ray;

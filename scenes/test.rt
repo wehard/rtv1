@@ -2,17 +2,17 @@ OBJECTS 4
 LIGHTS 2
 FOV 80.0
 CAM 0.0 0.0 0.0
-DIR 0 0 20
+DIR 0 0 3
 COLOR 0 0 0
 LIGHT
 pos -10 20 -10
 col 1 1 1
-int .4
+int .3
 #
 LIGHT
 pos 10 20 -10
 col 1 1 1
-int .6
+int .7
 #
 SPHERE
 pos 0 0 20

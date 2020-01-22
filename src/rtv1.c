@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/21 16:39:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/22 17:21:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,20 @@ void render(t_env *env, t_scene *scene)
 	t_raycasthit hit;
 	t_vec2i cur;
 	t_vec2 r;
-
+	int done = 0;
 	scene->camera_to_world = ft_lookat_mat4(scene->camera.pos, scene->camera.look_at, ft_make_vec3(0,1,0));
-
+	if (!done)
+	{
+		ft_printf("camera to world matrix\n");
+		ft_print_mat4(scene->camera_to_world);
+		done =1;
+	}
 	clear_mlx_img(env->mlx_img);
 	scene->options.scale = tan(ft_deg_to_rad((scene->options.fov * 0.5)));
 	scene->options.aspect = (double)env->width / (double)env->height;
 	start = clock();
+
+	ray.origin = ft_mul_vec3_mat4(ft_make_vec3(0.0, 0.0, 0.0), scene->camera_to_world);
 	cur.y = 0;
 	while (cur.y < env->height)
 	{
@@ -100,10 +107,7 @@ void render(t_env *env, t_scene *scene)
 		{
 			r.x = (2 * ((cur.x + 0.5) / (double)env->width) - 1) * scene->options.aspect * scene->options.scale;
 			r.y = (1 - 2 * (cur.y + 0.5) / (double)env->height) * scene->options.scale;
-			ray.origin = ft_make_vec3(0.0, 0.0, 0.0);
-			ray.origin = ft_mul_vec3_mat4(ray.origin, scene->camera_to_world);
-			ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_make_vec3(r.x, r.y, -1.0), ray.origin));
-			ray.direction = ft_mul_dir_vec3_mat4(ray.direction, scene->camera_to_world);
+			ray.direction = ft_normalize_vec3(ft_mul_vec3_mat4(ft_make_vec3(r.x, r.y, -1.0), scene->camera_to_world));
 			raycast(&ray, scene, &hit, 0);
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(hit.color));
 			cur.x++;
