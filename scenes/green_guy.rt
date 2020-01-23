@@ -5,26 +5,24 @@ CAM 0.0 0.0 0.0
 DIR 0 0 10
 COLOR .1 .1 .10
 LIGHT
-pos -10 10 -20
+pos -10 20 -10
 col 1 1 1
 int .5
 #
 LIGHT
-pos 10 10 0
+pos 10 20 -10
 col 1 1 1
-int .4
+int .5
 #
-DISC
-pos 0 -6 40
-rot 0 0 0
-sca 0 0 0
+PLANE
+pos 0 -10 0
+col .3 0 .7
+sca 500 5 10000
 nor 0 1 0
-rad 15.0
-col 0.2 0.2 0.7
 ref 0
 # head
 SPHERE
-pos 0 4 30
+pos 0 4 -30
 rot 0 0 0
 sca 0 0 0
 col 0.2 0.6 0.2
@@ -32,7 +30,7 @@ rad 10
 ref 0
 # nose
 SPHERE
-pos 0 2 20
+pos 0 2 -20
 rot 0 0 0
 sca 0 0 0
 col 0.6 0.2 0.2
@@ -40,7 +38,7 @@ rad 2
 ref 0
 # left
 SPHERE
-pos -4 4 19.5
+pos -4 4 -19.5
 rot 0 0 0
 sca 0 0 0
 col 1 1 1
@@ -48,7 +46,7 @@ rad 2
 ref 0
 # left pupil
 SPHERE
-pos -4 3.5 17.8
+pos -4 3.5 -17.8
 rot 0 0 0
 sca 0 0 0
 col 0.2 0.2 0.2
@@ -56,7 +54,7 @@ rad 0.6
 ref 0
 # right
 SPHERE
-pos 4 4 19.5
+pos 4 4 -19.5
 rot 0 0 0
 sca 0 0 0
 col 1 1 1
@@ -64,7 +62,7 @@ rad 2
 ref 0
 # right pupil
 SPHERE
-pos 4 3.5 17.8
+pos 4 3.5 -17.8
 rot 0 0 0
 sca 0 0 0
 col 0.2 0.2 0.2

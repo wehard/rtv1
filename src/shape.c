@@ -30,7 +30,7 @@ t_vec3	calculate_hit_normal(t_raycasthit *hit)
 	if (!hit || !hit->object)
 		return (ft_make_vec3(0, 0, 0));
 	if (hit->object->type == PLANE)
-		return (hit->object->normal);
+		return (hit->normal);
 	if (hit->object->type == SPHERE)
 		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->object->position)));
 	if (hit->object->type == BOX)

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 18:44:30 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/23 11:47:30 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,39 @@ t_object	make_sphere()
 	return (t);
 }
 
+int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
+{
+	t_vec3 oc;
+	double a;
+	double b;
+	double c;
+	double d;
+
+	oc = ft_sub_vec3(ray->origin, sphere->position);
+	a = ft_dot_vec3(ray->direction, ray->direction);
+	b = ft_dot_vec3(oc, ray->direction);
+	c = ft_dot_vec3(oc, oc) - (sphere->radius * sphere->radius);
+	d = (b * b) - (a * c);
+
+	if (d > 0)
+	{
+		double temp = (-b - sqrt(d)) / a;
+		if (temp < MAX_DISTANCE && temp > 0.0)
+		{
+			hit->t = temp;
+			return (TRUE);
+		}
+		temp = (-b + sqrt(d)) / a;
+		if (temp < MAX_DISTANCE && temp > 0.0)
+		{
+			hit->t = temp;
+			return (TRUE);
+		}
+	}
+	return (FALSE);
+}
+
+/*
 int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 {
 	double t0;
@@ -55,5 +88,6 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 	hit->t = t0;
 	return (1);
 }
+*/
 
 
