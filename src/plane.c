@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 12:56:44 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/23 14:54:36 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int		intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
 */
 
 // k = z, t = (k - az) / bz;
-static int		intersects_xy(t_ray *ray, t_object *plane, double k, t_raycasthit *hit)
+int		intersects_plane_xy(t_ray *ray, t_object *plane, double k, t_raycasthit *hit)
 {
 	double t;
 	double x;
@@ -66,11 +66,11 @@ static int		intersects_xy(t_ray *ray, t_object *plane, double k, t_raycasthit *h
 	if (x < -plane->scale.x || x > plane->scale.x || y < -plane->scale.y || y > plane->scale.y)
 		return (FALSE);
 	hit->t = t;
-	hit->normal = ft_make_vec3(0, 0, 1);
+	hit->normal = ft_make_vec3(0, 0, -1);
 	return (TRUE);
 }
 
-static int		intersects_xz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit)
+int		intersects_plane_xz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit)
 {
 	double t;
 	double x;
@@ -88,7 +88,7 @@ static int		intersects_xz(t_ray *ray, t_object *plane, double k, t_raycasthit *h
 	return (TRUE);
 }
 
-static int		intersects_yz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit)
+int		intersects_plane_yz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit)
 {
 	double t;
 	double y;
@@ -109,10 +109,10 @@ static int		intersects_yz(t_ray *ray, t_object *plane, double k, t_raycasthit *h
 int		intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
 {
 	if (plane->normal.z > 0)
-		return (intersects_xy(ray, plane, plane->position.z, hit));
+		return (intersects_plane_xy(ray, plane, plane->position.z, hit));
 	if (plane->normal.y > 0)
-		return (intersects_xz(ray, plane, plane->position.y, hit));
+		return (intersects_plane_xz(ray, plane, plane->position.y, hit));
 	if (plane->normal.x > 0)
-		return (intersects_yz(ray, plane, plane->position.x, hit));
+		return (intersects_plane_yz(ray, plane, plane->position.x, hit));
 	return (FALSE);
 }

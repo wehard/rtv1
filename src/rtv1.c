@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 11:27:32 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/23 16:46:31 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ int		key_press(int key, void *param)
 		del_env_exit(env);
 	if (key == KEY_SPACE)
 		update(param);
+	if (key == KEY_LEFT)
+		env->scene->camera.pos.x -= 1.0;
+	if (key == KEY_RIGHT)
+		env->scene->camera.pos.x += 1.0;
+	if (key == KEY_UP)
+		env->scene->camera.pos.y += 1.0;
+	if (key == KEY_DOWN)
+		env->scene->camera.pos.y -= 1.0;
+	render(env, env->scene);
 	return (0);
 }
 
@@ -47,7 +56,7 @@ int		mouse_press(int button, int x, int y, void *param)
 		r.x = (2 * (x + 0.5) / (double)env->width - 1) * env->scene->options.aspect * env->scene->options.scale;
 		r.y = (1 - 2 * (y + 0.5) / (double)env->height) * env->scene->options.scale;
 		ray.origin = ft_make_vec3(0.0, 0.0, 0.0);
-		ray.direction = ft_normalize_vec3(ft_add_vec3(ray.origin, ft_make_vec3(r.x, r.y, 1.0)));
+		ray.direction = ft_normalize_vec3(ft_add_vec3(ray.origin, ft_make_vec3(r.x, r.y, -1.0)));
 		if (raycast(&ray, env->scene, &hit, 0))
 		{
 			print_object_info(hit.object);
@@ -98,7 +107,7 @@ void render(t_env *env, t_scene *scene)
 	scene->options.aspect = (double)env->width / (double)env->height;
 	start = clock();
 
-	ray.origin = scene->camera.pos;
+	ray.origin = scene->camera.pos; // ft_mul_vec3_mat4(scene->camera.pos, scene->camera_to_world);
 	cur.y = 0;
 	while (cur.y < env->height)
 	{
@@ -107,7 +116,7 @@ void render(t_env *env, t_scene *scene)
 		{
 			r.x = (2 * ((cur.x + 0.5) / (double)env->width) - 1) * scene->options.aspect * scene->options.scale;
 			r.y = (1 - 2 * (cur.y + 0.5) / (double)env->height) * scene->options.scale;
-			ray.direction = ft_normalize_vec3(ft_make_vec3(r.x, r.y, -1.0));
+			ray.direction = ft_normalize_vec3(ft_mul_dir_vec3_mat4(ft_make_vec3(r.x, r.y, -1.0), scene->camera_to_world));
 			raycast(&ray, scene, &hit, 0);
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(hit.color));
 			cur.x++;

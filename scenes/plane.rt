@@ -5,9 +5,9 @@ CAM 0 0 3
 DIR 0 0 0
 COLOR .1 .05 .15
 LIGHT
-pos 10 10 0
+pos 10 10 -5
 col 1 1 1
-int .5
+int 1
 # xy
 PLANE
 pos 0 0 -1

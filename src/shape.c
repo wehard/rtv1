@@ -32,9 +32,9 @@ t_vec3	calculate_hit_normal(t_raycasthit *hit)
 	if (hit->object->type == PLANE)
 		return (hit->normal);
 	if (hit->object->type == SPHERE)
-		return (ft_normalize_vec3(ft_sub_vec3(hit->point, hit->object->position)));
+		return (hit->normal);
 	if (hit->object->type == BOX)
-		return (hit->object->normal); ///!!!
+		return (hit->normal);
 	if (hit->object->type == CYLINDER)
 		return (hit->object->normal);
 	if (hit->object->type == CONE)
@@ -50,7 +50,7 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 	hit->distance = 0.0f;
 	if (object->type == PLANE)
 		hit_found = intersects_plane(ray, object, hit);
-	if (object->type == DISC)
+	else if (object->type == DISC)
 		hit_found = intersects_disc(ray, object, hit);
 	else if (object->type == SPHERE)
 		hit_found = intersects_sphere(ray, object, hit);
@@ -65,7 +65,7 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit->object = object;
 		hit->point = point_on_ray(ray, hit->t);
 		hit->distance = hit->t;
-		hit->normal = calculate_hit_normal(hit);
+		//hit->normal = calculate_hit_normal(hit);
 	}
 	return (hit_found);
 }

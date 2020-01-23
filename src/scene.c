@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/21 16:04:59 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/23 15:59:05 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ static void init_object(t_object *object)
 	object->position = ft_make_vec3(0.0, 0.0, 0.0);
 	object->rotation = ft_make_vec3(0.0, 0.0, 0.0);
 	object->scale = ft_make_vec3(0.0, 0.0, 0.0);
+	object->radius = 0.0;
 	object->normal = ft_make_vec3(0.0, 0.0, 0.0);
 	object->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
-	object->radius = 0.0;
 	object->reflect = 0.0;
 }
 
@@ -183,7 +183,7 @@ int		read_scene(t_scene *scene, char *path)
 			scene->options.fov = ft_strtod(line + 3);
 		else if (ft_strnequ(line, "CAM", 3))
 			scene->camera.pos = parse_vec3(line);
-		else if (ft_strnequ(line, "DIR", 3))
+		else if (ft_strnequ(line, "LOOKAT", 6))
 			scene->camera.look_at = parse_vec3(line);
 		else
 		{
