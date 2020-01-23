@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 16:29:23 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/23 17:43:37 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "rtv1.h"
 #include "libft.h"
 #include "vector.h"
+#include "ft_printf.h"
 
 t_object	make_sphere()
 {
@@ -26,7 +27,7 @@ t_object	make_sphere()
 	t.color = ft_make_rgba(1.0, 1.0, 1.0, 1.0);
 	return (t);
 }
-
+/*
 int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 {
 	t_vec3 oc;
@@ -34,6 +35,7 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 	double b;
 	double c;
 	double d;
+	double t;
 
 	oc = ft_sub_vec3(ray->origin, sphere->position);
 	a = ft_dot_vec3(ray->direction, ray->direction);
@@ -43,21 +45,26 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 
 	if (d > 0)
 	{
-		hit->t = (-b - sqrt(d)) / a;
-		if (hit->t < MAX_DISTANCE && hit->t > 0.0)
+		t = (-b - sqrt(d)) / a;
+		if (t < MAX_DISTANCE && t > MIN_DISTANCE)
 		{
-			hit->point = point_on_ray(ray, hit->t);
-			hit->normal = ft_normalize_vec3(ft_sub_vec3(hit->point, sphere->position));
+			hit->point = point_on_ray(ray, t);
+			hit->normal = ft_normalize_vec3(ft_div_vec3(ft_sub_vec3(hit->point, sphere->position), sphere->radius));
 			return (TRUE);
 		}
-		hit->t = (-b + sqrt(d)) / a;
-		if (hit->t < MAX_DISTANCE && hit->t > 0.0)
+		t = (-b + sqrt(d)) / a;
+		if (t < MAX_DISTANCE && t > MIN_DISTANCE)
+		{
+			hit->point = point_on_ray(ray, t);
+			hit->normal = ft_normalize_vec3(ft_div_vec3(ft_sub_vec3(hit->point, sphere->position), sphere->radius));
+			ft_printf("second\n");
 			return (TRUE);
+		}
 	}
 	return (FALSE);
 }
+*/
 
-/*
 int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 {
 	double t0;
@@ -84,8 +91,9 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 			return (0);
 	}
 	hit->t = t0;
+	hit->point = point_on_ray(ray, hit->t);
+	hit->normal = ft_normalize_vec3(ft_sub_vec3(hit->point, sphere->position));
 	return (1);
 }
 
-*/
 

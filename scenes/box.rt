@@ -1,11 +1,11 @@
 OBJECTS 3
 LIGHTS 1
 FOV 95.0
-CAM 0.0 0.0 0.0
-LOOKAT 0 0 -10
+CAM 0.0 0.0 3.0
+LOOKAT 0 0 0
 COLOR 0.1 0.1 0.1
 LIGHT
-pos -10 40 2
+pos 10 10 0
 col 1 1 1
 int 1
 # xz
@@ -25,7 +25,7 @@ rad 4.0
 ref 0.0
 #
 SPHERE
-pos 1 2 -10
+pos 0 0 0
 rad 2.0
 col 0.4 .1 0.1
 ref 0

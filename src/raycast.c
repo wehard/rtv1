@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 16:54:18 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/23 17:46:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,11 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	hit_found = trace_ray(ray, scene, hit, FALSE);
 	if (hit_found)
 	{
-		hit->color = calc_color(ray, hit->t); // hit->object->color;
+		hit->color = ft_lerp_rgba(calc_color(ray, hit->t), hit->object->color, 0.9);
 
 		light_contrib = ft_clamp_d(calc_light_contrib(scene, hit), 0.0, 1.0);
 		shadow_contrib = ft_clamp_d(calc_shadow_contrib(scene, hit), 0.0, 1.0);
-		hit->color = ft_mul_rgba(hit->color, light_contrib);
+		//hit->color = ft_mul_rgba(hit->color, light_contrib);
 		//hit->color = ft_mul_rgba(hit->color, shadow_contrib);
 		if (hit->object->reflect > 0)
 		{

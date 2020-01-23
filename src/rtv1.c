@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 16:46:31 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/23 18:00:59 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,19 @@ int		key_press(int key, void *param)
 	if (key == KEY_SPACE)
 		update(param);
 	if (key == KEY_LEFT)
+	{
+		env->scene->camera.look_at.x -= 1.0;
 		env->scene->camera.pos.x -= 1.0;
+	}
 	if (key == KEY_RIGHT)
+	{
+		env->scene->camera.look_at.x += 1.0;
 		env->scene->camera.pos.x += 1.0;
+	}
 	if (key == KEY_UP)
-		env->scene->camera.pos.y += 1.0;
+		env->scene->camera.pos.z -= 1.0;
 	if (key == KEY_DOWN)
-		env->scene->camera.pos.y -= 1.0;
+		env->scene->camera.pos.z += 1.0;
 	render(env, env->scene);
 	return (0);
 }
@@ -55,13 +61,17 @@ int		mouse_press(int button, int x, int y, void *param)
 	{
 		r.x = (2 * (x + 0.5) / (double)env->width - 1) * env->scene->options.aspect * env->scene->options.scale;
 		r.y = (1 - 2 * (y + 0.5) / (double)env->height) * env->scene->options.scale;
-		ray.origin = ft_make_vec3(0.0, 0.0, 0.0);
-		ray.direction = ft_normalize_vec3(ft_add_vec3(ray.origin, ft_make_vec3(r.x, r.y, -1.0)));
+		ray.origin = env->scene->camera.pos;
+		ray.direction = ft_normalize_vec3(ft_mul_dir_vec3_mat4(ft_make_vec3(r.x, r.y, -1.0), env->scene->camera_to_world));
 		if (raycast(&ray, env->scene, &hit, 0))
 		{
 			print_object_info(hit.object);
+			ft_printf("hit normal: %.3f, %.3f, %.3f\n", hit.normal.x, hit.normal.y, hit.normal.z);
+			ft_printf("hit point: %.3f, %.3f, %.3f\n", hit.point.x, hit.point.y, hit.point.z);
 			ft_putchar('\n');
 		}
+		else
+			ft_printf("No hit!\n");
 	}
 	return (1);
 }
