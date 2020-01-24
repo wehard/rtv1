@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 14:18:02 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/24 13:51:50 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,17 @@ typedef struct	s_camera
 {
 	t_vec3		pos;
 	t_vec3		look_at;
+	double		fov;
+	double		aspect;
+	double		theta;
+	double		h_height;
+	double		h_width;
+	t_vec3		u;
+	t_vec3		v;
+	t_vec3		w;
+	t_vec3		llc;
+	t_vec3		horizontal;
+	t_vec3		vertical;
 }				t_camera;
 
 typedef struct	s_scene
@@ -149,6 +160,9 @@ int				update(void *param);
 t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
+
+t_camera		init_camera(t_vec3 pos, t_vec3 look_at, double fov, double aspect);
+t_ray			get_ray(t_camera *cam, double s, double t);
 
 int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
 

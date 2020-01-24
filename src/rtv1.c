@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 18:00:59 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/24 14:02:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,9 @@ void render(t_env *env, t_scene *scene)
 	clear_mlx_img(env->mlx_img);
 	scene->options.scale = tan(ft_deg_to_rad((scene->options.fov * 0.5)));
 	scene->options.aspect = (double)env->width / (double)env->height;
+
+	//scene->camera = init_camera(scene->camera.pos, scene->camera.look_at, scene->options.fov, scene->options.aspect);
+
 	start = clock();
 
 	ray.origin = scene->camera.pos; // ft_mul_vec3_mat4(scene->camera.pos, scene->camera_to_world);
@@ -126,7 +129,11 @@ void render(t_env *env, t_scene *scene)
 		{
 			r.x = (2 * ((cur.x + 0.5) / (double)env->width) - 1) * scene->options.aspect * scene->options.scale;
 			r.y = (1 - 2 * (cur.y + 0.5) / (double)env->height) * scene->options.scale;
+			double u = (double)cur.x / (double)env->width;
+			double v = (double)cur.y / (double)env->height;
+
 			ray.direction = ft_normalize_vec3(ft_mul_dir_vec3_mat4(ft_make_vec3(r.x, r.y, -1.0), scene->camera_to_world));
+			//ray = get_ray(&scene->camera, u, v);
 			raycast(&ray, scene, &hit, 0);
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(hit.color));
 			cur.x++;
