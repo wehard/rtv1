@@ -1,25 +1,25 @@
-OBJECTS 1
+OBJECTS 2
 LIGHTS 1
 FOV 95.0
-CAM 0.0 0.0 0.0
-DIR 0 0 10
-COLOR 0 0 0
+CAM 0.0 0.0 10.0
+LOOKAT 0 0 -10
+COLOR .1 .1 .1
 LIGHT
 pos 10 20 0
 col 1 1 1
 int .5
 #
 SPHERE
-pos 0 0 10
+pos 0 0 -30
 col 1 0 0
 rad 1.0
 nor 1 0 -1
 ref 0
 #
 CYLINDER
-pos 0 0 0
-col 1 1 1
+pos 0 0 -20
+col 0 .8 .2
 rad 1.0
-nor 1 1 0
+nor 0 1 0
 ref 0
 #
