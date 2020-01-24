@@ -1,8 +1,8 @@
-OBJECTS 8
+OBJECTS 7
 LIGHTS 2
-FOV 80.0
-CAM 0.0 0.0 0.0
-DIR 0 0 10
+FOV 40.0
+CAM 0.0 0.0 20.0
+LOOKAT 0 0 -1
 COLOR .1 .1 .10
 LIGHT
 pos -10 20 -10
@@ -13,13 +13,6 @@ LIGHT
 pos 10 20 -10
 col 1 1 1
 int .5
-#
-PLANE
-pos 0 -10 0
-col .3 0 .7
-sca 500 5 10000
-nor 0 1 0
-ref 0
 # head
 SPHERE
 pos 0 4 -30

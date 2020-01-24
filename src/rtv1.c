@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 18:00:59 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/24 16:00:19 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,29 @@ int		key_press(int key, void *param)
 	return (0);
 }
 
+static t_ray get_camera_ray(t_scene *scene, int x, int y)
+{
+	t_ray ray;
+	double rx;
+	double ry;
+
+	ray.origin = scene->camera.pos;
+	rx = (2 * ((x + 0.5) / (double)WIN_W) - 1) * scene->options.aspect * scene->options.scale;
+	ry = (1 - 2 * (y + 0.5) / (double)WIN_H) * scene->options.scale;
+	ray.direction = ft_normalize_vec3(ft_add_vec3(scene->camera.forward, ft_make_vec3(rx, ry, 0)));
+	return (ray);
+}
+
 int		mouse_press(int button, int x, int y, void *param)
 {
 	t_env *env;
 	t_ray ray;
 	t_raycasthit hit;
-	t_vec2 r;
 
 	env = (t_env*)param;
 	if (button == 1)
 	{
-		r.x = (2 * (x + 0.5) / (double)env->width - 1) * env->scene->options.aspect * env->scene->options.scale;
-		r.y = (1 - 2 * (y + 0.5) / (double)env->height) * env->scene->options.scale;
-		ray.origin = env->scene->camera.pos;
-		ray.direction = ft_normalize_vec3(ft_mul_dir_vec3_mat4(ft_make_vec3(r.x, r.y, -1.0), env->scene->camera_to_world));
+		ray = get_camera_ray(env->scene, x, y);
 		if (raycast(&ray, env->scene, &hit, 0))
 		{
 			print_object_info(hit.object);
@@ -103,30 +112,22 @@ void render(t_env *env, t_scene *scene)
 	t_ray ray;
 	t_raycasthit hit;
 	t_vec2i cur;
-	t_vec2 r;
-	int done = 0;
-	scene->camera_to_world = ft_lookat_mat4(scene->camera.pos, scene->camera.look_at, ft_make_vec3(0,1,0));
-	if (!done)
-	{
-		ft_printf("camera to world matrix\n");
-		ft_print_mat4(scene->camera_to_world);
-		done =1;
-	}
+
 	clear_mlx_img(env->mlx_img);
+
 	scene->options.scale = tan(ft_deg_to_rad((scene->options.fov * 0.5)));
 	scene->options.aspect = (double)env->width / (double)env->height;
-	start = clock();
+	scene->camera.forward = ft_normalize_vec3(ft_sub_vec3(scene->camera.look_at, scene->camera.pos));
+	ft_printf("cam forward: %.3f, %.3f, %.3f\n", scene->camera.forward.x, scene->camera.forward.y, scene->camera.forward.z);
 
-	ray.origin = scene->camera.pos; // ft_mul_vec3_mat4(scene->camera.pos, scene->camera_to_world);
+	start = clock();
 	cur.y = 0;
 	while (cur.y < env->height)
 	{
 		cur.x = 0;
 		while (cur.x < env->width)
 		{
-			r.x = (2 * ((cur.x + 0.5) / (double)env->width) - 1) * scene->options.aspect * scene->options.scale;
-			r.y = (1 - 2 * (cur.y + 0.5) / (double)env->height) * scene->options.scale;
-			ray.direction = ft_normalize_vec3(ft_mul_dir_vec3_mat4(ft_make_vec3(r.x, r.y, -1.0), scene->camera_to_world));
+			ray = get_camera_ray(scene, cur.x, cur.y);
 			raycast(&ray, scene, &hit, 0);
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(hit.color));
 			cur.x++;

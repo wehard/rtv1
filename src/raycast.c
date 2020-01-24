@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 17:46:39 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/24 17:08:32 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,13 @@ static double	calc_shadow_contrib(t_scene *scene, t_raycasthit *origin)
 	return (shadow);
 }
 
-static t_rgba calc_color(t_ray *ray, double t)
+static t_rgba shade(t_ray *ray, t_raycasthit *hit)
 {
-	t_vec3 n;
+	t_rgba color;
 
-	n = ft_normalize_vec3(ft_sub_vec3(point_on_ray(ray, t), ft_make_vec3(0, 0, -1)));
-	return (ft_mul_rgba(ft_make_rgba(n.x + 1.0, n.y + 1.0, n.z + 1.0, 1.0), 0.5));
+	t_vec3 N = hit->normal;
+
+	return (ft_mul_rgba(ft_make_rgba(N.x+1.0, N.y + 1.0, N.z + 1.0, 1.0), 0.5));
 }
 
 int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
@@ -110,7 +111,7 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	hit_found = trace_ray(ray, scene, hit, FALSE);
 	if (hit_found)
 	{
-		hit->color = ft_lerp_rgba(calc_color(ray, hit->t), hit->object->color, 0.9);
+		hit->color = shade(ray, hit);
 
 		light_contrib = ft_clamp_d(calc_light_contrib(scene, hit), 0.0, 1.0);
 		shadow_contrib = ft_clamp_d(calc_shadow_contrib(scene, hit), 0.0, 1.0);

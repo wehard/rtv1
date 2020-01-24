@@ -65,7 +65,7 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit->object = object;
 		hit->point = point_on_ray(ray, hit->t);
 		hit->distance = hit->t;
-		//hit->normal = calculate_hit_normal(hit);
+		hit->normal = calculate_hit_normal(hit);
 	}
 	return (hit_found);
 }
