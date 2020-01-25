@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/24 15:36:30 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 14:03:48 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define MIN_DISTANCE 0
 # define SHADOW_BIAS 0.001
 # define REFLECT_BIAS 0.0001
+# define RAYS_PER_PIXEL	1
 # define TRUE 1
 # define FALSE 0
 

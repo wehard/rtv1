@@ -1,21 +1,21 @@
 OBJECTS 4
 LIGHTS 2
-FOV 80.0
-CAM 0.0 0.0 0.0
-DIR 0 0 3
-COLOR 0 0 0
+FOV 60.0
+CAM 0.0 0.0 30.0
+LOOKAT 0 0 0
+COLOR .1 .1 .10
 LIGHT
-pos -10 20 -10
+pos -10 10 20
 col 1 1 1
-int .3
+int .5
 #
 LIGHT
-pos 10 20 -10
+pos 10 10 20
 col 1 1 1
-int .7
+int .5
 #
 SPHERE
-pos 0 0 20
+pos 0 0 0
 rot 0 0 0
 sca 1 1 1
 nor 0 1 0
@@ -24,7 +24,7 @@ rad 8.0
 ref 0
 #
 SPHERE
-pos 0 2 13
+pos 0 2 7
 rot 0 0 0
 sca 1 1 1
 nor 0 1 0
@@ -33,7 +33,7 @@ rad 3.0
 ref 0
 #
 SPHERE
-pos -7 2 15
+pos -7 2 5
 rot 0 0 0
 sca 1 1 1
 nor 0 1 0
@@ -42,7 +42,7 @@ rad 3.0
 ref 0
 #
 SPHERE
-pos 7 2 15
+pos 7 2 5
 rot 0 0 0
 sca 1 1 1
 nor 0 1 0

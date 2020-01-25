@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 13:16:11 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 14:20:47 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static t_ray get_camera_ray(t_scene *scene, int x, int y)
 	horizontal = ft_mul_vec3(u, half_width * 2);
 	vertical = ft_mul_vec3(v, halft_height * 2);
 	// dir: lower_left_corner + s*horizontal + t*vertical - origin
-	ray.direction = ft_sub_vec3(ft_add_vec3(lower_left_corner, ft_add_vec3(ft_mul_vec3(horizontal, x/(double)WIN_W), ft_mul_vec3(vertical, (y/(double)WIN_H)-1.0 ))), ray.origin);
+	ray.direction = ft_sub_vec3(ft_add_vec3(lower_left_corner, ft_add_vec3(ft_mul_vec3(horizontal, x/(double)WIN_W), ft_mul_vec3(vertical, 1-(y/(double)WIN_H)-1.0))), ray.origin);
 #endif
 	return (ray);
 }
@@ -107,6 +107,7 @@ int		mouse_press(int button, int x, int y, void *param)
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "point:", hit.point.x, hit.point.y, hit.point.z);
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "normal:", hit.normal.x, hit.normal.y, hit.normal.z);
 			ft_putchar('\n');
+			env->scene->camera.look_at = hit.object->position;
 		}
 		else
 			ft_printf("No hit!\n");
@@ -138,9 +139,10 @@ void render(t_env *env, t_scene *scene)
 {
 	clock_t start, end;
 	double cpu_time_used;
-	t_ray ray;
-	t_raycasthit hit;
-	t_vec2i cur;
+	t_ray 			ray;
+	t_raycasthit	hit;
+	t_vec2i			cur;
+	int i;
 
 	clear_mlx_img(env->mlx_img);
 
@@ -150,18 +152,25 @@ void render(t_env *env, t_scene *scene)
 	ft_printf("cam forward: %.3f, %.3f, %.3f\n", scene->camera.forward.x, scene->camera.forward.y, scene->camera.forward.z);
 
 	start = clock();
-	cur.y = 0;
-	while (cur.y < env->height)
+	cur.y = env->height;
+	while (cur.y > 0)
 	{
 		cur.x = 0;
 		while (cur.x < env->width)
 		{
-			ray = get_camera_ray(scene, cur.x, cur.y);
-			raycast(&ray, scene, &hit, 0);
-			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(hit.color));
+			t_rgba color = ft_make_rgba(1, 1, 1, 1);
+			i = 0;
+			while (i < RAYS_PER_PIXEL)
+			{
+				ray = get_camera_ray(scene, cur.x, cur.y);
+				raycast(&ray, scene, &hit, 0);
+				color = hit.color;
+				i++;
+			}
+			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(color));
 			cur.x++;
 		}
-		cur.y++;
+		cur.y--;
 	}
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
 	end = clock();

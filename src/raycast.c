@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/24 17:51:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 14:13:40 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 
 		light_contrib = ft_clamp_d(calc_light_contrib(scene, hit), 0.0, 1.0);
 		shadow_contrib = ft_clamp_d(calc_shadow_contrib(scene, hit), 0.0, 1.0);
-		//hit->color = ft_mul_rgba(hit->color, light_contrib);
+		hit->color = ft_mul_rgba(hit->color, light_contrib);
 		//hit->color = ft_mul_rgba(hit->color, shadow_contrib);
 		if (hit->object->reflect > 0)
 		{
