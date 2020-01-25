@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 18:56:21 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 22:32:15 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,18 @@ static t_ray get_camera_ray(t_scene *scene, int x, int y)
 	return (ray);
 }
 
+static t_vec2i world_to_screen_point(t_camera *camera, t_vec3 wp)
+{
+	t_vec3 dir;
+	t_vec2i sp;
+	double aspect = (double)WIN_W / (double)WIN_H;
+	dir =  ft_normalize_vec3(ft_sub_vec3(wp, camera->pos));
+	t_vec3 ipp = ft_mul_vec3(dir, 1.0);
+	sp.x = ((ipp.x + aspect * 0.5) / aspect) * WIN_W;
+	sp.y =  WIN_H - ((ipp.y + 0.5) * WIN_H);
+	return (sp);
+}
+
 int		mouse_press(int button, int x, int y, void *param)
 {
 	t_env *env;
@@ -107,6 +119,9 @@ int		mouse_press(int button, int x, int y, void *param)
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "point:", hit.point.x, hit.point.y, hit.point.z);
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "normal:", hit.normal.x, hit.normal.y, hit.normal.z);
 			ft_putchar('\n');
+			t_vec2i sp = world_to_screen_point(&env->scene->camera, hit.point);
+			t_vec2i np = world_to_screen_point(&env->scene->camera, ft_add_vec3(hit.point, hit.normal));
+			draw_line(env->mlx, ft_make_vec3(sp.x, sp.y, 0), ft_make_vec3(np.x, np.y, 0), 0x00FFFF);
 		}
 		else
 			ft_printf("No hit!\n");
@@ -195,7 +210,7 @@ int	main(int argc, char **argv)
 	render(env, env->scene);
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);
 	mlx_expose_hook(env->mlx->win_ptr, update, (void*)env);
-	mlx_hook(env->mlx->win_ptr, 4, 0, mouse_press, (void*)env);
+	mlx_hook(env->mlx->win_ptr, 4, (1L << 2), mouse_press, (void*)env);
 	mlx_loop(env->mlx->mlx_ptr);
 	return (0);
 }

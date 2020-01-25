@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 19:58:19 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 21:34:53 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ static double	calc_shadow_contrib(t_scene *scene, t_raycasthit *origin)
 
 static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 {
+	ray = 0;
 	double light_contrib;
 	double shadow_contrib;
 	ray = 0;

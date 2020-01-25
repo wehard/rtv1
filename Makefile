@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/01/25 19:43:26 by wkorande         ###   ########.fr        #
+#    Updated: 2020/01/25 22:11:48 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ SRC = rtv1.c\
 	disc.c\
 	color.c\
 	object.c\
-	raycast.c
+	raycast.c\
+	draw_line.c
 
 SRCDIR = src
 
@@ -38,7 +39,7 @@ INCL = include
 
 LIBFT = ../libft
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = #-Wall -Wextra -Werror
 
 all: $(NAME)
 
