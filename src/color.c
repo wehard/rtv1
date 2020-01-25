@@ -6,12 +6,23 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 18:03:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/17 20:13:00 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 20:12:42 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
+
+t_rgba	ft_make_rgba(double r, double g, double b, double a)
+{
+	t_rgba color;
+
+	color.r = r;
+	color.g = g;
+	color.b = b;
+	color.a = a;
+	return (color);
+}
 
 t_rgba	ft_clamp_rgba(t_rgba c)
 {
@@ -26,17 +37,6 @@ t_rgba	ft_clamp_rgba(t_rgba c)
 	return (c);
 }
 
-t_rgba	ft_make_rgba(double r, double g, double b, double a)
-{
-	t_rgba color;
-
-	color.r = r;
-	color.g = g;
-	color.b = b;
-	color.a = a;
-	return (color);
-}
-
 t_rgba	ft_mul_rgba(t_rgba c, double t)
 {
 	c.r *= t;
@@ -44,6 +44,15 @@ t_rgba	ft_mul_rgba(t_rgba c, double t)
 	c.b *= t;
 	c.a *= t;
 	return (ft_clamp_rgba(c));
+}
+
+t_rgba ft_add_rgba(t_rgba c1, t_rgba c2)
+{
+	c1.r += c2.r;
+	c1.g += c2.g;
+	c1.b += c2.b;
+	c1.a += c2.a;
+	return (c1);
 }
 
 t_rgba	ft_lerp_rgba(t_rgba c1, t_rgba c2, double t)

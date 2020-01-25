@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 19:20:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 20:13:53 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,32 +154,21 @@ void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
 int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
-
-t_object		make_plane();
-t_object		make_sphere();
-t_object		make_box();
 int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
-//int				intersects_plane_xy(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
-//int				intersects_plane_xz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
-//int				intersects_plane_yz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
-
 int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
-int				intersects_box(t_ray *ray, t_object *box, t_raycasthit *hit);
 int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit);
 int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
 
 int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
-int				trace_ray(t_ray *ray, t_scene *scene, t_raycasthit *hit, int ignore_origin_obj);
+int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int ignore_origin_obj);
 
-t_ray			make_ray(t_vec3 o, t_vec3 d);
 t_vec3			point_on_ray(t_ray *r, double t);
 void			init_raycasthit(t_raycasthit *hit);
 
-
 void			print_object_info(t_object *object);
 t_vec3			calculate_hit_normal(t_raycasthit *hit);
-int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
+
 time_t			check_mod_time(char *path);
 
 /*
@@ -187,6 +176,7 @@ time_t			check_mod_time(char *path);
 */
 t_rgba			ft_make_rgba(double r, double g, double b, double a);
 t_rgba			ft_mul_rgba(t_rgba c, double t);
+t_rgba 			ft_add_rgba(t_rgba c1, t_rgba c2);
 t_rgba			ft_lerp_rgba(t_rgba c1, t_rgba c2, double t);
 int				ft_get_color(t_rgba c);
 

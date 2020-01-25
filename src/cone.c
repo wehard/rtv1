@@ -6,23 +6,12 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:00:58 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 19:51:09 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 19:40:45 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
-
-/*
-struct Cone
-{
-	float cosa;	// half cone angle
-    float h;	// height
-    vec3 c;		// tip position
-    vec3 v;		// axis
-    Material m;	// material
-};
-*/
 
 int		intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit)
 {

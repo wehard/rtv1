@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 13:27:12 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 20:26:14 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ t_env		*init_env(int width, int height, char *title)
 
 void		del_env_exit(t_env *env)
 {
+	free(env->scene->lights);
+	free(env->scene->objects);
+	free(env->scene);
 	mlx_destroy_image(env->mlx->mlx_ptr, env->mlx_img->img);
 	mlx_destroy_window(env->mlx->mlx_ptr, env->mlx->win_ptr);
 	free(env->mlx_img);

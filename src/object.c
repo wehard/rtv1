@@ -25,23 +25,6 @@ void print_object_info(t_object *object)
 	ft_printf("reflect: %.3f\n", object->reflect);
 }
 
-t_vec3	calculate_hit_normal(t_raycasthit *hit)
-{
-	if (!hit || !hit->object)
-		return (ft_make_vec3(0, 0, 0));
-	if (hit->object->type == PLANE)
-		return (hit->normal);
-	if (hit->object->type == SPHERE)
-		return (hit->normal);
-	if (hit->object->type == BOX)
-		return (hit->normal);
-	if (hit->object->type == CYLINDER)
-		return (hit->normal);
-	if (hit->object->type == CONE)
-		return (hit->normal);
-	return (hit->object->normal);
-}
-
 int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 {
 	int hit_found;
@@ -54,8 +37,6 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit_found = intersects_disc(ray, object, hit);
 	else if (object->type == SPHERE)
 		hit_found = intersects_sphere(ray, object, hit);
-	//else if (object->type == BOX)
-	//	hit_found = intersects_box(ray, object, hit);
 	else if (object->type == CYLINDER)
 		hit_found = intersects_cylinder(ray, object, hit);
 	else if (object->type == CONE)
@@ -65,7 +46,6 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit->object = object;
 		hit->point = point_on_ray(ray, hit->t);
 		hit->distance = hit->t;
-		hit->normal = calculate_hit_normal(hit);
 	}
 	return (hit_found);
 }

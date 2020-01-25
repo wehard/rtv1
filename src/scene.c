@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 17:27:02 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 20:21:19 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,14 @@ static t_vec3 parse_vec3(char *line)
 	t_vec3 v;
 
 	split = ft_strsplit(line, ' ');
-
 	v.x = ft_strtod(split[1]);
 	v.y = ft_strtod(split[2]);
 	v.z = ft_strtod(split[3]);
+	free(split[0]);
+	free(split[1]);
+	free(split[2]);
+	free(split[3]);
+	free(split);
 	return (v);
 }
 
@@ -65,6 +69,13 @@ static t_rgba parse_rgba(char *line)
 		v.a = 1.0;
 	else
 		v.a = ft_strtod(split[4]);
+	free(split[0]);
+	free(split[1]);
+	free(split[2]);
+	free(split[3]);
+	if (!split[4])
+		free(split[4]);
+	free(split);
 	return (v);
 }
 static void init_object(t_object *object)
