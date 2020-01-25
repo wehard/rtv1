@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:37:20 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/15 20:34:27 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 09:42:11 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@
 
 # define KEY_ESC		65307
 # define KEY_SPACE		32
+# define KEY_UP			65362
+# define KEY_DOWN		65364
+# define KEY_LEFT		65361
+# define KEY_RIGHT		65363
 
 #endif
 
