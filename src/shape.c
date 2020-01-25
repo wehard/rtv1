@@ -36,7 +36,7 @@ t_vec3	calculate_hit_normal(t_raycasthit *hit)
 	if (hit->object->type == BOX)
 		return (hit->normal);
 	if (hit->object->type == CYLINDER)
-		return (hit->object->normal);
+		return (hit->normal);
 	if (hit->object->type == CONE)
 		return (hit->normal);
 	return (hit->object->normal);

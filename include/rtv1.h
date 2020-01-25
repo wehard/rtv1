@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 14:03:48 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 19:00:50 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 # define WIN_W 1200
 # define WIN_H 800
 # define MAX_RAY_DEPTH 5
-# define MAX_DISTANCE 2000
-# define MIN_DISTANCE 0
-# define SHADOW_BIAS 0.001
+# define MAX_DISTANCE 1000
+# define MIN_DISTANCE 0.1
+# define SHADOW_BIAS 0.00001
 # define REFLECT_BIAS 0.0001
 # define RAYS_PER_PIXEL	1
 # define TRUE 1
@@ -63,6 +63,8 @@ typedef struct		s_object
 	t_vec3			scale;
 	t_rgba			color;
 	double			radius;
+	t_vec3			start;
+	t_vec3			end;
 	t_vec3			normal;
 	double			reflect;
 }					t_object;

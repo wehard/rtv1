@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 14:20:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 18:56:21 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,13 @@ static void print_vec3(t_vec3 v)
 	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
 }
 
-#define DEBUG 1
+#define DEBUG 0
 
 //return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
 static t_ray get_camera_ray(t_scene *scene, int x, int y)
 {
 	t_ray ray;
-#if !DEBUG
+#if DEBUG
 	double rx;
 	double ry;
 	ray.origin = scene->camera.pos;
@@ -79,7 +79,7 @@ static t_ray get_camera_ray(t_scene *scene, int x, int y)
 	v = ft_cross_vec3(w, u);
 	// lower_left_corner = origin - half_width*u - half_height*v - w;
 	double theta = ft_deg_to_rad(scene->options.fov);
-	double halft_height = tan(theta/ 2);
+	double halft_height = tan(theta / 2.0);
 	double half_width = scene->options.aspect * halft_height;
 	lower_left_corner = ft_sub_vec3(ray.origin, ft_sub_vec3(ft_mul_vec3(u, half_width), ft_sub_vec3(ft_mul_vec3(v, halft_height), w)));
 	horizontal = ft_mul_vec3(u, half_width * 2);
@@ -107,7 +107,6 @@ int		mouse_press(int button, int x, int y, void *param)
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "point:", hit.point.x, hit.point.y, hit.point.z);
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "normal:", hit.normal.x, hit.normal.y, hit.normal.z);
 			ft_putchar('\n');
-			env->scene->camera.look_at = hit.object->position;
 		}
 		else
 			ft_printf("No hit!\n");
@@ -153,7 +152,7 @@ void render(t_env *env, t_scene *scene)
 
 	start = clock();
 	cur.y = env->height;
-	while (cur.y > 0)
+	while (cur.y >= 0)
 	{
 		cur.x = 0;
 		while (cur.x < env->width)

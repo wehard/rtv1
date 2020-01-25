@@ -1,18 +1,18 @@
 OBJECTS 3
 LIGHTS 1
 FOV 95.0
-CAM -50.0 0.0 40.0
+CAM -15.0 0.0 15.0
 LOOKAT 0 0 0
 COLOR 0.1 0.1 0.1
 LIGHT
-pos 10 10 0
+pos -10 10 0
 col 1 1 1
 int 1
 # xz
 PLANE
-pos 0 -10 0
+pos 0 -5 0
 col .3 0 .7
-sca 10 1 10
+sca 10 10 10
 nor 0 1 0
 ref 0
 #

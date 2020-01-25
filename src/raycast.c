@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 14:13:40 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 18:49:08 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,11 @@ static t_rgba shade(t_ray *ray, t_raycasthit *hit)
 	t_rgba color;
 
 	t_vec3 N = hit->normal;
-	return (hit->object->color/* ft_mul_rgba(ft_make_rgba(N.x+1.0, N.y + 1.0, N.z + 1.0, 1.0), 0.5) */);
+#if !DEBUG
+	return (hit->object->color);
+#else
+	return (ft_mul_rgba(ft_make_rgba(N.x+1.0, N.y + 1.0, N.z + 1.0, 1.0), 0.5));
+#endif
 }
 
 int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
@@ -115,7 +119,7 @@ int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 		light_contrib = ft_clamp_d(calc_light_contrib(scene, hit), 0.0, 1.0);
 		shadow_contrib = ft_clamp_d(calc_shadow_contrib(scene, hit), 0.0, 1.0);
 		hit->color = ft_mul_rgba(hit->color, light_contrib);
-		//hit->color = ft_mul_rgba(hit->color, shadow_contrib);
+		hit->color = ft_mul_rgba(hit->color, shadow_contrib);
 		if (hit->object->reflect > 0)
 		{
 			t_ray reflect_ray;

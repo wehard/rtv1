@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/23 15:59:05 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 17:27:02 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ static void init_object(t_object *object)
 	object->normal = ft_make_vec3(0.0, 0.0, 0.0);
 	object->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
 	object->reflect = 0.0;
+	object->start = ft_make_vec3(0, 0, 0);
+	object->end = ft_make_vec3(1, 1, 1);
 }
 
 static int	parse_light(int fd, t_object_type type, t_light *light)
@@ -130,6 +132,10 @@ static int parse_object(int fd, t_object_type type, t_object *object)
 			object->radius = ft_strtod(line + 4);
 		else if (ft_strnequ(line, "ref", 3))
 			object->reflect = ft_strtod(line + 4);
+		else if (ft_strnequ(line, "start", 5))
+			object->start = parse_vec3(line);
+		else if (ft_strnequ(line, "end", 3))
+			object->end = parse_vec3(line);
 		else if (line[0] == '#')
 		{
 			free(line);
