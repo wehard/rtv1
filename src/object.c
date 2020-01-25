@@ -54,8 +54,8 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit_found = intersects_disc(ray, object, hit);
 	else if (object->type == SPHERE)
 		hit_found = intersects_sphere(ray, object, hit);
-	else if (object->type == BOX)
-		hit_found = intersects_box(ray, object, hit);
+	//else if (object->type == BOX)
+	//	hit_found = intersects_box(ray, object, hit);
 	else if (object->type == CYLINDER)
 		hit_found = intersects_cylinder(ray, object, hit);
 	else if (object->type == CONE)

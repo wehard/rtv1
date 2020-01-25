@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/01/23 12:46:55 by wkorande         ###   ########.fr        #
+#    Updated: 2020/01/25 19:21:04 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,11 @@ SRC = rtv1.c\
 	ray.c\
 	sphere.c\
 	plane.c\
-	box.c\
 	cylinder.c\
 	cone.c\
 	disc.c\
 	color.c\
-	shape.c\
+	object.c\
 	raycast.c
 
 SRCDIR = src

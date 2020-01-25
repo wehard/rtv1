@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 19:00:50 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 19:20:33 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,9 +159,9 @@ t_object		make_plane();
 t_object		make_sphere();
 t_object		make_box();
 int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
-int				intersects_plane_xy(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
-int				intersects_plane_xz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
-int				intersects_plane_yz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
+//int				intersects_plane_xy(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
+//int				intersects_plane_xz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
+//int				intersects_plane_yz(t_ray *ray, t_object *plane, double k, t_raycasthit *hit);
 
 int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_box(t_ray *ray, t_object *box, t_raycasthit *hit);
