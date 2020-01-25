@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/24 16:00:19 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 13:16:11 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,44 @@ int		key_press(int key, void *param)
 	return (0);
 }
 
+static void print_vec3(t_vec3 v)
+{
+	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
+}
+
+#define DEBUG 1
+
+//return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
 static t_ray get_camera_ray(t_scene *scene, int x, int y)
 {
 	t_ray ray;
+#if !DEBUG
 	double rx;
 	double ry;
-
 	ray.origin = scene->camera.pos;
 	rx = (2 * ((x + 0.5) / (double)WIN_W) - 1) * scene->options.aspect * scene->options.scale;
 	ry = (1 - 2 * (y + 0.5) / (double)WIN_H) * scene->options.scale;
 	ray.direction = ft_normalize_vec3(ft_add_vec3(scene->camera.forward, ft_make_vec3(rx, ry, 0)));
+#else
+
+	ray.origin = scene->camera.pos;
+	t_vec3 horizontal, vertical;
+	t_vec3 lower_left_corner;
+	t_vec3 vup = ft_make_vec3(0.0, 1.0, 0.0);
+	t_vec3 u, v, w;
+	w = ft_normalize_vec3(ft_sub_vec3(scene->camera.pos, scene->camera.look_at));
+	u = ft_normalize_vec3(ft_cross_vec3(vup, w));
+	v = ft_cross_vec3(w, u);
+	// lower_left_corner = origin - half_width*u - half_height*v - w;
+	double theta = ft_deg_to_rad(scene->options.fov);
+	double halft_height = tan(theta/ 2);
+	double half_width = scene->options.aspect * halft_height;
+	lower_left_corner = ft_sub_vec3(ray.origin, ft_sub_vec3(ft_mul_vec3(u, half_width), ft_sub_vec3(ft_mul_vec3(v, halft_height), w)));
+	horizontal = ft_mul_vec3(u, half_width * 2);
+	vertical = ft_mul_vec3(v, halft_height * 2);
+	// dir: lower_left_corner + s*horizontal + t*vertical - origin
+	ray.direction = ft_sub_vec3(ft_add_vec3(lower_left_corner, ft_add_vec3(ft_mul_vec3(horizontal, x/(double)WIN_W), ft_mul_vec3(vertical, (y/(double)WIN_H)-1.0 ))), ray.origin);
+#endif
 	return (ray);
 }
 
@@ -72,11 +100,12 @@ int		mouse_press(int button, int x, int y, void *param)
 	if (button == 1)
 	{
 		ray = get_camera_ray(env->scene, x, y);
+		print_vec3(ray.direction);
 		if (raycast(&ray, env->scene, &hit, 0))
 		{
-			print_object_info(hit.object);
-			ft_printf("hit normal: %.3f, %.3f, %.3f\n", hit.normal.x, hit.normal.y, hit.normal.z);
-			ft_printf("hit point: %.3f, %.3f, %.3f\n", hit.point.x, hit.point.y, hit.point.z);
+			ft_printf("hitinfo\n");
+			ft_printf("%-10s %.3f, %.3f, %.3f\n", "point:", hit.point.x, hit.point.y, hit.point.z);
+			ft_printf("%-10s %.3f, %.3f, %.3f\n", "normal:", hit.normal.x, hit.normal.y, hit.normal.z);
 			ft_putchar('\n');
 		}
 		else
