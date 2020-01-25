@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 22:32:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 23:10:29 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static t_ray get_camera_ray(t_scene *scene, int x, int y)
 	horizontal = ft_mul_vec3(u, half_width * 2);
 	vertical = ft_mul_vec3(v, halft_height * 2);
 	// dir: lower_left_corner + s*horizontal + t*vertical - origin
-	ray.direction = ft_sub_vec3(ft_add_vec3(lower_left_corner, ft_add_vec3(ft_mul_vec3(horizontal, x/(double)WIN_W), ft_mul_vec3(vertical, 1-(y/(double)WIN_H)-1.0))), ray.origin);
+	ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_add_vec3(lower_left_corner, ft_add_vec3(ft_mul_vec3(horizontal, x/(double)WIN_W), ft_mul_vec3(vertical, 1-(y/(double)WIN_H)-1.0))), ray.origin));
 #endif
 	return (ray);
 }

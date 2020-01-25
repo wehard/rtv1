@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 22:27:06 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 23:19:43 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 # include "time.h"
 # include "matrix.h"
 
-# define WIN_W 1200
-# define WIN_H 800
+# define WIN_W 1280
+# define WIN_H 720
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 1000
 # define MIN_DISTANCE 0.1
@@ -153,6 +153,7 @@ t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
+void 			init_object(t_object *object);
 int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
 int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
 int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);

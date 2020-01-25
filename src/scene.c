@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 20:21:19 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/25 23:34:33 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,25 @@ static t_object_type parse_object_type(char *line)
 
 static t_vec3 parse_vec3(char *line)
 {
-	char **split;
+	//char **split;
 	t_vec3 v;
 
-	split = ft_strsplit(line, ' ');
-	v.x = ft_strtod(split[1]);
-	v.y = ft_strtod(split[2]);
-	v.z = ft_strtod(split[3]);
-	free(split[0]);
-	free(split[1]);
-	free(split[2]);
-	free(split[3]);
-	free(split);
+	//split = ft_strsplit(line, ' ');
+	//v.x = ft_strtod(split[1]);
+	//v.y = ft_strtod(split[2]);
+	//v.z = ft_strtod(split[3]);
+	//free(split[0]);
+	//free(split[1]);
+	//free(split[2]);
+	//free(split[3]);
+	//free(split);
+	line = ft_strstr(line, " ");
+	char *token = ft_strtok(line, " ");
+	v.x = ft_strtod(token);
+	token = ft_strtok(NULL, " ");
+	v.y = ft_strtod(token);
+	token = ft_strtok(NULL, " ");
+	v.z = ft_strtod(token);
 	return (v);
 }
 
@@ -77,19 +84,6 @@ static t_rgba parse_rgba(char *line)
 		free(split[4]);
 	free(split);
 	return (v);
-}
-static void init_object(t_object *object)
-{
-	object->type = 0;
-	object->position = ft_make_vec3(0.0, 0.0, 0.0);
-	object->rotation = ft_make_vec3(0.0, 0.0, 0.0);
-	object->scale = ft_make_vec3(0.0, 0.0, 0.0);
-	object->radius = 0.0;
-	object->normal = ft_make_vec3(0.0, 0.0, 0.0);
-	object->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
-	object->reflect = 0.0;
-	object->start = ft_make_vec3(0, 0, 0);
-	object->end = ft_make_vec3(1, 1, 1);
 }
 
 static int	parse_light(int fd, t_object_type type, t_light *light)
@@ -118,7 +112,6 @@ static int	parse_light(int fd, t_object_type type, t_light *light)
 	}
 	return (0);
 }
-
 static int parse_object(int fd, t_object_type type, t_object *object)
 {
 	char *line;
@@ -157,9 +150,6 @@ static int parse_object(int fd, t_object_type type, t_object *object)
 	return (0);
 }
 
-/*
-**	Reads a scene from file
-*/
 int		read_scene(t_scene *scene, char *path)
 {
 	int fd;

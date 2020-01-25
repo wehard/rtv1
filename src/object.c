@@ -13,6 +13,20 @@
 #include "rtv1.h"
 #include "ft_printf.h"
 
+void init_object(t_object *object)
+{
+	object->type = 0;
+	object->position = ft_make_vec3(0.0, 0.0, 0.0);
+	object->rotation = ft_make_vec3(0.0, 0.0, 0.0);
+	object->scale = ft_make_vec3(0.0, 0.0, 0.0);
+	object->radius = 0.0;
+	object->normal = ft_make_vec3(0.0, 0.0, 0.0);
+	object->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
+	object->reflect = 0.0;
+	object->start = ft_make_vec3(0, 0, 0);
+	object->end = ft_make_vec3(1, 1, 1);
+}
+
 void print_object_info(t_object *object)
 {
 	ft_printf("type: %d\n", object->type);
