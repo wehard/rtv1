@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 23:10:29 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/26 15:08:21 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,10 @@ int		mouse_press(int button, int x, int y, void *param)
 			t_vec2i sp = world_to_screen_point(&env->scene->camera, hit.point);
 			t_vec2i np = world_to_screen_point(&env->scene->camera, ft_add_vec3(hit.point, hit.normal));
 			draw_line(env->mlx, ft_make_vec3(sp.x, sp.y, 0), ft_make_vec3(np.x, np.y, 0), 0x00FFFF);
+			if (hit.object->type == CYLINDER)
+			{
+				rotate_cylinder(hit.object, ft_make_vec3(90, 0, 90));
+			}
 		}
 		else
 			ft_printf("No hit!\n");

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 23:19:43 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/26 14:17:41 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,8 @@ int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit);
 int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
+
+void			rotate_cylinder(t_object *c, t_vec3 rot);
 
 int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
 int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int ignore_origin_obj);

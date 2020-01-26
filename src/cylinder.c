@@ -6,13 +6,14 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 19:44:17 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/26 15:04:47 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
 #include <math.h>
+#include "ft_printf.h"
 
 
 static t_vec3 calc_cylinder_normal(t_object *c, t_raycasthit *hit)
@@ -27,6 +28,22 @@ static t_vec3 calc_cylinder_normal(t_object *c, t_raycasthit *hit)
 	d = ft_dot_vec3(dir, c_to_hit);
 	v = ft_add_vec3(c->start, ft_mul_vec3(dir, d));
 	return (ft_normalize_vec3(ft_sub_vec3(hit->point, v)));
+}
+
+void	rotate_cylinder(t_object *c, t_vec3 rot)
+{
+	//t_mat4x4 m = ft_create_rot_mat4(rot);
+	//t_vec3 r = ft_mul_vec3_mat4(ft_make_vec3(0, 1, 0), m);
+	t_vec3 r = ft_make_vec3(0, 1, 0);
+	t_vec3 p = ft_make_vec3(0, 0, 0);
+	p.x = r.x * cos(ft_deg_to_rad(rot.z)) - r.y * sin(ft_deg_to_rad(rot.z));
+	p.y = r.x * sin(ft_deg_to_rad(rot.z)) + r.y * cos(ft_deg_to_rad(rot.z));
+
+	c->end = ft_add_vec3(c->position, p);
+	c->start = c->position;
+
+	ft_printf("end  : %.3f, %.3f, %.3f\n", c->end.x, c->end.y, c->end.z);
+	ft_printf("start: %.3f, %.3f, %.3f\n", c->start.x, c->start.y, c->start.z);
 }
 
 
