@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 18:02:28 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 21:09:29 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,8 @@ int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
 int 			solve_quadratic(t_quadratic q, double *t1, double *t2);
 
 void			rotate_cylinder(t_object *c, t_vec3 rot);
+void			rotate_cone(t_object *c, t_vec3 rot);
+void			rotate_plane(t_object *p, t_vec3 rot);
 
 int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
 int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int ignore_origin_obj);

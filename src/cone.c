@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:00:58 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 18:31:21 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 21:03:55 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static t_vec3 calc_cone_normal(t_object *cone, t_raycasthit *hit)
 {
 	t_vec3 n;
 	t_vec3 cp;
-	t_vec3 cone_dir = cone->normal;
+	t_vec3 cone_dir = ft_normalize_vec3(ft_sub_vec3(cone->end, cone->start));  //cone->normal;
 	//double angle = 60.0;
 	cp = ft_sub_vec3(hit->point, cone->position);
 	n = ft_sub_vec3(cp, ft_mul_vec3(cone_dir, (ft_len_vec3(cp) / cos(cone->radius))));
@@ -32,12 +32,22 @@ static t_vec3 calc_cone_normal(t_object *cone, t_raycasthit *hit)
 	return (n);
 }
 
+void	rotate_cone(t_object *c, t_vec3 rot)
+{
+	t_vec3 res;
+	t_vec3 v = ft_make_vec3(0, 1, 0);
+
+	res = ft_rotate_vec3(v, rot);
+	c->end = ft_add_vec3(c->position, res);
+	c->start = c->position;
+}
+
 int		intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit)
 {
 	t_quadratic q;
 	double t1, t2;
 	double angle = cone->radius;
-	t_vec3 cone_dir = cone->normal;
+	t_vec3 cone_dir = ft_normalize_vec3(ft_sub_vec3(cone->end, cone->start));  //cone->normal;
 	angle = ft_deg_to_rad(angle/2);
 
 	double ddotv = ft_dot_vec3(ray->direction, cone_dir);

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 13:08:03 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 13:20:58 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 21:10:57 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,10 @@ int parse_object(int fd, t_object_type type, t_object *object)
 		{
 			if (type == CYLINDER)
 				rotate_cylinder(object, object->rotation);
+			if (type == CONE)
+				rotate_cone(object, object->rotation);
+			if (type == PLANE)
+				rotate_plane(object, object->rotation);
 			free(line);
 			return (1);
 		}

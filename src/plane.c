@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 19:32:11 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 21:13:00 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,15 @@
 #include <math.h>
 #include "libft.h"
 #include "ft_printf.h"
+
+void	rotate_plane(t_object *p, t_vec3 rot)
+{
+	t_vec3 res;
+	t_vec3 v = ft_make_vec3(0, 1, 0);
+
+	res = ft_rotate_vec3(v, rot);
+	p->normal = ft_normalize_vec3(res);
+}
 
 int		intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
 {
@@ -31,7 +40,7 @@ int		intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
 	if (hit->t > 0)
 	{
 		hit->object = plane;
-		hit->normal = ft_normalize_vec3(hit->object->normal);
+		hit->normal = hit->object->normal;
 		return (TRUE);
 	}
 	return (FALSE);

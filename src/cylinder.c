@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 19:27:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 20:58:50 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,29 +34,11 @@ void	rotate_cylinder(t_object *c, t_vec3 rot)
 {
 	t_vec3 res;
 	t_vec3 v = ft_make_vec3(0, 1, 0);
-	rot.x = ft_deg_to_rad(rot.x);
-	rot.y = ft_deg_to_rad(rot.y);
-	rot.z = ft_deg_to_rad(rot.z);
 
-	res.x = v.x;
-	res.y = v.y * cos(rot.x) + v.z * sin(rot.x);
-	res.z = -v.y * sin(rot.x) + v.z * cos(rot.x);
-	v = (t_vec3) {res.x, res.y, res.z};
-	res.x = v.x * cos(rot.y) + v.z * sin(rot.y);
-	res.y = v.y;
-	res.z = -v.x * sin(rot.y) + v.z * cos(rot.y);
-	v = (t_vec3) {res.x, res.y, res.z};
-	res.x = v.x * cos(rot.z) - v.y * sin(rot.z);
-	res.y = v.x * sin(rot.z) + v.y * cos(rot.z);
-	res.z = v.z;
-
+	res = ft_rotate_vec3(v, rot);
 	c->end = ft_add_vec3(c->position, res);
 	c->start = c->position;
-
-	//ft_printf("end  : %.3f, %.3f, %.3f\n", c->end.x, c->end.y, c->end.z);
-	//ft_printf("start: %.3f, %.3f, %.3f\n", c->start.x, c->start.y, c->start.z);
 }
-
 
 int	intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
 {
