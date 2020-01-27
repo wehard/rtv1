@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 15:14:53 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 21:30:47 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ static double	calc_light_contrib(t_scene *scene, t_raycasthit *hit)
 	{
 		light_dir = ft_normalize_vec3(ft_sub_vec3(scene->lights[i].position, hit->point));
 		ldn = ft_dot_vec3(light_dir, hit->normal);
+		double specular = ft_lerp_f(pow(ldn, 200), 1, 0.5);
 		light_contrib += ldn * scene->lights[i].intensity;
+		light_contrib *= specular;
 		i++;
 	}
 	return (light_contrib);
@@ -105,10 +107,7 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	return (ft_mul_rgba(ft_make_rgba(N.x+1.0, N.y + 1.0, N.z + 1.0, 1.0), 0.5));
 #endif
 
-	//double ray_dot_normal = ft_dot_vec3(ray->direction, hit->normal);
-	//double specular = ft_lerp_f(pow(light_dot_normal, 200), 1, 0.5);
-	//hit->color = ft_lerp_rgba(scene->ambient_color, hit->color, ft_max_d(0.0, ray_dot_normal));
-	//hit->color = ft_mul_rgba(hit->color, specular);
+
 }
 
 int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
