@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 15:15:16 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 18:02:28 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "time.h"
 # include "matrix.h"
 
+# define SQR(value) value * value
 # define WIN_W 1280
 # define WIN_H 720
 # define MAX_RAY_DEPTH 5
@@ -39,6 +40,13 @@ typedef enum		e_object_type
 	LIGHT,
 	CAMERA
 }					t_object_type;
+
+typedef struct	s_quadratic
+{
+	double		a;
+	double		b;
+	double		c;
+}				t_quadratic;
 
 typedef struct		s_rgba
 {
@@ -177,6 +185,7 @@ int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit);
 int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
+int 			solve_quadratic(t_quadratic q, double *t1, double *t2);
 
 void			rotate_cylinder(t_object *c, t_vec3 rot);
 

@@ -36,7 +36,7 @@ ref 0
 CYLINDER
 col 0 .8 .2
 pos -8 0 8
-rot 0 0 0
+rot 0 0 -45
 rad 1
 ref 0
 #

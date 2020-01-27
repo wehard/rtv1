@@ -12,6 +12,7 @@
 
 #include "rtv1.h"
 #include "ft_printf.h"
+#include <math.h>
 
 void init_object(t_object *object)
 {
@@ -62,4 +63,25 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit->distance = hit->t;
 	}
 	return (hit_found);
+}
+
+int solve_quadratic(t_quadratic q, double *t1, double *t2)
+{
+	double d;
+
+	*t1 = -1;
+	*t2 = -1;
+	d = q.b * q.b - 4 * q.a * q.c;
+	if (d == 0)
+	{
+		*t1 = (-q.b - sqrt(d)) / (2.0 * q.a);
+		return (1);
+	}
+	if (d > 0)
+	{
+		*t1 = (-q.b - sqrt(d)) / (2.0 * q.a);
+		*t2 = (-q.b + sqrt(d)) / (2.0 * q.a);
+		return (2);
+	}
+	return (0);
 }

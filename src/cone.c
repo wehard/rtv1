@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:00:58 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 17:10:19 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 18:31:21 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 // C cone tip
 // V cone direction
 // theta half cone angle
-
-#define SQR(value) value * value
 
 static t_vec3 calc_cone_normal(t_object *cone, t_raycasthit *hit)
 {
@@ -36,31 +34,33 @@ static t_vec3 calc_cone_normal(t_object *cone, t_raycasthit *hit)
 
 int		intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit)
 {
-	double a;
-	double b;
-	double c;
+	t_quadratic q;
+	double t1, t2;
 	double angle = cone->radius;
 	t_vec3 cone_dir = cone->normal;
 	angle = ft_deg_to_rad(angle/2);
 
 	double ddotv = ft_dot_vec3(ray->direction, cone_dir);
-	t_vec3 co = ft_sub_vec3(ray->origin, cone->position); // check dir maybe flip
+	t_vec3 co = ft_sub_vec3(ray->origin, cone->position);
 	double codotv = ft_dot_vec3(co, cone_dir);
 
-	a = SQR(ddotv) - SQR(cos(angle));
-	b = 2.0 * (ddotv * codotv - ft_dot_vec3(ray->direction, co) * SQR(cos(angle)));
-	c = SQR(codotv) - ft_dot_vec3(co, co) * SQR(cos(angle));
-
-	double det = b * b - 4.0 * a * c;
-	if (det < 0)
-		return (FALSE);
-	else
+	q.a = SQR(ddotv) - SQR(cos(angle));
+	q.b = 2.0 * (ddotv * codotv - ft_dot_vec3(ray->direction, co) * SQR(cos(angle)));
+	q.c = SQR(codotv) - ft_dot_vec3(co, co) * SQR(cos(angle));
+	if (solve_quadratic(q, &t1, &t2))
 	{
-		hit->t = (-b - sqrt(det)) / (2.0 * a);
+		hit->t = t1;
+		if (hit->t < 0 || (t2 > 0 && t2 < hit->t))
+			hit->t = t2;
+		if (hit->t < 0)
+			return (FALSE);
 		hit->point = point_on_ray(ray, hit->t);
+		if (ft_len_vec3(ft_sub_vec3(hit->point, cone->position)) > cone->scale.y)
+			return (FALSE);
 		if (ft_dot_vec3(ft_sub_vec3(hit->point, cone->position), cone_dir) > 0)
 			return (FALSE);
 		hit->normal = calc_cone_normal(cone, hit);
+		return (TRUE);
 	}
-	return (TRUE);
+	return (FALSE);
 }
