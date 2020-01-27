@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/26 15:04:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 15:18:17 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	rotate_cylinder(t_object *c, t_vec3 rot)
 	c->end = ft_add_vec3(c->position, p);
 	c->start = c->position;
 
-	ft_printf("end  : %.3f, %.3f, %.3f\n", c->end.x, c->end.y, c->end.z);
-	ft_printf("start: %.3f, %.3f, %.3f\n", c->start.x, c->start.y, c->start.z);
+	//ft_printf("end  : %.3f, %.3f, %.3f\n", c->end.x, c->end.y, c->end.z);
+	//ft_printf("start: %.3f, %.3f, %.3f\n", c->start.x, c->start.y, c->start.z);
 }
 
 
@@ -65,7 +65,6 @@ int	intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
 	else
 	{
 		hit->t = (-b - sqrt(disc)) / (2.0f * a);
-		hit->t2 = (-b + sqrt(disc)) / (2.0f * a);
 		if (hit->t > MAX_DISTANCE || hit->t < MIN_DISTANCE)
 			return (FALSE);
 		hit->point = point_on_ray(ray, hit->t);

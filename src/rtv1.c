@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/26 15:08:21 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 14:24:23 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,46 +56,14 @@ static void print_vec3(t_vec3 v)
 
 #define DEBUG 0
 
-//return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
-static t_ray get_camera_ray(t_scene *scene, int x, int y)
-{
-	t_ray ray;
-#if DEBUG
-	double rx;
-	double ry;
-	ray.origin = scene->camera.pos;
-	rx = (2 * ((x + 0.5) / (double)WIN_W) - 1) * scene->options.aspect * scene->options.scale;
-	ry = (1 - 2 * (y + 0.5) / (double)WIN_H) * scene->options.scale;
-	ray.direction = ft_normalize_vec3(ft_add_vec3(scene->camera.forward, ft_make_vec3(rx, ry, 0)));
-#else
 
-	ray.origin = scene->camera.pos;
-	t_vec3 horizontal, vertical;
-	t_vec3 lower_left_corner;
-	t_vec3 vup = ft_make_vec3(0.0, 1.0, 0.0);
-	t_vec3 u, v, w;
-	w = ft_normalize_vec3(ft_sub_vec3(scene->camera.pos, scene->camera.look_at));
-	u = ft_normalize_vec3(ft_cross_vec3(vup, w));
-	v = ft_cross_vec3(w, u);
-	// lower_left_corner = origin - half_width*u - half_height*v - w;
-	double theta = ft_deg_to_rad(scene->options.fov);
-	double halft_height = tan(theta / 2.0);
-	double half_width = scene->options.aspect * halft_height;
-	lower_left_corner = ft_sub_vec3(ray.origin, ft_sub_vec3(ft_mul_vec3(u, half_width), ft_sub_vec3(ft_mul_vec3(v, halft_height), w)));
-	horizontal = ft_mul_vec3(u, half_width * 2);
-	vertical = ft_mul_vec3(v, halft_height * 2);
-	// dir: lower_left_corner + s*horizontal + t*vertical - origin
-	ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_add_vec3(lower_left_corner, ft_add_vec3(ft_mul_vec3(horizontal, x/(double)WIN_W), ft_mul_vec3(vertical, 1-(y/(double)WIN_H)-1.0))), ray.origin));
-#endif
-	return (ray);
-}
 
 static t_vec2i world_to_screen_point(t_camera *camera, t_vec3 wp)
 {
 	t_vec3 dir;
 	t_vec2i sp;
 	double aspect = (double)WIN_W / (double)WIN_H;
-	dir =  ft_normalize_vec3(ft_sub_vec3(wp, camera->pos));
+	dir = ft_normalize_vec3(ft_sub_vec3(wp, camera->pos));
 	t_vec3 ipp = ft_mul_vec3(dir, 1.0);
 	sp.x = ((ipp.x + aspect * 0.5) / aspect) * WIN_W;
 	sp.y =  WIN_H - ((ipp.y + 0.5) * WIN_H);
@@ -109,9 +77,9 @@ int		mouse_press(int button, int x, int y, void *param)
 	t_raycasthit hit;
 
 	env = (t_env*)param;
-	if (button == 1)
+	if (button == 1 || button == 2)
 	{
-		ray = get_camera_ray(env->scene, x, y);
+		ray = get_camera_ray(&env->scene->camera, x, y);
 		print_vec3(ray.direction);
 		if (raycast(&ray, env->scene, &hit, 0))
 		{
@@ -122,10 +90,8 @@ int		mouse_press(int button, int x, int y, void *param)
 			t_vec2i sp = world_to_screen_point(&env->scene->camera, hit.point);
 			t_vec2i np = world_to_screen_point(&env->scene->camera, ft_add_vec3(hit.point, hit.normal));
 			draw_line(env->mlx, ft_make_vec3(sp.x, sp.y, 0), ft_make_vec3(np.x, np.y, 0), 0x00FFFF);
-			if (hit.object->type == CYLINDER)
-			{
-				rotate_cylinder(hit.object, ft_make_vec3(90, 0, 90));
-			}
+			if (button == 2)
+				env->scene->camera.look_at = hit.point;
 		}
 		else
 			ft_printf("No hit!\n");
@@ -163,12 +129,6 @@ void render(t_env *env, t_scene *scene)
 	int i;
 
 	clear_mlx_img(env->mlx_img);
-
-	scene->options.scale = tan(ft_deg_to_rad((scene->options.fov * 0.5)));
-	scene->options.aspect = (double)env->width / (double)env->height;
-	scene->camera.forward = ft_normalize_vec3(ft_sub_vec3(scene->camera.look_at, scene->camera.pos));
-	ft_printf("cam forward: %.3f, %.3f, %.3f\n", scene->camera.forward.x, scene->camera.forward.y, scene->camera.forward.z);
-
 	start = clock();
 	cur.y = env->height;
 	while (cur.y >= 0)
@@ -180,7 +140,7 @@ void render(t_env *env, t_scene *scene)
 			i = 0;
 			while (i < RAYS_PER_PIXEL)
 			{
-				ray = get_camera_ray(scene, cur.x, cur.y);
+				ray = get_camera_ray(&scene->camera, cur.x, cur.y);
 				raycast(&ray, scene, &hit, 0);
 				color = hit.color;
 				i++;

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/26 14:17:41 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 15:15:16 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 1000
 # define MIN_DISTANCE 0.1
-# define SHADOW_BIAS 0.00001
+# define SHADOW_BIAS 0.0001
 # define REFLECT_BIAS 0.0001
 # define RAYS_PER_PIXEL	1
 # define TRUE 1
@@ -36,9 +36,9 @@ typedef enum		e_object_type
 	CYLINDER,
 	CONE,
 	BOX,
-	LIGHT
+	LIGHT,
+	CAMERA
 }					t_object_type;
-
 
 typedef struct		s_rgba
 {
@@ -88,18 +88,28 @@ typedef struct	s_raycasthit
 	t_rgba		color;
 }				t_raycasthit;
 
-typedef struct	s_options
+
+typedef struct	s_camera_info
 {
-	double		fov;
-	double		scale;
-	double		aspect;
-}				t_options;
+	t_vec3		world_up;
+	t_vec3		u;
+	t_vec3		v;
+	t_vec3		w;
+	double		theta;
+	double		half_height;
+	double		half_width;
+}				t_camera_info;
 
 typedef struct	s_camera
 {
 	t_vec3		pos;
 	t_vec3		look_at;
-	t_vec3		forward;
+	double		fov;
+	double		scale;
+	double		aspect;
+	t_vec3		horizontal;
+	t_vec3		vertical;
+	t_vec3		lower_left_corner;
 }				t_camera;
 
 typedef struct	s_scene
@@ -112,7 +122,6 @@ typedef struct	s_scene
 	int			num_lights;
 	int			num_objects;
 	t_rgba		ambient_color;
-	t_options	options;
 	t_camera	camera;
 }				t_scene;
 
@@ -146,12 +155,20 @@ t_env			*init_env(int width, int height, char *title);
 void			del_env_exit(t_env *env);
 
 int				read_scene(t_scene *scene, char *path);
+t_vec3			parse_vec3(char *str);
+t_rgba			parse_rgba(char *line);
+int				parse_light(int fd, t_light *light);
+int				parse_object(int fd, t_object_type type, t_object *object);
+int				parse_camera(int fd, t_camera *camera);
 void 			render(t_env *env, t_scene *scene);
 int				update(void *param);
 
 t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
+
+int				init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov, double aspect);
+t_ray 			get_camera_ray(t_camera *camera, int x, int y);
 
 void 			init_object(t_object *object);
 int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);

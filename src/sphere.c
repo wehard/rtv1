@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 19:16:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 16:04:11 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_object	make_sphere()
 	return (t);
 }
 
-
+/*
 int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 {
 	t_vec3 oc = ft_sub_vec3(ray->origin, sphere->position);
@@ -45,4 +45,36 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 		hit->normal = ft_normalize_vec3(ft_sub_vec3(hit->point, sphere->position));
 	}
 	return (TRUE);
+}
+*/
+
+int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
+{
+	double t0;
+	double t1;
+	double sradius2;
+
+	sradius2 = sphere->radius * sphere->radius;
+
+	t_vec3 L = ft_sub_vec3(sphere->position, ray->origin);
+	double tca = ft_dot_vec3(L, ray->direction);
+	double d2 = ft_dot_vec3(L, L) - tca * tca;
+	if (d2 > sradius2)
+		return (0);
+	double thc = sqrt(sradius2 - d2);
+	t0 = tca - thc;
+	t1 = tca + thc;
+
+	if (t0 > t1)
+		ft_swap_d(&t0, &t1);
+	if (t0 < 0)
+	{
+		t0 = t1;
+		if (t0 < 0)
+			return (0);
+	}
+	hit->t = t0;
+	hit->point = point_on_ray(ray, hit->t);
+	hit->normal = ft_normalize_vec3(ft_sub_vec3(hit->point, sphere->position));
+	return (1);
 }

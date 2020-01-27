@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 23:34:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/27 13:13:35 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,119 +35,9 @@ static t_object_type parse_object_type(char *line)
 		return BOX;
 	if (ft_strequ(line, "LIGHT"))
 		return LIGHT;
+	if (ft_strequ(line, "CAMERA"))
+		return CAMERA;
 	return (-1);
-}
-
-static t_vec3 parse_vec3(char *line)
-{
-	//char **split;
-	t_vec3 v;
-
-	//split = ft_strsplit(line, ' ');
-	//v.x = ft_strtod(split[1]);
-	//v.y = ft_strtod(split[2]);
-	//v.z = ft_strtod(split[3]);
-	//free(split[0]);
-	//free(split[1]);
-	//free(split[2]);
-	//free(split[3]);
-	//free(split);
-	line = ft_strstr(line, " ");
-	char *token = ft_strtok(line, " ");
-	v.x = ft_strtod(token);
-	token = ft_strtok(NULL, " ");
-	v.y = ft_strtod(token);
-	token = ft_strtok(NULL, " ");
-	v.z = ft_strtod(token);
-	return (v);
-}
-
-static t_rgba parse_rgba(char *line)
-{
-	char **split;
-	t_rgba v;
-
-	split = ft_strsplit(line, ' ');
-
-	v.r = ft_strtod(split[1]);
-	v.g = ft_strtod(split[2]);
-	v.b = ft_strtod(split[3]);
-	if (!split[4])
-		v.a = 1.0;
-	else
-		v.a = ft_strtod(split[4]);
-	free(split[0]);
-	free(split[1]);
-	free(split[2]);
-	free(split[3]);
-	if (!split[4])
-		free(split[4]);
-	free(split);
-	return (v);
-}
-
-static int	parse_light(int fd, t_object_type type, t_light *light)
-{
-	char *line;
-
-	if (type != LIGHT || !light)
-		ft_printf("error: parsing light object!\n");
-	light->position = ft_make_vec3(0,0,0);
-	light->color = ft_make_rgba(1,1,1,1);
-	light->intensity = 1.0;
-	while(ft_get_next_line(fd, &line))
-	{
-		if (ft_strnequ(line, "pos", 3))
-			light->position = parse_vec3(line);
-		else if (ft_strnequ(line, "col", 3))
-			light->color = parse_rgba(line);
-		else if (ft_strnequ(line, "int", 3))
-			light->intensity = ft_strtod(line + 4);
-		else if (line[0] == '#')
-		{
-			free(line);
-			return (1);
-		}
-		free(line);
-	}
-	return (0);
-}
-static int parse_object(int fd, t_object_type type, t_object *object)
-{
-	char *line;
-
-	if (type < 0 || !object)
-		ft_printf("object type error\n");
-	init_object(object);
-	while(ft_get_next_line(fd, &line))
-	{
-		object->type = type;
-		if (ft_strnequ(line, "pos", 3))
-			object->position = parse_vec3(line);
-		else if (ft_strnequ(line, "rot", 3))
-			object->rotation = parse_vec3(line);
-		else if (ft_strnequ(line, "sca", 3))
-			object->scale = parse_vec3(line);
-		else if (ft_strnequ(line, "col", 3))
-			object->color = parse_rgba(line);
-		else if (ft_strnequ(line, "nor", 3))
-			object->normal = parse_vec3(line);
-		else if (ft_strnequ(line, "rad", 3))
-			object->radius = ft_strtod(line + 4);
-		else if (ft_strnequ(line, "ref", 3))
-			object->reflect = ft_strtod(line + 4);
-		else if (ft_strnequ(line, "start", 5))
-			object->start = parse_vec3(line);
-		else if (ft_strnequ(line, "end", 3))
-			object->end = parse_vec3(line);
-		else if (line[0] == '#')
-		{
-			free(line);
-			return (1);
-		}
-		free(line);
-	}
-	return (0);
 }
 
 int		read_scene(t_scene *scene, char *path)
@@ -186,17 +76,13 @@ int		read_scene(t_scene *scene, char *path)
 		}
 		else if (ft_strnequ(line, "COLOR", 5))
 			scene->ambient_color = parse_rgba(line);
-		else if (ft_strnequ(line, "FOV", 3))
-			scene->options.fov = ft_strtod(line + 3);
-		else if (ft_strnequ(line, "CAM", 3))
-			scene->camera.pos = parse_vec3(line);
-		else if (ft_strnequ(line, "LOOKAT", 6))
-			scene->camera.look_at = parse_vec3(line);
 		else
 		{
 			t_object_type type = parse_object_type(line);
-			if (type == LIGHT)
-				parse_light(fd, type, &(scene->lights)[light_index++]);
+			if (type == CAMERA)
+				parse_camera(fd, &scene->camera);
+			else if (type == LIGHT)
+				parse_light(fd, &(scene->lights)[light_index++]);
 			else
 				parse_object(fd, type, &(scene->objects)[obj_index++]);
 		}
