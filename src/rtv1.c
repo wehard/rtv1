@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 18:15:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 18:28:09 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ void render(t_env *env, t_scene *scene)
 	t_ray 			ray;
 	t_raycasthit	hit;
 	t_vec2i			cur;
+	int seed = 1234;
 
 	clear_mlx_img(env->mlx_img);
 	start = clock();
@@ -135,12 +136,14 @@ void render(t_env *env, t_scene *scene)
 		cur.x = 0;
 		while (cur.x < env->width)
 		{
-			t_rgba color = ft_make_rgba(1, 1, 1, 1);
+			t_rgba color = ft_make_rgba(0, 0, 0, 1);
 			int i = 0;
 			while (i < RAYS_PER_PIXEL)
 			{
-				ray = get_camera_ray(&scene->camera, cur.x, cur.y);
-				color = raycast(&ray, scene, &hit, 0);
+				double u = (double)cur.x / (double)WIN_W;
+				double v = (double)cur.y / (double)WIN_H;
+				ray = get_camera_ray(&scene->camera, u, v);
+				color = ft_lerp_rgba(color, raycast(&ray, scene, &hit, 0), 0.5);
 				i++;
 			}
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(color));

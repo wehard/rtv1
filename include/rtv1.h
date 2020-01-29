@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 18:06:31 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 18:27:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
 int				init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov, double aspect);
-t_ray 			get_camera_ray(t_camera *camera, int x, int y);
+t_ray 			get_camera_ray(t_camera *camera, double u, double v);
 
 void 			init_object(t_object *object);
 int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);

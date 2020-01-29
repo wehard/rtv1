@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 11:29:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 13:02:03 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 18:20:11 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov, double
 }
 
 //return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
-t_ray get_camera_ray(t_camera *camera, int x, int y)
+//t_ray get_camera_ray(t_camera *camera, int x, int y)
+t_ray get_camera_ray(t_camera *camera, double u, double v)
 {
 	t_camera_info	ci;
 	t_ray			ray;
@@ -46,6 +47,6 @@ t_ray get_camera_ray(t_camera *camera, int x, int y)
 	camera->horizontal = ft_mul_vec3(ci.u, ci.half_width * 2);
 	camera->vertical = ft_mul_vec3(ci.v, ci.half_height * 2);
 	ray.origin = camera->pos;
-	ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_add_vec3(camera->lower_left_corner, ft_add_vec3(ft_mul_vec3(camera->horizontal, x / (double)WIN_W), ft_mul_vec3(camera->vertical, 1.0 - (y/(double)WIN_H) - 1.0))), ray.origin));
+	ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_add_vec3(camera->lower_left_corner, ft_add_vec3(ft_mul_vec3(camera->horizontal, u), ft_mul_vec3(camera->vertical, 1.0 - v - 1.0))), ray.origin));
 	return (ray);
 }
