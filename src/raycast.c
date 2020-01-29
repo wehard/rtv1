@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 17:50:21 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 18:14:14 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,30 +97,30 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	hit->color = ft_mul_rgba(hit->color, ft_clamp_d(amount, 0, 1));
 	return (hit->color);
 	//return (ft_mul_rgba(ft_make_rgba(N.x+1.0, N.y + 1.0, N.z + 1.0, 1.0), 0.5));
+	/* if (hit->object->reflect > 0)
+	{
+		t_ray reflect_ray;
+		t_raycasthit reflect_hit;
+		reflect_ray.origin = ft_add_vec3(hit->point, ft_mul_vec3(hit->normal, REFLECT_BIAS));
+		reflect_ray.direction = ft_normalize_vec3(ft_reflect_vec3(ray->direction, hit->normal));
+		if (raycast(&reflect_ray, scene, &reflect_hit, depth + 1))
+			hit->color = ft_lerp_rgba(hit->color, reflect_hit.color, hit->object->reflect);
+	} */
 }
 
-int	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
+t_rgba	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 {
-	if (depth > MAX_RAY_DEPTH)
-	{
-		hit->color = scene->ambient_color;
-		return (0);
-	}
+	t_rgba color;
+	// if (depth > MAX_RAY_DEPTH)
+	// {
+	// 	hit->color = scene->ambient_color;
+	// 	return (0);
+	// }
+
+	color = ft_make_rgba(0,0,0,1);
 	if (trace(ray, scene, hit))
 	{
-		hit->color = shade(ray, scene, hit);
-		/* if (hit->object->reflect > 0)
-		{
-			t_ray reflect_ray;
-			t_raycasthit reflect_hit;
-			reflect_ray.origin = ft_add_vec3(hit->point, ft_mul_vec3(hit->normal, REFLECT_BIAS));
-			reflect_ray.direction = ft_normalize_vec3(ft_reflect_vec3(ray->direction, hit->normal));
-			if (raycast(&reflect_ray, scene, &reflect_hit, depth + 1))
-				hit->color = ft_lerp_rgba(hit->color, reflect_hit.color, hit->object->reflect);
-		} */
-		return (TRUE);
+		color = shade(ray, scene, hit);
 	}
-	else
-		hit->color = scene->ambient_color;
-	return (FALSE);
+	return (color);
 }

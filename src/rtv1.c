@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 18:56:06 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 18:15:15 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static t_vec2i world_to_screen_point(t_camera *camera, t_vec3 wp)
 	sp.y =  WIN_H - ((ipp.y + 0.5) * WIN_H);
 	return (sp);
 }
-
+/*
 int		mouse_press(int button, int x, int y, void *param)
 {
 	t_env *env;
@@ -98,7 +98,7 @@ int		mouse_press(int button, int x, int y, void *param)
 	}
 	return (1);
 }
-
+*/
 int	update(void *param)
 {
 	t_env *env;
@@ -126,7 +126,6 @@ void render(t_env *env, t_scene *scene)
 	t_ray 			ray;
 	t_raycasthit	hit;
 	t_vec2i			cur;
-	int i;
 
 	clear_mlx_img(env->mlx_img);
 	start = clock();
@@ -137,12 +136,11 @@ void render(t_env *env, t_scene *scene)
 		while (cur.x < env->width)
 		{
 			t_rgba color = ft_make_rgba(1, 1, 1, 1);
-			i = 0;
+			int i = 0;
 			while (i < RAYS_PER_PIXEL)
 			{
 				ray = get_camera_ray(&scene->camera, cur.x, cur.y);
-				raycast(&ray, scene, &hit, 0);
-				color = hit.color;
+				color = raycast(&ray, scene, &hit, 0);
 				i++;
 			}
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(color));
@@ -174,7 +172,7 @@ int	main(int argc, char **argv)
 	render(env, env->scene);
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);
 	mlx_expose_hook(env->mlx->win_ptr, update, (void*)env);
-	mlx_hook(env->mlx->win_ptr, 4, (1L << 2), mouse_press, (void*)env);
+	//mlx_hook(env->mlx->win_ptr, 4, (1L << 2), mouse_press, (void*)env);
 	mlx_loop(env->mlx->mlx_ptr);
 	return (0);
 }
