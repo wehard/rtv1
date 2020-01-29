@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 21:13:00 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 17:21:29 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,29 @@ void	rotate_plane(t_object *p, t_vec3 rot)
 
 int		intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
 {
-	hit->t = ft_dot_vec3(ft_sub_vec3(plane->position, ray->origin), plane->normal) / ft_dot_vec3(ray->direction, plane->normal);
-	hit->point = point_on_ray(ray, hit->t);
-	if (plane->scale.x > 0 && plane->scale.y > 0 && plane->scale.z > 0)
+	double t;
+	// if (ft_dot_vec3(ray->direction, plane->position) < 0)
+	// 	return (FALSE);
+	double d;
+	d = ft_dot_vec3(plane->normal, ray->direction);
+	if (ray->origin_object &&  d < 0.001) // if shadow ray
+		return (FALSE);
+	t = ft_dot_vec3(ft_sub_vec3(plane->position, ray->origin), plane->normal) / d;
+	if (t > 0.0001)
 	{
-		if (hit->point.x > plane->position.x + (plane->scale.x / 2.0) || hit->point.x < plane->position.x - (plane->scale.x / 2.0))
-			return (FALSE);
-		if (hit->point.z > plane->position.z + (plane->scale.z / 2.0) || hit->point.z < plane->position.z - (plane->scale.z / 2.0))
-			return (FALSE);
-		if (hit->point.y > plane->position.y + (plane->scale.y / 2.0) || hit->point.y < plane->position.y - (plane->scale.y / 2.0))
-			return (FALSE);
-	}
-	if (hit->t > 0)
-	{
+		hit->t = t;
+		hit->point = point_on_ray(ray, hit->t);
 		hit->object = plane;
-		hit->normal = hit->object->normal;
+		hit->normal = plane->normal;
+		if (plane->scale.x > 0 && plane->scale.y > 0 && plane->scale.z > 0)
+		{
+			if (hit->point.x > plane->position.x + (plane->scale.x / 2.0) || hit->point.x < plane->position.x - (plane->scale.x / 2.0))
+				return (FALSE);
+			if (hit->point.z > plane->position.z + (plane->scale.z / 2.0) || hit->point.z < plane->position.z - (plane->scale.z / 2.0))
+				return (FALSE);
+			if (hit->point.y > plane->position.y + (plane->scale.y / 2.0) || hit->point.y < plane->position.y - (plane->scale.y / 2.0))
+				return (FALSE);
+		}
 		return (TRUE);
 	}
 	return (FALSE);

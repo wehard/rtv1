@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 20:58:50 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 17:19:45 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,18 @@ int	intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
 	double t1, t2;
 	t_quadratic q;
 	double	disc;
-
+	double d;
 	t_vec3 pdp, eyexpdp, rdxpdp;
 	pdp = ft_sub_vec3(cyl->start, cyl->end);
+
+	//if (ray->origin_object && ft_dot_vec3(ray->direction, ft_sub_vec3(cyl->end, cyl->start)) < 0) // shadow ray
+	//	return (FALSE);
+
 	eyexpdp = ft_cross_vec3(ft_sub_vec3(ray->origin, cyl->end), pdp);
 	rdxpdp = ft_cross_vec3(ray->direction, pdp);
 	q.a = ft_dot_vec3(rdxpdp, rdxpdp);
 	q.b = 2 * ft_dot_vec3(rdxpdp, eyexpdp);
-	q.c = ft_dot_vec3(eyexpdp, eyexpdp) - (cyl->radius * cyl->radius * ft_dot_vec3(pdp, pdp));
+	q.c = ft_dot_vec3(eyexpdp, eyexpdp) - (SQR(cyl->radius) * ft_dot_vec3(pdp, pdp));
 	if (solve_quadratic(q, &t1, &t2))
 	{
 		hit->t = t1;

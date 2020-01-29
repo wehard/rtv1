@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 13:08:03 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 21:10:57 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 16:37:54 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,18 @@ int	parse_light(int fd, t_light *light)
 
 	if (!light)
 		ft_printf("error: light is null!\n");
-	light->position = ft_make_vec3(0,0,0);
-	light->color = ft_make_rgba(1,1,1,1);
+	light->type = 0;
+	light->position = ft_make_vec3(0, 0, 0);
+	light->direction = ft_make_vec3(0, 1, 0);
+	light->color = ft_make_rgba(1, 1, 1, 1);
 	light->intensity = 1.0;
 	while(ft_get_next_line(fd, &line))
 	{
-		if (ft_strnequ(line, "pos", 3))
+		if (ft_strnequ(line, "type", 4))
+			light->type = ft_atoi(ft_strstr(line, " "));
+		else if (ft_strnequ(line, "dir", 3))
+			light->direction = parse_vec3(line);
+		else if (ft_strnequ(line, "pos", 3))
 			light->position = parse_vec3(line);
 		else if (ft_strnequ(line, "col", 3))
 			light->color = parse_rgba(line);

@@ -1,49 +1,50 @@
-OBJECTS 7
-LIGHTS 1
-COLOR .1 .1 .1
+OBJECTS 6
+LIGHTS 2
+COLOR 0 0 0
 CAMERA
 fov 60.0
-pos 0.0 5 20.0
-look_at 0 3 0
+pos 0.0 10 30.0
+look_at 0 8 10
 #
 LIGHT
-pos -20 12 20
+type 0
+dir -1 -1 -1
+pos -30 30 30
 col 1 1 1
-int .8
+int 0
 #
-PLANE
-pos 8 8 0
-col 1 0 0
-rot 0 0 90
-sca 20 16 16
-nor -1 0 0
-ref 0
+LIGHT
+type 1
+dir 1 -1 -1
+pos -30 30 30
+col 1 1 1
+int 2
 #
 PLANE
 pos 0 0 0
 col 1 0 0
 rad 1.0
-sca 16 1 16
-nor 0 1 0
+sca 0 0 0
+nor 0 0 0
 ref 0
 #
 SPHERE
-pos 0 1 0
+pos 0 3 0
 col 0.3 0.3 1
 rad 3.0
 ref 0
 #
 CYLINDER
-col 0 .8 .2
 pos -8 0 8
-rot 0 0 -45
+col 0 .8 .2
+rot 0 0 0
 rad 1
 ref 0
 #
 CYLINDER
-col 0 .8 .2
 pos 8 0 8
 rot 0 0 0
+col 0 .8 .2
 rad 1
 nor 1 1 1
 ref 0

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 21:09:29 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/29 17:45:35 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 # include "matrix.h"
 
 # define SQR(value) value * value
-# define WIN_W 1280
-# define WIN_H 720
+# define WIN_W 800
+# define WIN_H 600
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 1000
 # define MIN_DISTANCE 0.1
-# define SHADOW_BIAS 0.0001
-# define REFLECT_BIAS 0.0001
+# define SHADOW_BIAS 0.001
+# define REFLECT_BIAS 0.001
 # define RAYS_PER_PIXEL	1
 # define TRUE 1
 # define FALSE 0
@@ -40,6 +40,12 @@ typedef enum		e_object_type
 	LIGHT,
 	CAMERA
 }					t_object_type;
+
+typedef enum		e_light_type
+{
+	POINT,
+	DIRECTIONAL
+}					t_light_type;
 
 typedef struct	s_quadratic
 {
@@ -58,7 +64,9 @@ typedef struct		s_rgba
 
 typedef struct		s_light
 {
+	t_light_type	type;
 	t_vec3			position;
+	t_vec3			direction;
 	double			intensity;
 	t_rgba			color;
 }					t_light;
@@ -192,7 +200,7 @@ void			rotate_cone(t_object *c, t_vec3 rot);
 void			rotate_plane(t_object *p, t_vec3 rot);
 
 int				raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
-int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int ignore_origin_obj);
+//int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit);
 
 t_vec3			point_on_ray(t_ray *r, double t);
 void			init_raycasthit(t_raycasthit *hit);
