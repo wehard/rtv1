@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 13:08:03 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 16:37:54 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/30 17:35:25 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ int parse_object(int fd, t_object_type type, t_object *object)
 			object->normal = parse_vec3(line);
 		else if (ft_strnequ(line, "rad", 3))
 			object->radius = ft_strtod(line + 4);
-		else if (ft_strnequ(line, "ref", 3))
-			object->reflect = ft_strtod(line + 4);
 		else if (line[0] == '#')
 		{
 			if (type == CYLINDER)

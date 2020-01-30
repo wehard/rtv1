@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 18:27:39 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/30 17:33:53 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ typedef struct		s_object
 	t_vec3			start;
 	t_vec3			end;
 	t_vec3			normal;
-	double			reflect;
 }					t_object;
 
 typedef struct	s_ray

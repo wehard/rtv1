@@ -20,12 +20,11 @@ void init_object(t_object *object)
 	object->position = ft_make_vec3(0.0, 0.0, 0.0);
 	object->rotation = ft_make_vec3(0.0, 0.0, 0.0);
 	object->scale = ft_make_vec3(0.0, 0.0, 0.0);
-	object->radius = 0.0;
 	object->normal = ft_make_vec3(0.0, 0.0, 0.0);
 	object->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
-	object->reflect = 0.0;
 	object->start = ft_make_vec3(0, 0, 0);
 	object->end = ft_make_vec3(1, 1, 1);
+	object->radius = 0.0;
 }
 
 void print_object_info(t_object *object)
@@ -36,8 +35,9 @@ void print_object_info(t_object *object)
 	ft_printf("scale: %.3f, %.3f, %.3f\n", object->scale.x, object->scale.y, object->scale.z);
 	ft_printf("normal: %.3f, %.3f, %.3f\n", object->normal.x, object->normal.y, object->normal.z);
 	ft_printf("color: %.3f, %.3f, %.3f, %.3f\n", object->color.r, object->color.g, object->color.b, object->color.a);
+	ft_printf("start: %.3f, %.3f, %.3f\n", object->start.x, object->start.y, object->start.z);
+	ft_printf("end: %.3f, %.3f, %.3f\n", object->end.x, object->end.y, object->end.z);
 	ft_printf("radius: %.3f\n", object->radius);
-	ft_printf("reflect: %.3f\n", object->reflect);
 }
 
 int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
@@ -48,14 +48,14 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 	hit->distance = 0.0f;
 	if (object->type == PLANE)
 		hit_found = intersects_plane(ray, object, hit);
-	else if (object->type == DISC)
-		hit_found = intersects_disc(ray, object, hit);
 	else if (object->type == SPHERE)
 		hit_found = intersects_sphere(ray, object, hit);
 	else if (object->type == CYLINDER)
 		hit_found = intersects_cylinder(ray, object, hit);
 	else if (object->type == CONE)
 		hit_found = intersects_cone(ray, object, hit);
+	else if (object->type == DISC)
+		hit_found = intersects_disc(ray, object, hit);
 	if (hit_found)
 	{
 		hit->object = object;
