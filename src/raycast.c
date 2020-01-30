@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 18:14:14 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/30 15:38:13 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ t_rgba	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	// 	return (0);
 	// }
 
-	color = ft_make_rgba(0,0,0,1);
+	color = scene->ambient_color;
 	if (trace(ray, scene, hit))
 	{
 		color = shade(ray, scene, hit);

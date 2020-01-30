@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 18:28:09 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/30 15:38:57 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void render(t_env *env, t_scene *scene)
 		cur.x = 0;
 		while (cur.x < env->width)
 		{
-			t_rgba color = ft_make_rgba(0, 0, 0, 1);
+			t_rgba color = ft_make_rgba(0,0,0,1);
 			int i = 0;
 			while (i < RAYS_PER_PIXEL)
 			{
