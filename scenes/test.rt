@@ -1,6 +1,6 @@
 OBJECTS 4
 LIGHTS 1
-COLOR .7 .1 .7
+COLOR .1 .1 .1
 CAMERA
 pos 0.0 0.0 30.0
 fov 60.0
@@ -9,9 +9,9 @@ look_at 0 0 0
 LIGHT
 type 1
 pos 10 10 20
-dir 0.8 -1 -1
+dir 0.8 -.5 -1
 col 1 1 1
-int 1
+int 2
 #
 SPHERE
 pos 0 0 0
@@ -32,7 +32,7 @@ rad 3.0
 ref 0
 #
 SPHERE
-pos -7 2 5
+pos -7 2 10
 rot 0 0 0
 sca 1 1 1
 nor 0 1 0
