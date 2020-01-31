@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 18:03:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 20:12:42 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/31 15:17:25 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,16 @@ t_rgba	ft_mul_rgba(t_rgba c, double t)
 	c.g *= t;
 	c.b *= t;
 	c.a *= t;
-	return (ft_clamp_rgba(c));
+	return (c);
+}
+
+t_rgba	ft_mul_rgba_rgba(t_rgba a, t_rgba b)
+{
+	a.r *= b.r;
+	a.g *= b.g;
+	a.b *= b.b;
+	a.a *= b.a;
+	return (a);
 }
 
 t_rgba ft_add_rgba(t_rgba c1, t_rgba c2)
@@ -71,7 +80,9 @@ int		ft_get_color(t_rgba c)
 	int r;
 	int g;
 	int b;
-
+	r = 0;
+	g = 0;
+	b = 0;
 	r = (int)(c.r * 255.0f) << 16;
 	g = (int)(c.g * 255.0f) << 8;
 	b = (int)(c.b * 255.0f);

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/30 17:33:53 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/31 17:49:06 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ typedef enum		e_object_type
 
 typedef enum		e_light_type
 {
-	POINT,
-	DIRECTIONAL
+	DIRECTIONAL,
+	POINT
 }					t_light_type;
 
 typedef struct	s_quadratic
@@ -216,6 +216,8 @@ t_rgba			ft_make_rgba(double r, double g, double b, double a);
 t_rgba			ft_mul_rgba(t_rgba c, double t);
 t_rgba 			ft_add_rgba(t_rgba c1, t_rgba c2);
 t_rgba			ft_lerp_rgba(t_rgba c1, t_rgba c2, double t);
+t_rgba			ft_clamp_rgba(t_rgba c);
+t_rgba			ft_mul_rgba_rgba(t_rgba a, t_rgba b);
 int				ft_get_color(t_rgba c);
 
 void			draw_line(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color);

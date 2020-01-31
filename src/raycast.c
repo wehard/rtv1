@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/30 18:47:36 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/01/31 18:16:11 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,46 +60,87 @@ static int	is_in_shadow(t_light *light, t_scene *scene, t_raycasthit *origin)
 	return (0);
 }
 
-static double	calc_light(t_scene *scene, t_light *light, t_raycasthit *hit)
+static t_rgba	calc_diffuse(t_light *light, t_raycasthit *hit)
 {
-	t_vec3 dir;
-	double dist;
-	double amount;
-	double ldn;
-	double spec;
-	int in_shadow;
+	// N hit normal
+	// L vec from hit point to light source
+	// all vectors normalized!
+	t_rgba diffuse;
+	t_vec3 light_dir;
+	double ndotl;
+	double distance;
+	double attenuation;
 
-	in_shadow = 0;
 
-	amount = 0.0;
-	dist = ft_len_vec3(ft_sub_vec3(light->position, hit->point));
 	if (light->type == POINT)
-		dir = ft_normalize_vec3(ft_sub_vec3(light->position, hit->point));
+		light_dir = ft_normalize_vec3(ft_sub_vec3(light->position, hit->point));
 	else
-		dir = ft_normalize_vec3(ft_mul_vec3(light->direction, -1.0));
-	ldn = ft_max_d(0.0, ft_dot_vec3(dir, hit->normal));
-	//spec = ft_lerp_f(pow(ldn, 200), 1, 0.5);
-	in_shadow = is_in_shadow(light, scene, hit);
-	amount = (1 - in_shadow) * light->intensity * ldn;
-	return (amount);
+		light_dir = ft_normalize_vec3(ft_mul_vec3(light->direction, -1.0));
+	ndotl = ft_dot_vec3(hit->normal, light_dir);
+	diffuse = ft_mul_rgba(light->color, ft_max_d(ndotl, 0.0));
+	return (ft_mul_rgba(diffuse, light->intensity));
+}
+
+static t_rgba	calc_specular(t_light *light, t_raycasthit *hit, t_vec3 cam)
+{
+	t_rgba specular;
+	t_vec3 light_dir;
+	t_vec3 r;
+	t_vec3 c;
+	double strength = 0.5;
+	unsigned int k;
+
+	if (light->type == POINT)
+		light_dir = ft_normalize_vec3(ft_sub_vec3(light->position, hit->point));
+	else
+		light_dir = ft_normalize_vec3(ft_mul_vec3(light->direction, -1.0));
+	light_dir = ft_mul_vec3(light_dir, -1);
+	r = ft_normalize_vec3(ft_reflect_vec3(light_dir, hit->normal));
+	c = ft_normalize_vec3(ft_sub_vec3(cam, hit->point));
+	k = 32;
+	specular = ft_mul_rgba(ft_mul_rgba(light->color, pow(ft_max_d(ft_dot_vec3(r, c), 0.0), k)), strength);
+	return (specular);
 }
 
 static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 {
-	double	l;
+	double ambient_strength;
+	t_rgba color;
+	t_rgba diffuse;
+	t_rgba specular;
+	//t_rgba ambient;
 	int		i;
+	double distance;
+	double attenuation;
+	double shadow_strength;
 
-	hit->color = hit->object->color;
-	l = 0.0;
+
+	shadow_strength = 0.0;
+	ambient_strength = 1;
+	//ambient = ft_mul_rgba(hit->object->color, ambient_strength);
+	diffuse = ft_make_rgba(0,0,0,1);
+	specular = ft_make_rgba(0,0,0,1);
 	i = 0;
 	while (i < scene->num_lights)
 	{
-		l += calc_light(scene, &scene->lights[i], hit);// * 1.0 - (hit->distance / MAX_DISTANCE);
+		if (scene->lights[i].type == POINT)
+		{
+			distance = ft_len_vec3(ft_sub_vec3(scene->lights[i].position, hit->point));
+			attenuation = 1.0 / (1.0 + 0.045 * distance + 0.0075 * SQR(distance));
+		}
+			attenuation = 1.0 / 1.0 - (hit->distance / MAX_DISTANCE);
 
+		diffuse = ft_add_rgba(diffuse, calc_diffuse(&scene->lights[i], hit));
+		specular = ft_add_rgba(specular, calc_specular(&scene->lights[i], hit, scene->camera.pos));
+
+		if (is_in_shadow(&scene->lights[i], scene, hit))
+			shadow_strength += 1.0 / scene->num_lights;
+		diffuse = ft_mul_rgba(ft_mul_rgba(diffuse, attenuation), 1.0 - shadow_strength * 0.5);
+		specular = ft_mul_rgba(specular, attenuation);
 		i++;
 	}
-	hit->color = ft_mul_rgba(hit->color, ft_clamp_d(l, 0, 1));
-	return (hit->color);
+	color = ft_mul_rgba_rgba(ft_add_rgba(diffuse, specular), hit->object->color);
+	return (color);
 }
 
 t_rgba	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
@@ -115,5 +156,5 @@ t_rgba	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth)
 	{
 		color = shade(ray, scene, hit);
 	}
-	return (color);
+	return (ft_clamp_rgba(color));
 }

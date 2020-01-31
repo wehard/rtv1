@@ -1,5 +1,5 @@
 OBJECTS 9
-LIGHTS 1
+LIGHTS 2
 COLOR 0.06 0.06 0.09
 CAMERA
 fov 55.0
@@ -7,11 +7,18 @@ pos 0.0 10 50.0
 look_at 0 8 0
 #
 LIGHT
-type 0
+type 1
 dir 1 -0.5 -1
-pos -30 30 30
+pos 0 -5 20
 col 1 1 1
-int 3
+int 1
+#
+LIGHT
+type 1
+dir 1 -0.5 -1
+pos 10 -5 20
+col 1 1 1
+int 1
 #
 PLANE
 pos 0 -5 -10
@@ -22,7 +29,6 @@ sca 50 50 50
 SPHERE
 pos 0 4 0
 rot 0 0 0
-sca 0 0 0
 col 0.2 0.6 0.2
 rad 10
 ref 0
