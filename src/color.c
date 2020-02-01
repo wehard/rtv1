@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 18:03:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/31 15:17:25 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/01 17:06:34 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,15 @@ t_rgba ft_add_rgba(t_rgba c1, t_rgba c2)
 	c1.g += c2.g;
 	c1.b += c2.b;
 	c1.a += c2.a;
+	return (c1);
+}
+
+t_rgba ft_sub_rgba(t_rgba c1, t_rgba c2)
+{
+	c1.r -= c2.r;
+	c1.g -= c2.g;
+	c1.b -= c2.b;
+	c1.a -= c2.a;
 	return (c1);
 }
 

@@ -5,11 +5,8 @@ Implement Raytracing protocol to render a scene from a specific angle and positi
 
 ### Features
 - Shapes
-	- Plane
-	- Sphere
-	- Cylinder
-	- Cone
-- Translation, rotation and scaling of shapes
+	- Plane, Sphere, Cylinder, Cone
+	- Translation, rotation and scaling of shapes
 - Camera
 	- Translation rotation and fov
 - Light management
@@ -61,5 +58,16 @@ col <r> <g> <b>
 ```
 
 #### Objects
+
+Objects are defined using their type and properties. Some objecs ignore some of the properties if they don't need them.
+
+```
+PLANE/SPHERE/CYLINDER/CONE
+pos <x> <y> <z>
+rot <x> <y> <z> (degrees)
+sca <x> <y> <z>
+rad <double>
+col <x> <y> <z>
+```
 
 <img src="https://github.com/wehard/rtv1/blob/master/assets/rtv1.png?raw=true"/>

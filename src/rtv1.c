@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/30 15:38:57 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/01 15:35:15 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void render(t_env *env, t_scene *scene)
 				double u = (double)cur.x / (double)WIN_W;
 				double v = (double)cur.y / (double)WIN_H;
 				ray = get_camera_ray(&scene->camera, u, v);
-				color = ft_lerp_rgba(color, raycast(&ray, scene, &hit, 0), 0.5);
+				color = raycast(&ray, scene, &hit, 0);
 				i++;
 			}
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(color));

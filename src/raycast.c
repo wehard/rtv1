@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/31 18:16:11 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/01 17:35:05 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static t_rgba	calc_specular(t_light *light, t_raycasthit *hit, t_vec3 cam)
 	r = ft_normalize_vec3(ft_reflect_vec3(light_dir, hit->normal));
 	c = ft_normalize_vec3(ft_sub_vec3(cam, hit->point));
 	k = 32;
-	specular = ft_mul_rgba(ft_mul_rgba(light->color, pow(ft_max_d(ft_dot_vec3(r, c), 0.0), k)), strength);
+	specular = ft_mul_rgba(ft_mul_rgba(ft_mul_rgba(ft_make_rgba(1,1,1,1), light->intensity), pow(ft_max_d(ft_dot_vec3(r, c), 0.0), k)), strength);
 	return (specular);
 }
 
@@ -112,10 +112,7 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	int		i;
 	double distance;
 	double attenuation;
-	double shadow_strength;
 
-
-	shadow_strength = 0.0;
 	ambient_strength = 1;
 	//ambient = ft_mul_rgba(hit->object->color, ambient_strength);
 	diffuse = ft_make_rgba(0,0,0,1);
@@ -128,18 +125,16 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 			distance = ft_len_vec3(ft_sub_vec3(scene->lights[i].position, hit->point));
 			attenuation = 1.0 / (1.0 + 0.045 * distance + 0.0075 * SQR(distance));
 		}
-			attenuation = 1.0 / 1.0 - (hit->distance / MAX_DISTANCE);
+			attenuation = 1.0; // / 1.0 - (hit->distance / MAX_DISTANCE);
 
 		diffuse = ft_add_rgba(diffuse, calc_diffuse(&scene->lights[i], hit));
 		specular = ft_add_rgba(specular, calc_specular(&scene->lights[i], hit, scene->camera.pos));
 
-		if (is_in_shadow(&scene->lights[i], scene, hit))
-			shadow_strength += 1.0 / scene->num_lights;
-		diffuse = ft_mul_rgba(ft_mul_rgba(diffuse, attenuation), 1.0 - shadow_strength * 0.5);
+		diffuse = ft_mul_rgba(diffuse, attenuation);
 		specular = ft_mul_rgba(specular, attenuation);
 		i++;
 	}
-	color = ft_mul_rgba_rgba(ft_add_rgba(diffuse, specular), hit->object->color);
+	color = ft_mul_rgba_rgba(hit->object->color, ft_add_rgba(diffuse, specular));
 	return (color);
 }
 

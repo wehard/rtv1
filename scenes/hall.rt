@@ -1,0 +1,71 @@
+OBJECTS 8
+LIGHTS 1
+COLOR 0 0 0
+CAMERA
+fov 60.0
+pos 0.0 15 30.0
+look_at 0 10 10
+#
+LIGHT
+type 1
+dir 0 -1 -1
+pos 0 10 20
+col 1 1 1
+int 1
+#
+PLANE
+pos 0 0 0
+col .2 .2 .4
+rot 0 0 0
+rad 1.0
+sca 0 0 0
+#
+PLANE
+pos 0 0 -10
+col .2 .2 .2
+rot -90 0 0
+rad 1.0
+sca 0 0 0
+#
+PLANE
+pos 0 20 0
+col .2 .2 .2
+rot 0 0 0
+rad 1.0
+sca 0 0 0
+#
+SPHERE
+pos 0 3 0
+col 0.3 0.3 1
+rad 3.0
+ref 0
+#
+CYLINDER
+pos -8 0 8
+col 0 .8 .2
+rot 0 0 0
+rad 1
+ref 0
+#
+CYLINDER
+pos 8 0 8
+rot 0 0 0
+col 0 .8 .2
+rad 1
+nor 1 1 1
+ref 0
+#
+CYLINDER
+col 0 .8 .2
+pos -8 0 -8
+rad 1
+nor 1 1 1
+ref 0
+#
+CYLINDER
+col 0 .8 .2
+pos 8 0 -8
+rad 1
+nor 1 1 1
+ref 0
+#
