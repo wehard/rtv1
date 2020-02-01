@@ -1,7 +1,7 @@
 # RTv1
 
 ### Objective
-Implement Raytracing protocol to render a scene from a specific angle and position. The scene is composed of simple geometric primitives and is illuminated by the lighting system defined in the scene file.
+Implement Raytracing protocol to render a scene from a specific angle and position. The scene is composed of simple geometric shapes and is illuminated by the lighting system defined in the scene file.
 
 ### Features
 - Shapes
@@ -26,6 +26,16 @@ Implement Raytracing protocol to render a scene from a specific angle and positi
 
 
 ### Scene definition
+
+All sections are need to end with a closing ```#```
+```
+HEADER
+#
+LIGHT
+#
+OBJECT
+#
+```
 
 #### Header
 Camera is defined in the header. [There can be only one!](https://www.youtube.com/watch?v=_J3VeogFUOs)
