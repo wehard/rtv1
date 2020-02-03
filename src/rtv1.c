@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/01 15:35:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 16:36:23 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,6 @@ static void print_vec3(t_vec3 v)
 	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
 }
 
-#define DEBUG 0
-
-
-
 static t_vec2i world_to_screen_point(t_camera *camera, t_vec3 wp)
 {
 	t_vec3 dir;
@@ -99,6 +95,7 @@ int		mouse_press(int button, int x, int y, void *param)
 	return (1);
 }
 */
+
 int	update(void *param)
 {
 	t_env *env;
@@ -117,6 +114,20 @@ int	update(void *param)
 			ft_printf("error: failed to read scene!\n");
 	}
 	return (0);
+}
+
+static void draw_lights(t_env *env, t_scene *scene)
+{
+	int i;
+	t_vec2i p;
+
+	i = 0;
+	while (i < scene->num_lights)
+	{
+		p = world_to_screen_point(&scene->camera, scene->lights[i].position);
+		mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, p.x, p.y, ft_get_color(scene->lights[i].color), scene->lights[i].type == DIRECTIONAL ? "D" : "P");
+		i++;
+	}
 }
 
 void render(t_env *env, t_scene *scene)
@@ -143,7 +154,7 @@ void render(t_env *env, t_scene *scene)
 				double u = (double)cur.x / (double)WIN_W;
 				double v = (double)cur.y / (double)WIN_H;
 				ray = get_camera_ray(&scene->camera, u, v);
-				color = raycast(&ray, scene, &hit, 0);
+				color = raycast(&ray, scene, &hit);
 				i++;
 			}
 			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(color));
@@ -152,6 +163,7 @@ void render(t_env *env, t_scene *scene)
 		cur.y--;
 	}
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
+	draw_lights(env, scene);
 	end = clock();
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 	ft_printf("scene rendered in: %fs\n", cpu_time_used);

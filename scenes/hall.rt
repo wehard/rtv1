@@ -1,6 +1,6 @@
 OBJECTS 8
 LIGHTS 2
-COLOR 0 0 0
+COLOR .1 .1 .1
 CAMERA
 fov 60.0
 pos 0.0 10 30.0
@@ -10,14 +10,14 @@ LIGHT
 type 0
 pos 40 10 50
 dir 0.6 -0.3 -1
-col 0 0 1
-int .4
+col 1 .5 .5
+int .8
 #
 LIGHT
 type 0
 pos -40 10 50
 dir -0.6 -0.3 -1
-col 1 1 0
+col .5 .5 1
 int .8
 #
 PLANE
@@ -31,15 +31,14 @@ col .2 .2 .4
 rot -90 0 0
 #
 PLANE
-pos 0 20 0
+pos 0 40 -30
 col .2 .2 .4
-rot 180 0 0
-nor 0 -1 0
+rot -140 0 0
 #
 SPHERE
-pos 0 4 3
-col .8 .1 .1
-rad 4.0
+pos 0 6 6
+col .5 .1 .1
+rad 3.0
 #
 CYLINDER
 pos -8 0 8

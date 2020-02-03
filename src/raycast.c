@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 14:02:04 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 16:50:15 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "libft.h"
 #include <math.h>
 
-static int		trace(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+static int		trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int stop_at_first)
 {
 	t_raycasthit	cur_hit;
 	double			min_dist;
@@ -23,12 +23,14 @@ static int		trace(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	int				hit_found;
 
 	min_dist = INFINITY;
-	hit_found = 0;
+	hit_found = FALSE;
 	i = 0;
 	while (i < scene->num_objects)
 	{
 		if (intersects_object(ray, &scene->objects[i], &cur_hit))
 		{
+			if (stop_at_first)
+				return (TRUE);
 			hit_found = TRUE;
 			if (cur_hit.distance < min_dist)
 			{
@@ -52,25 +54,18 @@ static int	is_in_shadow(t_light *light, t_scene *scene, t_raycasthit *origin)
 		shadow_ray.direction = ft_normalize_vec3(ft_sub_vec3(light->position, shadow_ray.origin));
 	else
 		shadow_ray.direction = ft_normalize_vec3(ft_mul_vec3(light->direction, -1.0));
-	if (trace(&shadow_ray, scene, &hit))
-	{
-		if (hit.object != shadow_ray.origin_object)
-			return(1);
-	}
-	return (0);
+	if (trace(&shadow_ray, scene, &hit, TRUE) && hit.object != shadow_ray.origin_object)
+		return(TRUE);
+	return (FALSE);
 }
 
 static t_rgba	calc_diffuse(t_light *light, t_raycasthit *hit)
 {
-	// N hit normal
-	// L vec from hit point to light source
-	// all vectors normalized!
 	t_rgba diffuse;
 	t_vec3 light_dir;
 	double ndotl;
 	double distance;
 	double attenuation;
-
 
 	if (light->type == POINT)
 		light_dir = ft_normalize_vec3(ft_sub_vec3(light->position, hit->point));
@@ -87,7 +82,6 @@ static t_rgba	calc_specular(t_light *light, t_raycasthit *hit, t_vec3 cam)
 	t_vec3 light_dir;
 	t_vec3 r;
 	t_vec3 c;
-	double strength = 0.5;
 	unsigned int k;
 
 	if (light->type == POINT)
@@ -98,7 +92,7 @@ static t_rgba	calc_specular(t_light *light, t_raycasthit *hit, t_vec3 cam)
 	r = ft_normalize_vec3(ft_reflect_vec3(light_dir, hit->normal));
 	c = ft_normalize_vec3(ft_sub_vec3(cam, hit->point));
 	k = 32;
-	specular = ft_mul_rgba(ft_mul_rgba(ft_mul_rgba(light->color, light->intensity), pow(ft_max_d(ft_dot_vec3(r, c), 0.0), k)), strength);
+	specular = ft_mul_rgba(ft_mul_rgba(light->color, light->intensity), pow(ft_max_d(ft_dot_vec3(r, c), 0.0), k));
 	return (specular);
 }
 
@@ -113,7 +107,7 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	double distance;
 	double attenuation;
 
-	ambient_strength = 1;
+	ambient_strength = .1;
 	ambient = ft_mul_rgba(hit->object->color, ambient_strength);
 	diffuse = ft_make_rgba(0,0,0,1);
 	specular = ft_make_rgba(0,0,0,1);
@@ -136,7 +130,7 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 		}
 		i++;
 	}
-	color = ft_mul_rgba_rgba(ambient, ft_add_rgba(diffuse, specular));
+	color = ft_mul_rgba_rgba(hit->object->color, ft_add_rgba(ambient, ft_add_rgba(diffuse, specular)));
 	return (color);
 }
 
@@ -145,7 +139,7 @@ t_rgba	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	t_rgba color;
 
 	color = scene->ambient_color;
-	if (trace(ray, scene, hit))
+	if (trace(ray, scene, hit, FALSE))
 		color = shade(ray, scene, hit);
 	return (ft_clamp_rgba(color));
 }
