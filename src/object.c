@@ -13,6 +13,9 @@
 #include "rtv1.h"
 #include "ft_printf.h"
 #include <math.h>
+#include "vector.h"
+#include "libft.h"
+#include "ft_get_next_line.h"
 
 void init_object(t_object *object)
 {
@@ -63,6 +66,42 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit->distance = hit->t;
 	}
 	return (hit_found);
+}
+
+int parse_object(int fd, t_obj_type type, t_object *object)
+{
+	char *line;
+
+	if (type < 0 || !object)
+		ft_printf("error: wrong object type!\n");
+	init_object(object);
+	while(ft_get_next_line(fd, &line))
+	{
+		object->type = type;
+		if (ft_strnequ(line, "pos", 3))
+			object->position = ft_parse_vec3(line);
+		else if (ft_strnequ(line, "rot", 3))
+			object->rotation = ft_parse_vec3(line);
+		else if (ft_strnequ(line, "sca", 3))
+			object->scale = ft_parse_vec3(line);
+		else if (ft_strnequ(line, "col", 3))
+			object->color = ft_parse_rgba(line);
+		else if (ft_strnequ(line, "rad", 3))
+			object->radius = ft_strtod(line + 4);
+		else if (line[0] == '#')
+		{
+			if (type == CYLINDER)
+				rotate_cylinder(object, object->rotation);
+			if (type == CONE)
+				rotate_cone(object, object->rotation);
+			if (type == PLANE)
+				rotate_plane(object, object->rotation);
+			free(line);
+			return (1);
+		}
+		free(line);
+	}
+	return (0);
 }
 
 int solve_quadratic(t_quadratic q, double *t1, double *t2)

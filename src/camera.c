@@ -6,47 +6,89 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 11:29:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/29 18:20:11 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 18:29:01 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
 #include "ft_printf.h"
+#include "ft_get_next_line.h"
 #include <math.h>
 
-int	init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov, double aspect)
+int		init_camera(t_camera *cam, t_vec3 pos, t_vec3 look_at, double fov, double aspect)
 {
-	camera->pos = pos;
-	camera->look_at = look_at;
-	camera->fov = fov;
-	camera->aspect = aspect;
-	ft_printf("camera:\n");
-	ft_printf("%8s %.3f, %.3f, %.3f\n", "pos:", pos.x, pos.y, pos.z);
-	ft_printf("%8s %.3f, %.3f, %.3f\n", "look_at:", look_at.x, look_at.y, look_at.z);
-	ft_printf("%8s %.3f\n", "fov:", fov);
+	t_camera_info	ci;
+
+	cam->pos = pos;
+	cam->look_at = look_at;
+	cam->fov = fov;
+	cam->aspect = aspect;
+	ci.world_up = ft_make_vec3(0, 1, 0);
+	ci.w = ft_normalize_vec3(ft_sub_vec3(cam->pos, cam->look_at));
+	ci.u = ft_normalize_vec3(ft_cross_vec3(ci.world_up, ci.w));
+	ci.v = ft_cross_vec3(ci.w, ci.u);
+	ci.theta = ft_deg_to_rad(cam->fov);
+	ci.half_height = tan(ci.theta / 2.0);
+	ci.half_width = cam->aspect * ci.half_height;
+	cam->lower_left_corner = ft_sub_vec3(cam->pos, ft_sub_vec3(
+		ft_mul_vec3(ci.u, ci.half_width), ft_sub_vec3(
+			ft_mul_vec3(ci.v, ci.half_height), ci.w)));
+	cam->horizontal = ft_mul_vec3(ci.u, ci.half_width * 2);
+	cam->vertical = ft_mul_vec3(ci.v, ci.half_height * 2);
 	return (1);
 }
 
-//return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
-//t_ray get_camera_ray(t_camera *camera, int x, int y)
-t_ray get_camera_ray(t_camera *camera, double u, double v)
+t_ray	get_camera_ray(t_camera *camera, double u, double v)
 {
-	t_camera_info	ci;
 	t_ray			ray;
 
 	ray.origin_object = NULL;
-	ci.world_up = ft_make_vec3(0, 1, 0);
-	ci.w = ft_normalize_vec3(ft_sub_vec3(camera->pos, camera->look_at));
-	ci.u = ft_normalize_vec3(ft_cross_vec3(ci.world_up, ci.w));
-	ci.v = ft_cross_vec3(ci.w, ci.u);
-	ci.theta = ft_deg_to_rad(camera->fov);
-	ci.half_height = tan(ci.theta / 2.0);
-	ci.half_width = camera->aspect * ci.half_height;
-	camera->lower_left_corner = ft_sub_vec3(camera->pos, ft_sub_vec3(ft_mul_vec3(ci.u, ci.half_width), ft_sub_vec3(ft_mul_vec3(ci.v, ci.half_height), ci.w)));
-	camera->horizontal = ft_mul_vec3(ci.u, ci.half_width * 2);
-	camera->vertical = ft_mul_vec3(ci.v, ci.half_height * 2);
 	ray.origin = camera->pos;
-	ray.direction = ft_normalize_vec3(ft_sub_vec3(ft_add_vec3(camera->lower_left_corner, ft_add_vec3(ft_mul_vec3(camera->horizontal, u), ft_mul_vec3(camera->vertical, 1.0 - v - 1.0))), ray.origin));
+	ray.direction = ft_normalize_vec3(ft_sub_vec3(
+		ft_add_vec3(camera->lower_left_corner, ft_add_vec3(
+			ft_mul_vec3(camera->horizontal, u), ft_mul_vec3(
+				camera->vertical, 1.0 - v - 1.0 ))), ray.origin));
 	return (ray);
+}
+
+t_vec2i world_to_screen_point(t_camera *camera, t_vec3 wp)
+{
+	t_vec3 dir;
+	t_vec2i sp;
+	double aspect = (double)WIN_W / (double)WIN_H;
+	dir = ft_normalize_vec3(ft_sub_vec3(wp, camera->pos));
+	t_vec3 ipp = ft_mul_vec3(dir, 1.0);
+	sp.x = ((ipp.x + aspect * 0.5) / aspect) * WIN_W;
+	sp.y =  WIN_H - ((ipp.y + 0.5) * WIN_H);
+	return (sp);
+}
+
+int parse_camera(int fd, t_camera *camera)
+{
+	char *line;
+	t_vec3 pos;
+	t_vec3 look_at;
+	double fov;
+
+	if (!camera)
+		ft_printf("error: camera is null!\n");
+	while(ft_get_next_line(fd, &line))
+	{
+		if (ft_strnequ(line, "pos", 3))
+			pos = ft_parse_vec3(line);
+		else if (ft_strnequ(line, "fov", 3))
+			fov = ft_strtod(ft_strstr(line, " "));
+		else if (ft_strnequ(line, "look_at", 7))
+			look_at = ft_parse_vec3(line);
+		else if (line[0] == '#')
+		{
+			init_camera(camera, pos, look_at, fov,
+				(double)WIN_W / (double)WIN_H);
+			free(line);
+			return (1);
+		}
+		free(line);
+	}
+	return (0);
 }

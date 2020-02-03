@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 16:36:23 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 18:54:01 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,81 +20,12 @@
 #include "keys.h"
 #include "vector.h"
 #include "matrix.h"
-
-int		key_press(int key, void *param)
-{
-	t_env *env;
-
-	env = (t_env*)param;
-	ft_printf("key: %d\n", key);
-	if (key == KEY_ESC)
-		del_env_exit(env);
-	if (key == KEY_SPACE)
-		update(param);
-	if (key == KEY_LEFT)
-	{
-		env->scene->camera.look_at.x -= 1.0;
-		env->scene->camera.pos.x -= 1.0;
-	}
-	if (key == KEY_RIGHT)
-	{
-		env->scene->camera.look_at.x += 1.0;
-		env->scene->camera.pos.x += 1.0;
-	}
-	if (key == KEY_UP)
-		env->scene->camera.pos.z -= 1.0;
-	if (key == KEY_DOWN)
-		env->scene->camera.pos.z += 1.0;
-	render(env, env->scene);
-	return (0);
-}
+#include <pthread.h>
 
 static void print_vec3(t_vec3 v)
 {
 	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
 }
-
-static t_vec2i world_to_screen_point(t_camera *camera, t_vec3 wp)
-{
-	t_vec3 dir;
-	t_vec2i sp;
-	double aspect = (double)WIN_W / (double)WIN_H;
-	dir = ft_normalize_vec3(ft_sub_vec3(wp, camera->pos));
-	t_vec3 ipp = ft_mul_vec3(dir, 1.0);
-	sp.x = ((ipp.x + aspect * 0.5) / aspect) * WIN_W;
-	sp.y =  WIN_H - ((ipp.y + 0.5) * WIN_H);
-	return (sp);
-}
-/*
-int		mouse_press(int button, int x, int y, void *param)
-{
-	t_env *env;
-	t_ray ray;
-	t_raycasthit hit;
-
-	env = (t_env*)param;
-	if (button == 1 || button == 2)
-	{
-		ray = get_camera_ray(&env->scene->camera, x, y);
-		print_vec3(ray.direction);
-		if (raycast(&ray, env->scene, &hit, 0))
-		{
-			ft_printf("hitinfo\n");
-			ft_printf("%-10s %.3f, %.3f, %.3f\n", "point:", hit.point.x, hit.point.y, hit.point.z);
-			ft_printf("%-10s %.3f, %.3f, %.3f\n", "normal:", hit.normal.x, hit.normal.y, hit.normal.z);
-			ft_putchar('\n');
-			t_vec2i sp = world_to_screen_point(&env->scene->camera, hit.point);
-			t_vec2i np = world_to_screen_point(&env->scene->camera, ft_add_vec3(hit.point, hit.normal));
-			draw_line(env->mlx, ft_make_vec3(sp.x, sp.y, 0), ft_make_vec3(np.x, np.y, 0), 0x00FFFF);
-			if (button == 2)
-				env->scene->camera.look_at = hit.point;
-		}
-		else
-			ft_printf("No hit!\n");
-	}
-	return (1);
-}
-*/
 
 int	update(void *param)
 {
@@ -116,16 +47,18 @@ int	update(void *param)
 	return (0);
 }
 
-static void draw_lights(t_env *env, t_scene *scene)
+void	draw_lights(t_env *env, t_scene *scene)
 {
-	int i;
-	t_vec2i p;
+	int		i;
+	t_vec2i	p;
 
 	i = 0;
 	while (i < scene->num_lights)
 	{
 		p = world_to_screen_point(&scene->camera, scene->lights[i].position);
-		mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, p.x, p.y, ft_get_color(scene->lights[i].color), scene->lights[i].type == DIRECTIONAL ? "D" : "P");
+		mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, p.x, p.y,
+			ft_get_color(scene->lights[i].color),
+			scene->lights[i].type == DIRECTIONAL ? "D" : "P");
 		i++;
 	}
 }
@@ -137,30 +70,25 @@ void render(t_env *env, t_scene *scene)
 	t_ray 			ray;
 	t_raycasthit	hit;
 	t_vec2i			cur;
-	int seed = 1234;
+	t_vec2			screen;
 
-	clear_mlx_img(env->mlx_img);
+	init_camera(&scene->camera, scene->camera.pos, scene->camera.look_at,
+		scene->camera.fov, scene->camera.aspect);
 	start = clock();
-	cur.y = env->height;
-	while (cur.y >= 0)
+	cur.y = 0;
+	while (cur.y < env->height)
 	{
 		cur.x = 0;
 		while (cur.x < env->width)
 		{
-			t_rgba color = ft_make_rgba(0,0,0,1);
-			int i = 0;
-			while (i < RAYS_PER_PIXEL)
-			{
-				double u = (double)cur.x / (double)WIN_W;
-				double v = (double)cur.y / (double)WIN_H;
-				ray = get_camera_ray(&scene->camera, u, v);
-				color = raycast(&ray, scene, &hit);
-				i++;
-			}
-			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y, ft_get_color(color));
+			screen.x = (double)cur.x / (double)WIN_W;
+			screen.y = (double)cur.y / (double)WIN_H;
+			ray = get_camera_ray(&scene->camera, screen.x, screen.y);
+			put_pixel_mlx_img(env->mlx_img, cur.x, cur.y,
+				ft_get_color(raycast(&ray, scene, &hit)));
 			cur.x++;
 		}
-		cur.y--;
+		cur.y++;
 	}
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
 	draw_lights(env, scene);
@@ -183,7 +111,6 @@ int	main(int argc, char **argv)
 	env = init_env(WIN_W, WIN_H, window_title);
 	if (!read_scene(env->scene, argv[1]))
 		return (1);
-	mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, WIN_W/2, WIN_H/2, 0xFFFFFF, "rendering");
 	render(env, env->scene);
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);
 	mlx_expose_hook(env->mlx->win_ptr, update, (void*)env);

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 14:00:52 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 18:35:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "vector.h"
 # include "time.h"
 # include "matrix.h"
+# include "color.h"
 
 # define SQR(value) value * value
 # define WIN_W 800
@@ -29,7 +30,7 @@
 # define TRUE 1
 # define FALSE 0
 
-typedef enum		e_object_type
+typedef enum	e_obj_type
 {
 	PLANE,
 	DISC,
@@ -39,13 +40,13 @@ typedef enum		e_object_type
 	BOX,
 	LIGHT,
 	CAMERA
-}					t_object_type;
+}				t_obj_type;
 
-typedef enum		e_light_type
+typedef enum	e_lgt_type
 {
 	DIRECTIONAL,
 	POINT
-}					t_light_type;
+}				t_lgt_type;
 
 typedef struct	s_quadratic
 {
@@ -54,35 +55,27 @@ typedef struct	s_quadratic
 	double		c;
 }				t_quadratic;
 
-typedef struct		s_rgba
+typedef struct	s_light
 {
-	double			r;
-	double			g;
-	double			b;
-	double			a;
-}					t_rgba;
+	t_lgt_type	type;
+	t_vec3		position;
+	t_vec3		direction;
+	double		intensity;
+	t_rgba		color;
+}				t_light;
 
-typedef struct		s_light
+typedef struct	s_object
 {
-	t_light_type	type;
-	t_vec3			position;
-	t_vec3			direction;
-	double			intensity;
-	t_rgba			color;
-}					t_light;
-
-typedef struct		s_object
-{
-	t_object_type	type;
-	t_vec3			position;
-	t_vec3			rotation;
-	t_vec3			scale;
-	t_rgba			color;
-	double			radius;
-	t_vec3			start;
-	t_vec3			end;
-	t_vec3			normal;
-}					t_object;
+	t_obj_type	type;
+	t_vec3		position;
+	t_vec3		rotation;
+	t_vec3		scale;
+	t_rgba		color;
+	double		radius;
+	t_vec3		start;
+	t_vec3		end;
+	t_vec3		normal;
+}				t_object;
 
 typedef struct	s_ray
 {
@@ -102,7 +95,6 @@ typedef struct	s_raycasthit
 	double		distance;
 	t_rgba		color;
 }				t_raycasthit;
-
 
 typedef struct	s_camera_info
 {
@@ -140,16 +132,16 @@ typedef struct	s_scene
 	t_camera	camera;
 }				t_scene;
 
-typedef struct		s_mlx_img
+typedef struct	s_mlx_img
 {
-	void			*img;
-	char			*d_addr;
-	int				bpp;
-	int				size_line;
-	int				endian;
-	int				width;
-	int				height;
-}					t_mlx_img;
+	void		*img;
+	char		*d_addr;
+	int			bpp;
+	int			size_line;
+	int			endian;
+	int			width;
+	int			height;
+}				t_mlx_img;
 
 typedef struct	s_mlx
 {
@@ -170,36 +162,39 @@ t_env			*init_env(int width, int height, char *title);
 void			del_env_exit(t_env *env);
 
 int				read_scene(t_scene *scene, char *path);
-t_vec3			parse_vec3(char *str);
-t_rgba			parse_rgba(char *line);
 int				parse_light(int fd, t_light *light);
-int				parse_object(int fd, t_object_type type, t_object *object);
+int				parse_object(int fd, t_obj_type type, t_object *object);
 int				parse_camera(int fd, t_camera *camera);
-void 			render(t_env *env, t_scene *scene);
+void			render(t_env *env, t_scene *scene);
 int				update(void *param);
 
+int				is_in_shadow(t_light *light, t_scene *scene, t_raycasthit *origin);
+t_rgba			calc_diffuse(t_light *light, t_raycasthit *hit);
+t_rgba			calc_specular(t_light *light, t_raycasthit *hit, t_vec3 cam);
 t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
 int				init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov, double aspect);
-t_ray 			get_camera_ray(t_camera *camera, double u, double v);
+t_ray			get_camera_ray(t_camera *camera, double u, double v);
+t_vec2i			world_to_screen_point(t_camera *camera, t_vec3 wp);
 
-void 			init_object(t_object *object);
+void			init_object(t_object *object);
 int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
 int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
 int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit);
 int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
-int 			solve_quadratic(t_quadratic q, double *t1, double *t2);
+int				solve_quadratic(t_quadratic q, double *t1, double *t2);
 
 void			rotate_cylinder(t_object *c, t_vec3 rot);
 void			rotate_cone(t_object *c, t_vec3 rot);
 void			rotate_plane(t_object *p, t_vec3 rot);
 
 t_rgba			raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit);
-//int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit);
+
+int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int stop_at_first);
 
 t_vec3			point_on_ray(t_ray *r, double t);
 void			init_raycasthit(t_raycasthit *hit);
@@ -209,18 +204,13 @@ t_vec3			calculate_hit_normal(t_raycasthit *hit);
 
 time_t			check_mod_time(char *path);
 
-/*
-** colors
-*/
-t_rgba			ft_make_rgba(double r, double g, double b, double a);
-t_rgba			ft_mul_rgba(t_rgba c, double t);
-t_rgba 			ft_add_rgba(t_rgba c1, t_rgba c2);
-t_rgba 			ft_sub_rgba(t_rgba c1, t_rgba c2);
-t_rgba			ft_lerp_rgba(t_rgba c1, t_rgba c2, double t);
-t_rgba			ft_clamp_rgba(t_rgba c);
-t_rgba			ft_mul_rgba_rgba(t_rgba a, t_rgba b);
-int				ft_get_color(t_rgba c);
+
 
 void			draw_line(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color);
+
+int				key_press(int key, void *param);
+int				mouse_press(int button, int x, int y, void *param);
+
+void draw_lights(t_env *env, t_scene *scene);
 
 #endif

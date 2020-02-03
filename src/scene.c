@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/27 13:13:35 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 18:24:35 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "ft_get_next_line.h"
 #include <stdio.h>
 
-static t_object_type parse_object_type(char *line)
+static t_obj_type parse_object_type(char *line)
 {
 	if (ft_strequ(line, "PLANE"))
 		return PLANE;
@@ -75,10 +75,10 @@ int		read_scene(t_scene *scene, char *path)
 			ft_printf("lights: %d\n", scene->num_lights);
 		}
 		else if (ft_strnequ(line, "COLOR", 5))
-			scene->ambient_color = parse_rgba(line);
+			scene->ambient_color = ft_parse_rgba(line);
 		else
 		{
-			t_object_type type = parse_object_type(line);
+			t_obj_type type = parse_object_type(line);
 			if (type == CAMERA)
 				parse_camera(fd, &scene->camera);
 			else if (type == LIGHT)

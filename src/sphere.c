@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/31 18:02:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 17:33:19 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@ t_object	make_sphere()
 
 int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 {
-	t_quadratic q;
-	double t0, t1;
+	t_quadratic	q;
+	double		t0;
+	double		t1;
+	t_vec3		oc;
 
-	t_vec3 oc = ft_sub_vec3(ray->origin, sphere->position);
+	oc = ft_sub_vec3(ray->origin, sphere->position);
 	q.a = ft_dot_vec3(ray->direction, ray->direction);
 	q.b = 2.0 * ft_dot_vec3(oc, ray->direction);
 	q.c = ft_dot_vec3(oc, oc) - SQR(sphere->radius);
-
 	if (solve_quadratic(q, &t0, &t1))
 	{
 		if (t0 > t1)
@@ -46,7 +47,7 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 		{
 			t0 = t1;
 			if (t0 < 0)
-				return (0);
+				return (FALSE);
 		}
 		hit->t = t0;
 		hit->point = point_on_ray(ray, hit->t);
