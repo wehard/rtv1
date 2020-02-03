@@ -8,17 +8,15 @@ look_at 0 0 0
 #
 LIGHT
 type 1
-pos -5 10 20
-dir 0 -1 -1
+pos -20 10 20
 col 1 1 1
-int 0.7
+int .5
 #
 LIGHT
-type 0
-pos 5 20 20
-dir -1 -1 -1
+type 1
+pos 20 10 20
 col 1 1 1
-int 0.7
+int .5
 #
 SPHERE
 pos 0 0 0

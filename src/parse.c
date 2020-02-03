@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 13:08:03 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/30 17:35:25 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 13:58:59 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	parse_light(int fd, t_light *light)
 		ft_printf("error: light is null!\n");
 	light->type = 0;
 	light->position = ft_make_vec3(0, 0, 0);
-	light->direction = ft_make_vec3(0, 1, 0);
+	light->direction = ft_make_vec3(0, 0, -1);
 	light->color = ft_make_rgba(1, 1, 1, 1);
 	light->intensity = 1.0;
 	while(ft_get_next_line(fd, &line))
@@ -98,8 +98,8 @@ int parse_object(int fd, t_object_type type, t_object *object)
 			object->scale = parse_vec3(line);
 		else if (ft_strnequ(line, "col", 3))
 			object->color = parse_rgba(line);
-		else if (ft_strnequ(line, "nor", 3))
-			object->normal = parse_vec3(line);
+		//else if (ft_strnequ(line, "nor", 3))
+		//	object->normal = parse_vec3(line);
 		else if (ft_strnequ(line, "rad", 3))
 			object->radius = ft_strtod(line + 4);
 		else if (line[0] == '#')

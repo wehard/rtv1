@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/01 17:07:00 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/03 14:00:52 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ void			rotate_cylinder(t_object *c, t_vec3 rot);
 void			rotate_cone(t_object *c, t_vec3 rot);
 void			rotate_plane(t_object *p, t_vec3 rot);
 
-t_rgba			raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit, int depth);
+t_rgba			raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit);
 //int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit);
 
 t_vec3			point_on_ray(t_ray *r, double t);

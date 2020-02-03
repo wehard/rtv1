@@ -7,18 +7,18 @@ pos 0.0 10 50.0
 look_at 0 8 0
 #
 LIGHT
-type 1
+type 0
 dir 1 -0.5 -1
-pos 0 -5 20
+pos -20 0 20
 col 1 1 1
-int 1
+int .5
 #
 LIGHT
-type 1
-dir 1 -0.5 -1
-pos 10 -5 20
+type 0
+dir -1 -0.5 -1
+pos 20 0 20
 col 1 1 1
-int 1
+int .5
 #
 PLANE
 pos 0 -5 -10
