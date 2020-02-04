@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 19:28:24 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/04 16:39:40 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ void *render_thread(void *env_ptr)
 	t_raycasthit	hit;
 
 	env = (t_env*)env_ptr;
-	cur.y = env->thread_index * (WIN_H / NUM_THREADS);
-	env->height = (env->thread_index + 1) * (WIN_H / NUM_THREADS);
+	cur.y = env->thread_index; // * (WIN_H / NUM_THREADS);
+	//env->height = (env->thread_index + 1) * (WIN_H / NUM_THREADS);
 	while (cur.y < env->height)
 	{
 		cur.x = 0;
@@ -86,7 +86,7 @@ void *render_thread(void *env_ptr)
 				ft_get_color(raycast(&ray, env->scene, &hit)));
 			cur.x++;
 		}
-		cur.y++;
+		cur.y += NUM_THREADS;
 	}
 	return (env_ptr);
 }
@@ -103,11 +103,15 @@ void render(t_env *env, t_scene *scene)
 	init_camera(&scene->camera, scene->camera.pos, scene->camera.look_at,
 		scene->camera.fov, scene->camera.aspect);
 	start = clock();
+	i = 0;
 	while (i < NUM_THREADS)
 	{
 		ft_memcpy((void*)&thread_env[i], (void*)env, sizeof(t_env));
 		thread_env[i].thread_index = i;
-		pthread_create(&threads[i], NULL, render_thread, &thread_env[i]);
+		if (pthread_create(&threads[i], NULL, render_thread, &thread_env[i]) != 0)
+		{
+			ft_printf("error: thread failed!\n");
+		}
 		i++;
 	}
 	while (i--)

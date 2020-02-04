@@ -10,13 +10,13 @@ LIGHT
 type 1
 pos -20 10 30
 col 1 1 1
-int .2
+int .5
 #
 LIGHT
 type 1
 pos 20 10 30
 col 1 1 1
-int .8
+int .5
 #
 PLANE
 pos 0 -2 0

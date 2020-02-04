@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 18:38:10 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/04 17:57:16 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,14 @@ int		trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int stop_at_first)
 
 static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 {
-	double ambient_strength;
 	t_rgba color;
 	t_rgba diffuse;
 	t_rgba specular;
-	t_rgba ambient;
 	int		i;
 	double distance;
 	double attenuation;
 
-	ambient_strength = .1;
-	ambient = ft_mul_rgba(hit->object->color, ambient_strength);
+	t_rgba ambient = ft_mul_rgba(hit->object->color, 0.18);
 	diffuse = ft_make_rgba(0,0,0,1);
 	specular = ft_make_rgba(0,0,0,1);
 	i = 0;
@@ -66,7 +63,8 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 			distance = ft_len_vec3(ft_sub_vec3(scene->lights[i].position, hit->point));
 			attenuation = 1.0 / (1.0 + 0.045 * distance + 0.0075 * SQR(distance));
 		}
-			attenuation = 1.0;
+		else
+			attenuation = 1.0 - (hit->distance / MAX_DISTANCE);
 
 		if (!is_in_shadow(&scene->lights[i], scene, hit))
 		{
@@ -77,7 +75,7 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 		}
 		i++;
 	}
-	color = ft_mul_rgba_rgba(hit->object->color, ft_add_rgba(ambient, ft_add_rgba(diffuse, specular)));
+	color =  ft_add_rgba(ambient, ft_add_rgba(ft_mul_rgba_rgba(hit->object->color, diffuse), specular));
 	return (color);
 }
 

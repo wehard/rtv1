@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 19:20:05 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/04 16:34:46 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "color.h"
 
 # define SQR(value) value * value
-# define NUM_THREADS 6
+# define NUM_THREADS 60
 # define WIN_W 800
 # define WIN_H 600
 # define MAX_RAY_DEPTH 5

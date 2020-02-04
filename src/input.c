@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 16:58:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 17:20:04 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/04 16:43:32 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int		key_press(int key, void *param)
 	t_env *env;
 
 	env = (t_env*)param;
-	ft_printf("key: %d\n", key);
 	if (key == KEY_ESC)
 		del_env_exit(env);
 	if (key == KEY_SPACE)
@@ -35,9 +34,15 @@ int		key_press(int key, void *param)
 		env->scene->camera.pos.x += 1.0;
 	}
 	if (key == KEY_UP)
+	{
 		env->scene->camera.pos.z -= 1.0;
+		env->scene->camera.look_at.z -= 1.0;
+	}
 	if (key == KEY_DOWN)
+	{
 		env->scene->camera.pos.z += 1.0;
+		env->scene->camera.look_at.z += 1.0;
+	}
 	render(env, env->scene);
 	return (0);
 }
