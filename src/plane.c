@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:56:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void		rotate_plane(t_object *p, t_vec3 rot)
 	p->normal = ft_normalize_vec3(res);
 }
 
-static int	test_quad(t_raycasthit *hit, t_object *plane)
+static int	test_quad(t_hit *hit, t_object *plane)
 {
 	if (hit->point.x > plane->position.x + (plane->scale.x / 2.0) ||
 		hit->point.x < plane->position.x - (plane->scale.x / 2.0))
@@ -39,7 +39,7 @@ static int	test_quad(t_raycasthit *hit, t_object *plane)
 	return (TRUE);
 }
 
-int			intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit)
+int			intersects_plane(t_ray *ray, t_object *plane, t_hit *hit)
 {
 	double t;
 	double d;

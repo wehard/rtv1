@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:42:24 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:14:37 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef struct	s_ray
 	t_object	*origin_object;
 }				t_ray;
 
-typedef struct	s_raycasthit
+typedef struct	s_hit
 {
 	t_vec3		point;
 	t_vec3		normal;
@@ -103,7 +103,7 @@ typedef struct	s_raycasthit
 	double		t2;
 	double		distance;
 	t_rgba		color;
-}				t_raycasthit;
+}				t_hit;
 
 typedef struct	s_camera_info
 {
@@ -140,6 +140,8 @@ typedef struct	s_scene
 	t_rgba		ambient_color;
 	t_camera	camera;
 	t_object	*selected_object;
+	int			l_index;
+	int			o_index;
 }				t_scene;
 
 typedef struct	s_mlx_img
@@ -179,38 +181,41 @@ int				parse_camera(int fd, t_camera *camera);
 void			render(t_env *env, t_scene *scene);
 int				update(void *param);
 
-int				is_in_shadow(t_light *light, t_scene *scene, t_raycasthit *origin);
-t_rgba			calc_diffuse(t_light *light, t_raycasthit *hit);
-t_rgba			calc_specular(t_light *light, t_raycasthit *hit, t_vec3 cam);
+int				is_in_shadow(t_light *light, t_scene *scene,
+								t_hit *origin);
+t_rgba			calc_diffuse(t_light *light, t_hit *hit);
+t_rgba			calc_specular(t_light *light, t_hit *hit, t_vec3 cam);
 t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
-int				init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov);
+int				init_camera(t_camera *camera, t_vec3 pos,
+								t_vec3 look_at, double fov);
 t_ray			get_camera_ray(t_camera *camera, double u, double v);
 t_vec2i			world_to_screen_point(t_camera *camera, t_vec3 wp);
 
 void			init_object(t_object *object);
-int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
-int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
-int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
-int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
-int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
+int				intersects_object(t_ray *ray, t_object *object, t_hit *hit);
+int				intersects_plane(t_ray *ray, t_object *plane, t_hit *hit);
+int				intersects_sphere(t_ray *ray, t_object *sphere, t_hit *hit);
+int				intersects_cylinder(t_ray *ray, t_object *sphere, t_hit *hit);
+int				intersects_cone(t_ray *ray, t_object *cone, t_hit *hit);
 int				solve_quadratic(t_quadratic q, double *t1, double *t2);
 
 void			rotate_cylinder(t_object *c, t_vec3 rot);
 void			rotate_cone(t_object *c, t_vec3 rot);
 void			rotate_plane(t_object *p, t_vec3 rot);
 
-t_rgba			raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit);
+t_rgba			raycast(t_ray *ray, t_scene *scene, t_hit *hit);
 
-int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int stop_at_first);
+int				trace(t_ray *ray, t_scene *scene, t_hit *hit,
+					int stop_at_first);
 
 t_vec3			point_on_ray(t_ray *r, double t);
-void			init_raycasthit(t_raycasthit *hit);
+void			init_raycasthit(t_hit *hit);
 
 void			print_object_info(t_object *object);
-t_vec3			calculate_hit_normal(t_raycasthit *hit);
+t_vec3			calculate_hit_normal(t_hit *hit);
 
 time_t			check_mod_time(char *path);
 

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:00:58 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:00:11 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 ** theta half cone angle
 */
 
-static t_vec3	calc_cone_normal(t_object *cone, t_raycasthit *hit)
+static t_vec3	calc_cone_normal(t_object *cone, t_hit *hit)
 {
 	t_vec3 n;
 	t_vec3 cp;
@@ -47,7 +47,7 @@ void			rotate_cone(t_object *c, t_vec3 rot)
 	c->start = c->position;
 }
 
-static int		test_truncated(t_object *cone, t_raycasthit *hit)
+static int		test_truncated(t_object *cone, t_hit *hit)
 {
 	if (cone->scale.y != 0 && ft_len_vec3(ft_sub_vec3(hit->point,
 		cone->position)) > cone->scale.y)
@@ -55,7 +55,7 @@ static int		test_truncated(t_object *cone, t_raycasthit *hit)
 	return (TRUE);
 }
 
-int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit)
+int				intersects_cone(t_ray *ray, t_object *cone, t_hit *hit)
 {
 	t_quadratic	q;
 	t_vec3		x;

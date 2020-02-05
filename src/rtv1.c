@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:42:46 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:14:03 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ int		update(void *param)
 
 void	*render_thread(void *env_ptr)
 {
-	t_env			*env;
-	t_ray			ray;
-	t_vec2			screen;
-	t_vec2i			cur;
-	t_raycasthit	hit;
+	t_env	*env;
+	t_ray	ray;
+	t_vec2	screen;
+	t_vec2i	cur;
+	t_hit	hit;
 
 	env = (t_env*)env_ptr;
 	cur.y = env->thread_index;

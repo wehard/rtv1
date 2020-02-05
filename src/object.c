@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 17:41:53 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:49:12 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void		init_object(t_object *object)
 	object->radius = 0.0;
 }
 
-int			intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
+int			intersects_object(t_ray *ray, t_object *object, t_hit *hit)
 {
 	int hit_found;
 

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:36:09 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "vector.h"
 #include "ft_printf.h"
 
-int	intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
+int	intersects_sphere(t_ray *ray, t_object *sphere, t_hit *hit)
 {
 	t_quadratic	q;
 	t_vec3		oc;

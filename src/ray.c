@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 18:43:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:36:36 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_vec3	point_on_ray(t_ray *r, double t)
 	return (p);
 }
 
-void	init_raycasthit(t_raycasthit *hit)
+void	init_raycasthit(t_hit *hit)
 {
 	hit->point = ft_make_vec3(0, 0, 0);
 	hit->normal = ft_make_vec3(0, 0, 0);

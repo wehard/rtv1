@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 18:12:08 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/04 17:45:49 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:13:34 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static void	init_light(t_light *light)
 	light->intensity = 1.0;
 }
 
-int			is_in_shadow(t_light *light, t_scene *scene, t_raycasthit *origin)
+int			is_in_shadow(t_light *light, t_scene *scene, t_hit *origin)
 {
-	t_ray			shadow_ray;
-	t_raycasthit	hit;
+	t_ray	shadow_ray;
+	t_hit	hit;
 
 	shadow_ray.origin = ft_add_vec3(origin->point,
 		ft_mul_vec3(ft_normalize_vec3(origin->normal), SHADOW_BIAS));
@@ -49,7 +49,7 @@ int			is_in_shadow(t_light *light, t_scene *scene, t_raycasthit *origin)
 	return (FALSE);
 }
 
-t_rgba		calc_diffuse(t_light *light, t_raycasthit *hit)
+t_rgba		calc_diffuse(t_light *light, t_hit *hit)
 {
 	t_rgba diffuse;
 	t_vec3 light_dir;
@@ -66,7 +66,7 @@ t_rgba		calc_diffuse(t_light *light, t_raycasthit *hit)
 	return (ft_mul_rgba(diffuse, light->intensity));
 }
 
-t_rgba		calc_specular(t_light *light, t_raycasthit *hit, t_vec3 cam)
+t_rgba		calc_specular(t_light *light, t_hit *hit, t_vec3 cam)
 {
 	t_rgba			specular;
 	t_vec3			light_dir;

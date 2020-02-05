@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 16:58:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:41:09 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:13:21 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,10 @@ int			key_press(int key, void *param)
 
 int			mouse_press(int button, int x, int y, void *param)
 {
-	t_raycasthit	hit;
-	t_env			*env;
-	t_ray			ray;
-	t_vec2			screen;
+	t_hit	hit;
+	t_env	*env;
+	t_ray	ray;
+	t_vec2	screen;
 
 	env = (t_env*)param;
 	if (button == 1)

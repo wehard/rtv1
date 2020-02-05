@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:14:46 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:13:49 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 #include "libft.h"
 #include <math.h>
 
-int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit,
+int				trace(t_ray *ray, t_scene *scene, t_hit *hit,
 						int stop_at_first)
 {
-	t_raycasthit	cur_hit;
-	double			min_dist;
-	int				i;
-	int				hit_found;
+	t_hit	cur_hit;
+	double	min_dist;
+	int		i;
+	int		hit_found;
 
 	min_dist = INFINITY;
 	hit_found = FALSE;
@@ -44,7 +44,7 @@ int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit,
 	return (hit_found);
 }
 
-static double	calc_attenuation(t_light *light, t_raycasthit *hit)
+static double	calc_attenuation(t_light *light, t_hit *hit)
 {
 	double distance;
 	double attenuation;
@@ -60,7 +60,7 @@ static double	calc_attenuation(t_light *light, t_raycasthit *hit)
 }
 
 static void		init_color_data(t_color_data *color, t_scene *scene,
-									t_raycasthit *hit)
+									t_hit *hit)
 {
 	color->ambient = ft_mul_rgba(hit->object->color,
 		ft_intensity_rgba(scene->ambient_color));
@@ -68,7 +68,7 @@ static void		init_color_data(t_color_data *color, t_scene *scene,
 	color->specular = ft_make_rgba(0, 0, 0, 1);
 }
 
-static t_rgba	shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+static t_rgba	shade(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	t_color_data	color;
 	int				i;
@@ -95,7 +95,7 @@ static t_rgba	shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	return (color.out);
 }
 
-t_rgba			raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+t_rgba			raycast(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	t_rgba color;
 

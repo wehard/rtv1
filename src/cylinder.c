@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:38:11 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "ft_printf.h"
 #include "matrix.h"
 
-t_vec3	calc_cylinder_normal(t_object *c, t_raycasthit *hit)
+t_vec3	calc_cylinder_normal(t_object *c, t_hit *hit)
 {
 	t_vec3 dir;
 	t_vec3 c_to_hit;
@@ -47,7 +47,7 @@ void	rotate_cylinder(t_object *c, t_vec3 rot)
 **	return (FALSE);
 */
 
-int		intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
+int		intersects_cylinder(t_ray *ray, t_object *cyl, t_hit *hit)
 {
 	t_quadratic	q;
 	t_vec3		pdp;
