@@ -2,7 +2,7 @@ OBJECTS 3
 LIGHTS 1
 COLOR 0 0 0
 CAMERA
-fov 60.0
+fov 30.0
 pos 0.0 5 20.0
 look_at 0 5 0
 #

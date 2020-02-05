@@ -1,30 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   disc.c                                             :+:      :+:    :+:   */
+/*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/18 18:09:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/18 18:27:21 by wkorande         ###   ########.fr       */
+/*   Created: 2020/02/05 12:45:18 by wkorande          #+#    #+#             */
+/*   Updated: 2020/02/05 12:45:53 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include "libft.h"
-#include <math.h>
+#include "ft_printf.h"
 
-int	intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit)
+void print_vec3(t_vec3 v)
 {
-	if (intersects_plane(ray, disc, hit))
-	{
-		t_vec3 dir = ft_sub_vec3(disc->position, hit->point);
-		double d2 = ft_dot_vec3(dir, dir);
-		if (sqrt(d2) <= disc->radius)
-		{
-			hit->object = disc;
-			return (TRUE);
-		}
-	}
-	return (FALSE);
+	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
 }

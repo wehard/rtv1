@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 12:21:00 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 12:52:07 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@
 #include "vector.h"
 #include "matrix.h"
 #include <pthread.h>
-
-void print_vec3(t_vec3 v)
-{
-	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
-}
 
 int	update(void *param)
 {
@@ -45,22 +40,6 @@ int	update(void *param)
 			ft_printf("error: failed to read scene!\n");
 	}
 	return (0);
-}
-
-void	draw_lights(t_env *env, t_scene *scene)
-{
-	int		i;
-	t_vec2i	p;
-
-	i = 0;
-	while (i < scene->num_lights)
-	{
-		p = world_to_screen_point(&scene->camera, scene->lights[i].position);
-		mlx_string_put(env->mlx->mlx_ptr, env->mlx->win_ptr, p.x, p.y,
-			ft_get_color(scene->lights[i].color),
-			scene->lights[i].type == DIRECTIONAL ? "D" : "P");
-		i++;
-	}
 }
 
 void *render_thread(void *env_ptr)
@@ -104,15 +83,12 @@ void render(t_env *env, t_scene *scene)
 		ft_memcpy((void*)&thread_env[i], (void*)env, sizeof(t_env));
 		thread_env[i].thread_index = i;
 		if (pthread_create(&threads[i], NULL, render_thread, &thread_env[i]) != 0)
-		{
-			ft_printf("error: thread failed!\n");
-		}
+			panic("thread failed!");
 		i++;
 	}
 	while (i--)
 		pthread_join(threads[i], NULL);
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
-	draw_lights(env, scene);
 }
 
 int	main(int argc, char **argv)

@@ -57,8 +57,6 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 		hit_found = intersects_cylinder(ray, object, hit);
 	else if (object->type == CONE)
 		hit_found = intersects_cone(ray, object, hit);
-	else if (object->type == DISC)
-		hit_found = intersects_disc(ray, object, hit);
 	if (hit_found)
 	{
 		hit->object = object;
@@ -73,7 +71,7 @@ int parse_object(int fd, t_obj_type type, t_object *object)
 	char *line;
 
 	if (type < 0 || !object)
-		ft_printf("error: wrong object type!\n");
+		panic("wrong object type!");
 	init_object(object);
 	while(ft_get_next_line(fd, &line))
 	{

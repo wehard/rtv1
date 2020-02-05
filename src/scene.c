@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 18:24:35 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 13:23:16 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,27 @@ static t_obj_type parse_object_type(char *line)
 {
 	if (ft_strequ(line, "PLANE"))
 		return PLANE;
-	if (ft_strequ(line, "DISC"))
-		return DISC;
 	if (ft_strequ(line, "SPHERE"))
 		return SPHERE;
 	if (ft_strequ(line, "CYLINDER"))
 		return CYLINDER;
 	if (ft_strequ(line, "CONE"))
 		return CONE;
-	if (ft_strequ(line, "BOX"))
-		return BOX;
 	if (ft_strequ(line, "LIGHT"))
 		return LIGHT;
 	if (ft_strequ(line, "CAMERA"))
 		return CAMERA;
 	return (-1);
+}
+
+static void init_scene(t_scene *scene, char *path)
+{
+	scene->ambient_color = ft_make_rgba(0,0,0,1);
+	scene->num_lights = 0;
+	scene->lights = NULL;
+	scene->num_objects = 0;
+	scene->objects = 0;
+	scene->path = path;
 }
 
 int		read_scene(t_scene *scene, char *path)
@@ -47,18 +53,11 @@ int		read_scene(t_scene *scene, char *path)
 	int obj_index;
 	int light_index;
 
-	scene->path = path;
+	init_scene(scene, path);
 	fd = open(path, O_RDWR);
-	if (!scene)
-		ft_putendl("null");
 	scene->mod_time = check_mod_time(scene->path);
 	if (fd < 3)
-	{
-		ft_printf("error: opening scene file\n");
-		return (0);
-	}
-	scene->num_objects = 0;
-	scene->num_lights = 0;
+		panic("error opening scene file");
 	obj_index = 0;
 	light_index = 0;
 	while(ft_get_next_line(fd, &line))
@@ -72,7 +71,6 @@ int		read_scene(t_scene *scene, char *path)
 		{
 			scene->num_lights = ft_atoi(line + 6);
 			scene->lights = (t_light*)malloc(sizeof(t_light) * scene->num_lights);
-			ft_printf("lights: %d\n", scene->num_lights);
 		}
 		else if (ft_strnequ(line, "COLOR", 5))
 			scene->ambient_color = ft_parse_rgba(line);
@@ -83,7 +81,7 @@ int		read_scene(t_scene *scene, char *path)
 				parse_camera(fd, &scene->camera);
 			else if (type == LIGHT)
 				parse_light(fd, &(scene->lights)[light_index++]);
-			else
+			else if (type >= 0 && type < 4)
 				parse_object(fd, type, &(scene->objects)[obj_index++]);
 		}
 		free(line);

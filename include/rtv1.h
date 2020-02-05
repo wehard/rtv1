@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 12:14:17 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 13:25:07 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,9 @@
 typedef enum	e_obj_type
 {
 	PLANE,
-	DISC,
 	SPHERE,
 	CYLINDER,
 	CONE,
-	BOX,
 	LIGHT,
 	CAMERA
 }				t_obj_type;
@@ -186,7 +184,6 @@ int				intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit);
 int				intersects_plane(t_ray *ray, t_object *plane, t_raycasthit *hit);
 int				intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit);
 int				intersects_cylinder(t_ray *ray, t_object *sphere, t_raycasthit *hit);
-int				intersects_disc(t_ray *ray, t_object *disc, t_raycasthit *hit);
 int				intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit);
 int				solve_quadratic(t_quadratic q, double *t1, double *t2);
 
@@ -206,7 +203,7 @@ t_vec3			calculate_hit_normal(t_raycasthit *hit);
 
 time_t			check_mod_time(char *path);
 
-
+void			panic(char *message);
 
 void			draw_line(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color);
 

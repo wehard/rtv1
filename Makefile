@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/02/03 19:13:56 by wkorande         ###   ########.fr        #
+#    Updated: 2020/02/05 13:23:39 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,13 +23,13 @@ SRC = rtv1.c\
 	plane.c\
 	cylinder.c\
 	cone.c\
-	disc.c\
 	object.c\
 	raycast.c\
 	draw_line.c\
 	camera.c\
 	input.c\
-	light.c
+	light.c\
+	debug.c
 
 SRCDIR = src
 

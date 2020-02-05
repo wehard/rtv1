@@ -6,32 +6,34 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 20:26:14 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 12:54:04 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
+#include "ft_printf.h"
 #include <stdlib.h>
 #include <mlx.h>
 
-t_env		*init_env(int width, int height, char *title)
+t_env	*init_env(int width, int height, char *title)
 {
 	t_env	*env;
 
 	if (!(env = (t_env*)malloc(sizeof(t_env))))
-		return (NULL);
+		panic("env malloc failed!");
 	if (!(env->mlx = (t_mlx*)malloc(sizeof(t_mlx))))
-		return (NULL);
+		panic("env->mlx malloc failed!");
 	env->width = width;
 	env->height = height;
 	env->mlx->mlx_ptr = mlx_init();
 	env->mlx->win_ptr = mlx_new_window(env->mlx->mlx_ptr, width, height, title);
 	env->mlx_img = create_mlx_image(env, width, height);
-	env->scene = (t_scene*)malloc(sizeof(t_scene));
+	if(!(env->scene = (t_scene*)malloc(sizeof(t_scene))))
+		panic("env->scene malloc failed!");
 	return (env);
 }
 
-void		del_env_exit(t_env *env)
+void	del_env_exit(t_env *env)
 {
 	free(env->scene->lights);
 	free(env->scene->objects);
@@ -42,4 +44,11 @@ void		del_env_exit(t_env *env)
 	free(env->mlx);
 	free(env);
 	exit(EXIT_SUCCESS);
+}
+
+
+void	panic(char *message)
+{
+	ft_printf("panic: %s\n", message);
+	exit(EXIT_FAILURE);
 }
