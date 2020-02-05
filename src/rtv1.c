@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:14:03 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 22:10:15 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void	render(t_env *env, t_scene *scene)
 		pthread_join(threads[i], NULL);
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr,
 		env->mlx_img->img, 0, 0);
+	if (env->debug)
+		draw_debug_info(env, scene);
 }
 
 int		main(int argc, char **argv)

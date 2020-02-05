@@ -14,9 +14,9 @@ int 0
 #
 LIGHT
 type 0
-dir 0 -1 -1
+rot -90 0 0
 col 1 1 1
-int 3
+int 1
 #
 PLANE
 pos 0 -10 0

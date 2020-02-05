@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 18:12:08 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:13:34 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 22:35:54 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,24 @@
 #include "ft_printf.h"
 #include <math.h>
 
-static void	init_light(t_light *light)
+void	init_light(t_light *light)
 {
 	light->type = 0;
 	light->position = ft_make_vec3(0, 0, 0);
-	light->direction = ft_make_vec3(0, 0, -1);
+	light->rotation = ft_make_vec3(0, 0, 0);
+	light->direction = ft_make_vec3(0, -1, 0);
 	light->color = ft_make_rgba(1, 1, 1, 1);
 	light->intensity = 1.0;
+}
+
+void		rotate_light(t_light *light, t_vec3 rot)
+{
+	t_vec3 res;
+	t_vec3 v;
+
+	v = ft_make_vec3(0, -1, 0);
+	res = ft_rotate_vec3(v, rot);
+	light->direction = ft_normalize_vec3(res);
 }
 
 int			is_in_shadow(t_light *light, t_scene *scene, t_hit *origin)
@@ -85,31 +96,4 @@ t_rgba		calc_specular(t_light *light, t_hit *hit, t_vec3 cam)
 	specular = ft_mul_rgba(ft_mul_rgba(light->color, light->intensity),
 		pow(ft_max_d(ft_dot_vec3(r, c), 0.0), k));
 	return (specular);
-}
-
-int			parse_light(int fd, t_light *light)
-{
-	char *line;
-
-	init_light(light);
-	while (ft_get_next_line(fd, &line))
-	{
-		if (ft_strnequ(line, "type", 4))
-			light->type = ft_atoi(ft_strstr(line, " "));
-		else if (ft_strnequ(line, "dir", 3))
-			light->direction = ft_parse_vec3(line);
-		else if (ft_strnequ(line, "pos", 3))
-			light->position = ft_parse_vec3(line);
-		else if (ft_strnequ(line, "col", 3))
-			light->color = ft_parse_rgba(line);
-		else if (ft_strnequ(line, "int", 3))
-			light->intensity = ft_strtod(line + 4);
-		else if (line[0] == '#')
-		{
-			free(line);
-			return (1);
-		}
-		free(line);
-	}
-	return (0);
 }

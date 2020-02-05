@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:10:40 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 22:51:18 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ static void			parse_scene_header(char *line, t_scene *scene)
 		scene->num_lights = ft_atoi(line + 6);
 		scene->lights = (t_light*)malloc(sizeof(t_light) * scene->num_lights);
 	}
-	else if (ft_strnequ(line, "COLOR", 5))
-		scene->ambient_color = ft_parse_rgba(line);
 }
 
 int					read_scene(t_scene *scene, char *path)
@@ -80,6 +78,8 @@ int					read_scene(t_scene *scene, char *path)
 	{
 		if (!scene->num_objects || !scene->num_lights)
 			parse_scene_header(line, scene);
+		else if (ft_strnequ(line, "COLOR", 5))
+			scene->ambient_color = ft_parse_rgba(line);
 		else
 		{
 			type = parse_object_type(line);

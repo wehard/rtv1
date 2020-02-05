@@ -7,10 +7,10 @@ fov 60.0
 look_at 0 0 0
 #
 LIGHT
-type 0
+type 1
 pos 0 10 20
 col 1 1 1
-int 1
+int 2
 #
 SPHERE
 pos 0 0 0

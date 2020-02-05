@@ -1,56 +1,74 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   object.c                                           :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/05 17:41:53 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
+/*   Created: 2020/02/05 21:49:19 by wkorande          #+#    #+#             */
+/*   Updated: 2020/02/05 22:36:38 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include "ft_printf.h"
-#include <math.h>
-#include "vector.h"
 #include "libft.h"
 #include "ft_get_next_line.h"
+#include "ft_printf.h"
 
-void		init_object(t_object *object)
+int		parse_camera(int fd, t_camera *camera)
 {
-	object->type = 0;
-	object->position = ft_make_vec3(0.0, 0.0, 0.0);
-	object->rotation = ft_make_vec3(0.0, 0.0, 0.0);
-	object->scale = ft_make_vec3(0.0, 0.0, 0.0);
-	object->normal = ft_make_vec3(0.0, 0.0, 0.0);
-	object->color = ft_make_rgba(0.0, 0.0, 0.0, 1.0);
-	object->start = ft_make_vec3(0, 0, 0);
-	object->end = ft_make_vec3(1, 1, 1);
-	object->radius = 0.0;
+	char	*line;
+	t_vec3	pos;
+	t_vec3	look_at;
+	double	fov;
+
+	if (!camera)
+		ft_printf("error: camera is null!\n");
+	while (ft_get_next_line(fd, &line))
+	{
+		if (ft_strnequ(line, "pos", 3))
+			pos = ft_parse_vec3(line);
+		else if (ft_strnequ(line, "fov", 3))
+			fov = ft_strtod(ft_strstr(line, " "));
+		else if (ft_strnequ(line, "look_at", 7))
+			look_at = ft_parse_vec3(line);
+		else if (line[0] == '#')
+		{
+			init_camera(camera, pos, look_at, fov);
+			free(line);
+			return (1);
+		}
+		free(line);
+	}
+	return (0);
 }
 
-int			intersects_object(t_ray *ray, t_object *object, t_hit *hit)
+int			parse_light(int fd, t_light *light)
 {
-	int hit_found;
+	char *line;
 
-	hit_found = 0;
-	hit->distance = 0.0f;
-	if (object->type == PLANE)
-		hit_found = intersects_plane(ray, object, hit);
-	else if (object->type == SPHERE)
-		hit_found = intersects_sphere(ray, object, hit);
-	else if (object->type == CYLINDER)
-		hit_found = intersects_cylinder(ray, object, hit);
-	else if (object->type == CONE)
-		hit_found = intersects_cone(ray, object, hit);
-	if (hit_found)
+	init_light(light);
+	while (ft_get_next_line(fd, &line))
 	{
-		hit->object = object;
-		hit->point = point_on_ray(ray, hit->t);
-		hit->distance = hit->t;
+		if (ft_strnequ(line, "type", 4))
+			light->type = ft_atoi(ft_strstr(line, " "));
+		else if (ft_strnequ(line, "pos", 3))
+			light->position = ft_parse_vec3(line);
+		else if (ft_strnequ(line, "rot", 3))
+			light->rotation = ft_parse_vec3(line);
+		else if (ft_strnequ(line, "col", 3))
+			light->color = ft_parse_rgba(line);
+		else if (ft_strnequ(line, "int", 3))
+			light->intensity = ft_strtod(line + 4);
+		else if (line[0] == '#')
+		{
+			free(line);
+			rotate_light(light, light->rotation);
+			return (1);
+		}
+		free(line);
 	}
-	return (hit_found);
+	return (0);
 }
 
 static void	set_object_property(char *line, t_object *object)
@@ -91,27 +109,6 @@ int			parse_object(int fd, t_obj_type type, t_object *object)
 		else
 			set_object_property(line, object);
 		free(line);
-	}
-	return (0);
-}
-
-int			solve_quadratic(t_quadratic q, double *t1, double *t2)
-{
-	double d;
-
-	*t1 = -1;
-	*t2 = -1;
-	d = q.b * q.b - 4 * q.a * q.c;
-	if (d == 0)
-	{
-		*t1 = (-q.b - sqrt(d)) / (2.0 * q.a);
-		return (1);
-	}
-	if (d > 0)
-	{
-		*t1 = (-q.b - sqrt(d)) / (2.0 * q.a);
-		*t2 = (-q.b + sqrt(d)) / (2.0 * q.a);
-		return (2);
 	}
 	return (0);
 }

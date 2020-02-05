@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/02/05 13:23:39 by wkorande         ###   ########.fr        #
+#    Updated: 2020/02/05 22:29:42 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,22 +14,22 @@ NAME = RTv1
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = rtv1.c\
-	env.c\
-	scene.c\
-	mlx_image.c\
-	ray.c\
-	sphere.c\
-	plane.c\
-	cylinder.c\
-	cone.c\
-	object.c\
-	raycast.c\
-	draw_line.c\
-	camera.c\
-	input.c\
-	light.c\
-	debug.c
+SRC = draw_line.c\
+		scene/parse.c\
+		scene/scene.c\
+		scene/light.c\
+		object/plane.c\
+		object/object.c\
+		object/cone.c\
+		object/cylinder.c\
+		object/sphere.c\
+		camera.c\
+		ray.c\
+		debug.c\
+		rtv1.c\
+		env.c\
+		raycast.c\
+		input.c
 
 SRCDIR = src
 
@@ -54,7 +54,7 @@ debug:
 
 linux:
 	make -C $(LIBFT)
-	gcc -g $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lXext -lX11 -lm
+	gcc -g $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lXext -lX11 -lm -pthread
 
 clean:
 	#make clean -C $(LIBFT)

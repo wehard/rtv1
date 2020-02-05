@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:39:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 22:02:48 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <mlx.h>
 
-t_env	*init_env(int width, int height, char *title)
+t_env		*init_env(int width, int height, char *title)
 {
 	t_env	*env;
 
@@ -30,10 +30,11 @@ t_env	*init_env(int width, int height, char *title)
 	env->mlx_img = create_mlx_image(env, width, height);
 	if (!(env->scene = (t_scene*)malloc(sizeof(t_scene))))
 		panic("env->scene malloc failed!");
+	env->debug = 0;
 	return (env);
 }
 
-void	del_env_exit(t_env *env)
+void		del_env_exit(t_env *env)
 {
 	free(env->scene->lights);
 	free(env->scene->objects);
@@ -50,4 +51,29 @@ void	panic(char *message)
 {
 	ft_printf("panic: %s\n", message);
 	exit(EXIT_FAILURE);
+}
+
+t_mlx_img	*create_mlx_image(t_env *env, int width, int height)
+{
+	t_mlx_img *img;
+
+	if (!(img = (t_mlx_img*)malloc(sizeof(t_mlx_img))))
+		panic("create_mlx_image failed!");
+	img->width = width;
+	img->height = height;
+	if (!(img->img = mlx_new_image(env->mlx->mlx_ptr,
+									img->width, img->height)))
+		panic("mlx_new_image failed!");
+	if (!(img->d_addr = mlx_get_data_addr(img->img, &img->bpp,
+										&img->size_line, &img->endian)))
+		panic("mlx_get_data_addr failed!");
+	img->bpp /= 8;
+	return (img);
+}
+
+void		put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c)
+{
+	if (x < 0 || x >= img->width || y < 0 || y >= img->height)
+		return ;
+	*(int*)(img->d_addr + (((y * img->width) + x) * img->bpp)) = c;
 }

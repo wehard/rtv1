@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:14:37 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 22:36:09 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include "color.h"
 
 # define SQR(value) value * value
-# define NUM_THREADS 60
-# define WIN_W 800
-# define WIN_H 600
+# define NUM_THREADS 72
+# define WIN_W 1280
+# define WIN_H 720
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 1000
 # define MIN_DISTANCE 0.1
@@ -68,6 +68,7 @@ typedef struct	s_light
 {
 	t_lgt_type	type;
 	t_vec3		position;
+	t_vec3		rotation;
 	t_vec3		direction;
 	double		intensity;
 	t_rgba		color;
@@ -140,6 +141,7 @@ typedef struct	s_scene
 	t_rgba		ambient_color;
 	t_camera	camera;
 	t_object	*selected_object;
+	t_light		*selected_light;
 	int			l_index;
 	int			o_index;
 }				t_scene;
@@ -169,6 +171,7 @@ typedef struct	s_env
 	int			width;
 	int			height;
 	int			thread_index;
+	int			debug;
 }				t_env;
 
 t_env			*init_env(int width, int height, char *title);
@@ -181,6 +184,8 @@ int				parse_camera(int fd, t_camera *camera);
 void			render(t_env *env, t_scene *scene);
 int				update(void *param);
 
+void			init_light(t_light *light);
+void			rotate_light(t_light *light, t_vec3 rot);
 int				is_in_shadow(t_light *light, t_scene *scene,
 								t_hit *origin);
 t_rgba			calc_diffuse(t_light *light, t_hit *hit);
@@ -228,5 +233,6 @@ int				mouse_press(int button, int x, int y, void *param);
 
 void			draw_lights(t_env *env, t_scene *scene);
 void			print_vec3(t_vec3 v);
+void			draw_debug_info(t_env *env, t_scene *scene);
 
 #endif

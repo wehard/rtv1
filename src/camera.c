@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 11:29:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:42:00 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 21:50:31 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,32 +63,4 @@ t_vec2i	world_to_screen_point(t_camera *camera, t_vec3 wp)
 	sp.x = ((ipp.x + camera->aspect * 0.5) / camera->aspect) * WIN_W;
 	sp.y = WIN_H - ((ipp.y + 0.5) * WIN_H);
 	return (sp);
-}
-
-int		parse_camera(int fd, t_camera *camera)
-{
-	char	*line;
-	t_vec3	pos;
-	t_vec3	look_at;
-	double	fov;
-
-	if (!camera)
-		ft_printf("error: camera is null!\n");
-	while (ft_get_next_line(fd, &line))
-	{
-		if (ft_strnequ(line, "pos", 3))
-			pos = ft_parse_vec3(line);
-		else if (ft_strnequ(line, "fov", 3))
-			fov = ft_strtod(ft_strstr(line, " "));
-		else if (ft_strnequ(line, "look_at", 7))
-			look_at = ft_parse_vec3(line);
-		else if (line[0] == '#')
-		{
-			init_camera(camera, pos, look_at, fov);
-			free(line);
-			return (1);
-		}
-		free(line);
-	}
-	return (0);
 }
