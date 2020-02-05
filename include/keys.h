@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:37:20 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 14:05:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 15:18:38 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,15 @@
 # define KEY_NUM_MINUS	78
 # define KEY_NUM_ENTER	76
 # define KEY_NUM_0		82
+# define KEY_NUM_1		83
+# define KEY_NUM_2		84
+# define KEY_NUM_3		85
+# define KEY_NUM_4		86
+# define KEY_NUM_5		87
+# define KEY_NUM_6		88
+# define KEY_NUM_7		89
+# define KEY_NUM_8		91
+# define KEY_NUM_9		92
 # define KEY_NUM_LEFT	86
 # define KEY_NUM_RIGHT	88
 # define KEY_NUM_UP		91

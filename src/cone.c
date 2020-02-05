@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:00:58 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 18:29:27 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 16:50:05 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ static t_vec3 calc_cone_normal(t_object *cone, t_raycasthit *hit)
 {
 	t_vec3 n;
 	t_vec3 cp;
-	t_vec3 cone_dir = ft_normalize_vec3(ft_sub_vec3(cone->end, cone->start));
-	//double angle = 60.0;
+	t_vec3 cone_dir;
+
+	cone_dir = ft_normalize_vec3(ft_sub_vec3(cone->end, cone->start));
 	cp = ft_sub_vec3(hit->point, cone->position);
 	n = ft_sub_vec3(cp, ft_mul_vec3(cone_dir, (ft_len_vec3(cp) / cos(cone->radius))));
 	n = ft_normalize_vec3(n);
@@ -35,7 +36,7 @@ static t_vec3 calc_cone_normal(t_object *cone, t_raycasthit *hit)
 void	rotate_cone(t_object *c, t_vec3 rot)
 {
 	t_vec3 res;
-	t_vec3 v = ft_make_vec3(0, 1, 0);
+	t_vec3 v = ft_make_vec3(0, -1, 0);
 
 	res = ft_rotate_vec3(v, rot);
 	c->end = ft_add_vec3(c->position, res);
@@ -45,29 +46,28 @@ void	rotate_cone(t_object *c, t_vec3 rot)
 int		intersects_cone(t_ray *ray, t_object *cone, t_raycasthit *hit)
 {
 	t_quadratic q;
-	double t1, t2;
-	double angle = cone->radius;
+	t_vec3 x;
 	t_vec3 cone_dir = ft_normalize_vec3(ft_sub_vec3(cone->end, cone->start));
-	angle = ft_deg_to_rad(angle/2);
 
-	double ddotv = ft_dot_vec3(ray->direction, cone_dir);
-	t_vec3 co = ft_sub_vec3(ray->origin, cone->position);
-	double codotv = ft_dot_vec3(co, cone_dir);
+	x = ft_sub_vec3(ray->origin, cone->position);
+	q.a = ft_dot_vec3(ray->direction, cone_dir);
+	q.a = ft_dot_vec3(ray->direction, ray->direction) - (1 + cone->radius * cone->radius) * q.a * q.a;
 
-	q.a = SQR(ddotv) - SQR(cos(angle));
-	q.b = 2.0 * (ddotv * codotv - ft_dot_vec3(ray->direction, co) * SQR(cos(angle)));
-	q.c = SQR(codotv) - ft_dot_vec3(co, co) * SQR(cos(angle));
+	q.b = 2.0 * (ft_dot_vec3(ray->direction, x) - (1 + cone->radius * cone->radius)
+		* ft_dot_vec3(ray->direction, cone_dir) * ft_dot_vec3(x, cone_dir));
+	q.c = ft_dot_vec3(x, cone_dir);
+	q.c = ft_dot_vec3(x, x) - (1 + cone->radius * cone->radius) * q.c * q.c;
+
+	double t1, t2;
 	if (solve_quadratic(q, &t1, &t2))
 	{
+		if (t1 < 0)
+			return (FALSE);
 		hit->t = t1;
-		if (hit->t < 0 || (t2 > 0 && t2 < hit->t))
-			hit->t = t2;
-		if (hit->t < 0)
-			return (FALSE);
 		hit->point = point_on_ray(ray, hit->t);
-		if (ft_len_vec3(ft_sub_vec3(hit->point, cone->position)) > cone->scale.y)
+		if (cone->scale.y != 0 && ft_len_vec3(ft_sub_vec3(hit->point, cone->position)) > cone->scale.y)
 			return (FALSE);
-		if (ft_dot_vec3(ft_sub_vec3(hit->point, cone->position), cone_dir) > 0)
+		if (ft_dot_vec3(ft_sub_vec3(hit->point, cone->position), cone_dir) < 0)
 			return (FALSE);
 		hit->normal = calc_cone_normal(cone, hit);
 		return (TRUE);

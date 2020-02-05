@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 16:58:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 14:29:06 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 15:51:22 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,24 @@ static void	handle_camera_movement(t_env *env, int key)
 	}
 }
 
+static void handle_object_rotation(t_object *object, int key)
+{
+	if (key == KEY_NUM_7)
+		object->rotation.z -= 1.0;
+	if (key == KEY_NUM_9)
+		object->rotation.z += 1.0;
+	if (key == KEY_NUM_1)
+		object->rotation.x -= 1.0;
+	if (key == KEY_NUM_3)
+		object->rotation.x += 1.0;
+	if (object->type == CYLINDER)
+		rotate_cylinder(object, object->rotation);
+	if (object->type == PLANE)
+		rotate_plane(object, object->rotation);
+	if (object->type == CONE)
+		rotate_cone(object, object->rotation);
+}
+
 static void	handle_object_manipulation(t_object *object, int key)
 {
 	if (key == KEY_NUM_LEFT)
@@ -52,8 +70,6 @@ static void	handle_object_manipulation(t_object *object, int key)
 		object->position.y += 1.0;
 	if (key == KEY_NUM_MINUS)
 		object->position.y -= 1.0;
-	if (object->type == CYLINDER)
-		rotate_cylinder(object, object->rotation);
 }
 
 int			key_press(int key, void *param)
@@ -61,13 +77,18 @@ int			key_press(int key, void *param)
 	t_env *env;
 
 	env = (t_env*)param;
+	ft_printf("%d\n", key);
 	if (key == KEY_ESC)
 		del_env_exit(env);
 	if (key == KEY_SPACE)
 		update(param);
 	handle_camera_movement(env, key);
 	if (env->scene->selected_object)
+	{
 		handle_object_manipulation(env->scene->selected_object, key);
+		handle_object_rotation(env->scene->selected_object, key);
+		print_object_info(env->scene->selected_object);
+	}
 	render(env, env->scene);
 	return (0);
 }
@@ -94,7 +115,10 @@ int			mouse_press(int button, int x, int y, void *param)
 			print_object_info(hit.object);
 		}
 		else
+		{
 			ft_printf("No hit!\n");
+			env->scene->selected_object = NULL;
+		}
 	}
 	return (1);
 }
