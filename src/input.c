@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 16:58:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 14:22:39 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 14:29:06 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,22 @@ static void	handle_camera_movement(t_env *env, int key)
 	}
 }
 
-static void	handle_object_manipulation(t_env *env, int key)
+static void	handle_object_manipulation(t_object *object, int key)
 {
 	if (key == KEY_NUM_LEFT)
-		env->scene->selected_object->position.x -= 1.0;
+		object->position.x -= 1.0;
 	if (key == KEY_NUM_RIGHT)
-		env->scene->selected_object->position.x += 1.0;
+		object->position.x += 1.0;
 	if (key == KEY_NUM_UP)
-		env->scene->selected_object->position.z -= 1.0;
+		object->position.z -= 1.0;
 	if (key == KEY_NUM_DOWN)
-		env->scene->selected_object->position.z += 1.0;
+		object->position.z += 1.0;
 	if (key == KEY_NUM_PLUS)
-		env->scene->selected_object->position.y += 1.0;
+		object->position.y += 1.0;
 	if (key == KEY_NUM_MINUS)
-		env->scene->selected_object->position.y -= 1.0;
+		object->position.y -= 1.0;
+	if (object->type == CYLINDER)
+		rotate_cylinder(object, object->rotation);
 }
 
 int			key_press(int key, void *param)
@@ -65,7 +67,7 @@ int			key_press(int key, void *param)
 		update(param);
 	handle_camera_movement(env, key);
 	if (env->scene->selected_object)
-		handle_object_manipulation(env, key);
+		handle_object_manipulation(env->scene->selected_object, key);
 	render(env, env->scene);
 	return (0);
 }
@@ -78,7 +80,7 @@ int			mouse_press(int button, int x, int y, void *param)
 	t_vec2	screen;
 
 	env = (t_env*)param;
-	if (button == 1 || button == 2)
+	if (button == 1)
 	{
 		ft_printf("mouse pos: %d, %d\n", x, y);
 		screen.x = (double)x / (double)WIN_W;
