@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 09:26:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/03 17:33:19 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:08:36 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,33 +56,3 @@ int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
 	}
 	return (FALSE);
 }
-
-/*
-int		intersects_sphere(t_ray *ray, t_object *sphere, t_raycasthit *hit)
-{
-	double t0;
-	double t1;
-
-	t_vec3 L = ft_sub_vec3(sphere->position, ray->origin);
-	double tca = ft_dot_vec3(L, ray->direction);
-	double d2 = ft_dot_vec3(L, L) - tca * tca;
-	if (d2 > SQR(sphere->radius))
-		return (0);
-	double thc = sqrt(SQR(sphere->radius) - d2);
-	t0 = tca - thc;
-	t1 = tca + thc;
-
-	if (t0 > t1)
-		ft_swap_d(&t0, &t1);
-	if (t0 < 0)
-	{
-		t0 = t1;
-		if (t0 < 0)
-			return (0);
-	}
-	hit->t = t0;
-	hit->point = point_on_ray(ray, hit->t);
-	hit->normal = ft_normalize_vec3(ft_sub_vec3(hit->point, sphere->position));
-	return (1);
-}
-*/
