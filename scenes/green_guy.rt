@@ -7,9 +7,9 @@ pos 0.0 10 50.0
 look_at 0 8 0
 #
 LIGHT
-type 0
+type 1
 dir 1 -0.5 -1
-pos -20 0 20
+pos 20 0 20
 col 1 1 1
 int .5
 #
