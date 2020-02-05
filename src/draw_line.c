@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 13:06:16 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/25 22:28:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:39:02 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,21 @@
 #include "libft.h"
 #include "mlx.h"
 
-static t_vec2i set_vec2i(int x, int y)
+static t_vec2i	set_vec2i(int x, int y)
 {
 	t_vec2i v;
+
 	v.x = x;
 	v.y = y;
 	return (v);
 }
 
-static void	draw_l(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
+static void		draw_l(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
 {
 	t_vec2i	p;
 	t_vec2i	d;
-	int			yi;
-	int			delta;
+	int		yi;
+	int		delta;
 
 	d = set_vec2i(p1.x - p0.x, p1.y - p0.y);
 	yi = 1;
@@ -51,10 +52,10 @@ static void	draw_l(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
 	}
 }
 
-static void	draw_h(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
+static void		draw_h(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
 {
-	t_vec2i	p;
-	t_vec2i	d;
+	t_vec2i		p;
+	t_vec2i		d;
 	int			xi;
 	int			delta;
 
@@ -80,7 +81,7 @@ static void	draw_h(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
 	}
 }
 
-void		draw_line(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
+void			draw_line(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color)
 {
 	if (ft_abs(p1.y - p0.y) < ft_abs(p1.x - p0.x))
 	{

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 13:33:24 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 18:16:33 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define RAYS_PER_PIXEL	1
 # define TRUE 1
 # define FALSE 0
+# define RGBA_BLACK ft_make_rgba(0, 0, 0, 1)
 
 typedef enum	e_obj_type
 {
@@ -46,6 +47,15 @@ typedef enum	e_lgt_type
 	DIRECTIONAL,
 	POINT
 }				t_lgt_type;
+
+typedef struct	s_color_data
+{
+	t_rgba		out;
+	t_rgba		ambient;
+	t_rgba		diffuse;
+	t_rgba		specular;
+	double		attenuation;
+}				t_color_data;
 
 typedef struct	s_quadratic
 {

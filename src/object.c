@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   object.c                                            :+:      :+:    :+:   */
+/*   object.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/13 15:34:42 by wkorande          #+#    #+#             */
-/*   Updated: 2020/01/16 15:12:31 by wkorande         ###   ########.fr       */
+/*   Created: 2020/02/05 17:41:53 by wkorande          #+#    #+#             */
+/*   Updated: 2020/02/05 17:49:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "libft.h"
 #include "ft_get_next_line.h"
 
-void init_object(t_object *object)
+void		init_object(t_object *object)
 {
 	object->type = 0;
 	object->position = ft_make_vec3(0.0, 0.0, 0.0);
@@ -30,20 +30,7 @@ void init_object(t_object *object)
 	object->radius = 0.0;
 }
 
-void print_object_info(t_object *object)
-{
-	ft_printf("type: %d\n", object->type);
-	ft_printf("pos: %.3f, %.3f, %.3f\n", object->position.x, object->position.y, object->position.z);
-	ft_printf("rot: %.3f, %.3f, %.3f\n", object->rotation.x, object->rotation.y, object->rotation.z);
-	ft_printf("scale: %.3f, %.3f, %.3f\n", object->scale.x, object->scale.y, object->scale.z);
-	ft_printf("normal: %.3f, %.3f, %.3f\n", object->normal.x, object->normal.y, object->normal.z);
-	ft_printf("color: %.3f, %.3f, %.3f, %.3f\n", object->color.r, object->color.g, object->color.b, object->color.a);
-	ft_printf("start: %.3f, %.3f, %.3f\n", object->start.x, object->start.y, object->start.z);
-	ft_printf("end: %.3f, %.3f, %.3f\n", object->end.x, object->end.y, object->end.z);
-	ft_printf("radius: %.3f\n", object->radius);
-}
-
-int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
+int			intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 {
 	int hit_found;
 
@@ -66,27 +53,31 @@ int	intersects_object(t_ray *ray, t_object *object, t_raycasthit *hit)
 	return (hit_found);
 }
 
-int parse_object(int fd, t_obj_type type, t_object *object)
+static void	set_object_property(char *line, t_object *object)
+{
+	if (ft_strnequ(line, "pos", 3))
+		object->position = ft_parse_vec3(line);
+	else if (ft_strnequ(line, "rot", 3))
+		object->rotation = ft_parse_vec3(line);
+	else if (ft_strnequ(line, "sca", 3))
+		object->scale = ft_parse_vec3(line);
+	else if (ft_strnequ(line, "col", 3))
+		object->color = ft_parse_rgba(line);
+	else if (ft_strnequ(line, "rad", 3))
+		object->radius = ft_strtod(line + 4);
+}
+
+int			parse_object(int fd, t_obj_type type, t_object *object)
 {
 	char *line;
 
 	if (type < 0 || !object)
 		panic("wrong object type!");
 	init_object(object);
-	while(ft_get_next_line(fd, &line))
+	while (ft_get_next_line(fd, &line))
 	{
 		object->type = type;
-		if (ft_strnequ(line, "pos", 3))
-			object->position = ft_parse_vec3(line);
-		else if (ft_strnequ(line, "rot", 3))
-			object->rotation = ft_parse_vec3(line);
-		else if (ft_strnequ(line, "sca", 3))
-			object->scale = ft_parse_vec3(line);
-		else if (ft_strnequ(line, "col", 3))
-			object->color = ft_parse_rgba(line);
-		else if (ft_strnequ(line, "rad", 3))
-			object->radius = ft_strtod(line + 4);
-		else if (line[0] == '#')
+		if (line[0] == '#')
 		{
 			if (type == CYLINDER)
 				rotate_cylinder(object, object->rotation);
@@ -97,12 +88,14 @@ int parse_object(int fd, t_obj_type type, t_object *object)
 			free(line);
 			return (1);
 		}
+		else
+			set_object_property(line, object);
 		free(line);
 	}
 	return (0);
 }
 
-int solve_quadratic(t_quadratic q, double *t1, double *t2)
+int			solve_quadratic(t_quadratic q, double *t1, double *t2)
 {
 	double d;
 

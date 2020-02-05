@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:32:07 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:38:11 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "ft_printf.h"
 #include "matrix.h"
 
-static t_vec3	calc_cylinder_normal(t_object *c, t_raycasthit *hit)
+t_vec3	calc_cylinder_normal(t_object *c, t_raycasthit *hit)
 {
 	t_vec3 dir;
 	t_vec3 c_to_hit;
@@ -30,7 +30,7 @@ static t_vec3	calc_cylinder_normal(t_object *c, t_raycasthit *hit)
 	return (ft_normalize_vec3(ft_sub_vec3(hit->point, v)));
 }
 
-void			rotate_cylinder(t_object *c, t_vec3 rot)
+void	rotate_cylinder(t_object *c, t_vec3 rot)
 {
 	t_vec3 res;
 	t_vec3 v;
@@ -42,29 +42,29 @@ void			rotate_cylinder(t_object *c, t_vec3 rot)
 }
 
 /*
-** if (ray->origin_object && ft_dot_vec3(ray->direction, ft_sub_vec3(cyl->end, cyl->start)) < 0) // shadow ray
+** if (ray->origin_object && ft_dot_vec3(ray->direction,\
+**			ft_sub_vec3(cyl->end, cyl->start)) < 0) // shadow ray
 **	return (FALSE);
 */
 
-int				intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
+int		intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
 {
-	double t1, t2;
-	t_quadratic q;
-	double	disc;
-	double d;
-	t_vec3 pdp, eyexpdp, rdxpdp;
+	t_quadratic	q;
+	t_vec3		pdp;
+	t_vec3		eyexpdp;
+	t_vec3		rdxpdp;
 
 	pdp = ft_sub_vec3(cyl->start, cyl->end);
 	eyexpdp = ft_cross_vec3(ft_sub_vec3(ray->origin, cyl->end), pdp);
 	rdxpdp = ft_cross_vec3(ray->direction, pdp);
 	q.a = ft_dot_vec3(rdxpdp, rdxpdp);
 	q.b = 2 * ft_dot_vec3(rdxpdp, eyexpdp);
-	q.c = ft_dot_vec3(eyexpdp, eyexpdp) - (SQR(cyl->radius) * ft_dot_vec3(pdp, pdp));
-	if (solve_quadratic(q, &t1, &t2))
+	q.c = ft_dot_vec3(eyexpdp, eyexpdp) - (SQR(cyl->radius) *
+		ft_dot_vec3(pdp, pdp));
+	if (solve_quadratic(q, &hit->t, &hit->t2))
 	{
-		hit->t = t1;
-		if (hit->t < 0 || (t2 > 0 && t2 < hit->t))
-			hit->t = t2;
+		if (hit->t < 0 || (hit->t2 > 0 && hit->t2 < hit->t))
+			hit->t = hit->t2;
 		if (hit->t < 0)
 			return (FALSE);
 		hit->point = point_on_ray(ray, hit->t);

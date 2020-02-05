@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 16:58:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 15:51:22 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:41:09 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	handle_camera_movement(t_env *env, int key)
 	}
 }
 
-static void handle_object_rotation(t_object *object, int key)
+static void	handle_object_rotation(t_object *object, int key)
 {
 	if (key == KEY_NUM_7)
 		object->rotation.z -= 1.0;
@@ -95,18 +95,16 @@ int			key_press(int key, void *param)
 
 int			mouse_press(int button, int x, int y, void *param)
 {
-	t_env *env;
-	t_ray ray;
-	t_raycasthit hit;
-	t_vec2	screen;
+	t_raycasthit	hit;
+	t_env			*env;
+	t_ray			ray;
+	t_vec2			screen;
 
 	env = (t_env*)param;
 	if (button == 1)
 	{
-		ft_printf("mouse pos: %d, %d\n", x, y);
 		screen.x = (double)x / (double)WIN_W;
 		screen.y = (double)y / (double)WIN_H;
-		ft_printf("screen pos: %.3f, %.3f\n", screen.x, screen.y);
 		ray = get_camera_ray(&env->scene->camera, screen.x, screen.y);
 		hit.object = NULL;
 		if (trace(&ray, env->scene, &hit, FALSE) && hit.object != NULL)
@@ -122,4 +120,3 @@ int			mouse_press(int button, int x, int y, void *param)
 	}
 	return (1);
 }
-

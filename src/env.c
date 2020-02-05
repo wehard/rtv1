@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 12:54:04 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:39:47 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_env	*init_env(int width, int height, char *title)
 	env->mlx->mlx_ptr = mlx_init();
 	env->mlx->win_ptr = mlx_new_window(env->mlx->mlx_ptr, width, height, title);
 	env->mlx_img = create_mlx_image(env, width, height);
-	if(!(env->scene = (t_scene*)malloc(sizeof(t_scene))))
+	if (!(env->scene = (t_scene*)malloc(sizeof(t_scene))))
 		panic("env->scene malloc failed!");
 	return (env);
 }
@@ -45,7 +45,6 @@ void	del_env_exit(t_env *env)
 	free(env);
 	exit(EXIT_SUCCESS);
 }
-
 
 void	panic(char *message)
 {

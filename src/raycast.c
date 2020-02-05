@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 12:43:23 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 18:14:46 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #include "libft.h"
 #include <math.h>
 
-int		trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int stop_at_first)
+int				trace(t_ray *ray, t_scene *scene, t_raycasthit *hit,
+						int stop_at_first)
 {
 	t_raycasthit	cur_hit;
 	double			min_dist;
@@ -43,43 +44,58 @@ int		trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int stop_at_first)
 	return (hit_found);
 }
 
-static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+static double	calc_attenuation(t_light *light, t_raycasthit *hit)
 {
-	t_rgba color;
-	t_rgba diffuse;
-	t_rgba specular;
-	int		i;
 	double distance;
 	double attenuation;
 
-	t_rgba ambient = ft_mul_rgba(hit->object->color, ft_intensity_rgba(scene->ambient_color));
-	diffuse = ft_make_rgba(0,0,0,1);
-	specular = ft_make_rgba(0,0,0,1);
+	if (light->type == POINT)
+	{
+		distance = ft_len_vec3(ft_sub_vec3(light->position, hit->point));
+		attenuation = 1.0 / (1.0 + 0.045 * distance + 0.0075 * SQR(distance));
+	}
+	else
+		attenuation = 1.0 - (hit->distance / MAX_DISTANCE);
+	return (attenuation);
+}
+
+static void		init_color_data(t_color_data *color, t_scene *scene,
+									t_raycasthit *hit)
+{
+	color->ambient = ft_mul_rgba(hit->object->color,
+		ft_intensity_rgba(scene->ambient_color));
+	color->diffuse = ft_make_rgba(0, 0, 0, 1);
+	color->specular = ft_make_rgba(0, 0, 0, 1);
+}
+
+static t_rgba	shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+{
+	t_color_data	color;
+	int				i;
+	double			distance;
+
+	init_color_data(&color, scene, hit);
 	i = 0;
 	while (i < scene->num_lights)
 	{
-		if (scene->lights[i].type == POINT)
-		{
-			distance = ft_len_vec3(ft_sub_vec3(scene->lights[i].position, hit->point));
-			attenuation = 1.0 / (1.0 + 0.045 * distance + 0.0075 * SQR(distance));
-		}
-		else
-			attenuation = 1.0 - (hit->distance / MAX_DISTANCE);
-
+		color.attenuation = calc_attenuation(&scene->lights[i], hit);
 		if (!is_in_shadow(&scene->lights[i], scene, hit))
 		{
-			diffuse = ft_add_rgba(diffuse, calc_diffuse(&scene->lights[i], hit));
-			specular = ft_add_rgba(specular, calc_specular(&scene->lights[i], hit, scene->camera.pos));
-			diffuse = ft_mul_rgba(diffuse, attenuation);
-			specular = ft_mul_rgba(specular, attenuation);
+			color.diffuse = ft_add_rgba(color.diffuse,
+				calc_diffuse(&scene->lights[i], hit));
+			color.specular = ft_add_rgba(color.specular,
+				calc_specular(&scene->lights[i], hit, scene->camera.pos));
+			color.diffuse = ft_mul_rgba(color.diffuse, color.attenuation);
+			color.specular = ft_mul_rgba(color.specular, color.attenuation);
 		}
 		i++;
 	}
-	color =  ft_add_rgba(ambient, ft_add_rgba(ft_mul_rgba_rgba(hit->object->color, diffuse), specular));
-	return (color);
+	color.out = ft_add_rgba(color.ambient, ft_add_rgba(
+		ft_mul_rgba_rgba(hit->object->color, color.diffuse), color.specular));
+	return (color.out);
 }
 
-t_rgba	raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit)
+t_rgba			raycast(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 {
 	t_rgba color;
 
