@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 12:52:07 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:26:13 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,15 @@
 #include "matrix.h"
 #include <pthread.h>
 
-int	update(void *param)
+int		update(void *param)
 {
-	t_env *env;
+	t_env	*env;
+	time_t	newtime;
 
 	env = (t_env*)param;
 	if (!param || !env || !env->scene)
 		return (1);
-	time_t newtime = check_mod_time(env->scene->path);
+	newtime = check_mod_time(env->scene->path);
 	if (env->scene->mod_time < newtime)
 	{
 		env->scene->mod_time = newtime;
@@ -42,10 +43,10 @@ int	update(void *param)
 	return (0);
 }
 
-void *render_thread(void *env_ptr)
+void	*render_thread(void *env_ptr)
 {
 	t_env			*env;
-	t_ray 			ray;
+	t_ray			ray;
 	t_vec2			screen;
 	t_vec2i			cur;
 	t_raycasthit	hit;
@@ -69,11 +70,11 @@ void *render_thread(void *env_ptr)
 	return (env_ptr);
 }
 
-void render(t_env *env, t_scene *scene)
+void	render(t_env *env, t_scene *scene)
 {
 	pthread_t	threads[NUM_THREADS];
 	t_env		thread_env[NUM_THREADS];
-	int		i;
+	int			i;
 
 	init_camera(&scene->camera, scene->camera.pos, scene->camera.look_at,
 		scene->camera.fov, scene->camera.aspect);
@@ -82,19 +83,22 @@ void render(t_env *env, t_scene *scene)
 	{
 		ft_memcpy((void*)&thread_env[i], (void*)env, sizeof(t_env));
 		thread_env[i].thread_index = i;
-		if (pthread_create(&threads[i], NULL, render_thread, &thread_env[i]) != 0)
+		if (pthread_create(&threads[i], NULL, render_thread,
+			&thread_env[i]) != 0)
 			panic("thread failed!");
 		i++;
 	}
 	while (i--)
 		pthread_join(threads[i], NULL);
-	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
+	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr,
+		env->mlx_img->img, 0, 0);
 }
 
-int	main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
-	t_env *env;
-	char window_title[50];
+	t_env	*env;
+	char	window_title[50];
+
 	ft_bzero(window_title, 50);
 	if (argc != 2)
 	{

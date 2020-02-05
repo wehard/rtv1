@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 11:29:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 14:42:11 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:28:50 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,29 @@ t_ray	get_camera_ray(t_camera *camera, double u, double v)
 	return (ray);
 }
 
-t_vec2i world_to_screen_point(t_camera *camera, t_vec3 wp)
+t_vec2i	world_to_screen_point(t_camera *camera, t_vec3 wp)
 {
-	t_vec3 dir;
-	t_vec2i sp;
-	double aspect = (double)WIN_W / (double)WIN_H;
+	t_vec3	dir;
+	t_vec2i	sp;
+	t_vec3	ipp;
+
 	dir = ft_normalize_vec3(ft_sub_vec3(wp, camera->pos));
-	t_vec3 ipp = ft_mul_vec3(dir, 1.0);
-	sp.x = ((ipp.x + aspect * 0.5) / aspect) * WIN_W;
-	sp.y =  WIN_H - ((ipp.y + 0.5) * WIN_H);
+	ipp = ft_mul_vec3(dir, 1.0);
+	sp.x = ((ipp.x + camera->aspect * 0.5) / camera->aspect) * WIN_W;
+	sp.y = WIN_H - ((ipp.y + 0.5) * WIN_H);
 	return (sp);
 }
 
-int parse_camera(int fd, t_camera *camera)
+int		parse_camera(int fd, t_camera *camera)
 {
-	char *line;
-	t_vec3 pos;
-	t_vec3 look_at;
-	double fov;
+	char	*line;
+	t_vec3	pos;
+	t_vec3	look_at;
+	double	fov;
 
 	if (!camera)
 		ft_printf("error: camera is null!\n");
-	while(ft_get_next_line(fd, &line))
+	while (ft_get_next_line(fd, &line))
 	{
 		if (ft_strnequ(line, "pos", 3))
 			pos = ft_parse_vec3(line);

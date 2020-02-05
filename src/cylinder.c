@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 14:27:17 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 17:32:07 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "ft_printf.h"
 #include "matrix.h"
 
-static t_vec3 calc_cylinder_normal(t_object *c, t_raycasthit *hit)
+static t_vec3	calc_cylinder_normal(t_object *c, t_raycasthit *hit)
 {
 	t_vec3 dir;
 	t_vec3 c_to_hit;
@@ -30,28 +30,31 @@ static t_vec3 calc_cylinder_normal(t_object *c, t_raycasthit *hit)
 	return (ft_normalize_vec3(ft_sub_vec3(hit->point, v)));
 }
 
-void	rotate_cylinder(t_object *c, t_vec3 rot)
+void			rotate_cylinder(t_object *c, t_vec3 rot)
 {
 	t_vec3 res;
-	t_vec3 v = ft_make_vec3(0, 1, 0);
+	t_vec3 v;
 
+	v = ft_make_vec3(0, 1, 0);
 	res = ft_rotate_vec3(v, rot);
 	c->end = ft_add_vec3(c->position, res);
 	c->start = c->position;
 }
 
-int	intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
+/*
+** if (ray->origin_object && ft_dot_vec3(ray->direction, ft_sub_vec3(cyl->end, cyl->start)) < 0) // shadow ray
+**	return (FALSE);
+*/
+
+int				intersects_cylinder(t_ray *ray, t_object *cyl, t_raycasthit *hit)
 {
 	double t1, t2;
 	t_quadratic q;
 	double	disc;
 	double d;
 	t_vec3 pdp, eyexpdp, rdxpdp;
+
 	pdp = ft_sub_vec3(cyl->start, cyl->end);
-
-	//if (ray->origin_object && ft_dot_vec3(ray->direction, ft_sub_vec3(cyl->end, cyl->start)) < 0) // shadow ray
-	//	return (FALSE);
-
 	eyexpdp = ft_cross_vec3(ft_sub_vec3(ray->origin, cyl->end), pdp);
 	rdxpdp = ft_cross_vec3(ray->direction, pdp);
 	q.a = ft_dot_vec3(rdxpdp, rdxpdp);
