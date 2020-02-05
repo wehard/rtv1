@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 11:29:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:28:50 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 18:42:00 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 #include "ft_get_next_line.h"
 #include <math.h>
 
-int		init_camera(t_camera *cam, t_vec3 pos, t_vec3 look_at, double fov, double aspect)
+int		init_camera(t_camera *cam, t_vec3 pos, t_vec3 look_at, double fov)
 {
 	t_camera_info	ci;
 
 	cam->pos = pos;
 	cam->look_at = look_at;
 	cam->fov = fov;
-	cam->aspect = aspect;
+	cam->aspect = (double)WIN_W / (double)WIN_H;
 	ci.world_up = ft_make_vec3(0, 1, 0);
 	ci.w = ft_normalize_vec3(ft_sub_vec3(cam->pos, cam->look_at));
 	ci.u = ft_normalize_vec3(ft_cross_vec3(ci.world_up, ci.w));
@@ -84,8 +84,7 @@ int		parse_camera(int fd, t_camera *camera)
 			look_at = ft_parse_vec3(line);
 		else if (line[0] == '#')
 		{
-			init_camera(camera, pos, look_at, fov,
-				(double)WIN_W / (double)WIN_H);
+			init_camera(camera, pos, look_at, fov);
 			free(line);
 			return (1);
 		}

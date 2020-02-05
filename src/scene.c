@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:19:56 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 18:31:14 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,32 @@ static t_obj_type	parse_object_type(char *line)
 	return (-1);
 }
 
-static void			init_scene(t_scene *scene, char *path)
+static void			init_scene(t_scene *scene, char *path, time_t modtime)
 {
 	scene->ambient_color = RGBA_BLACK;
 	scene->num_lights = 0;
 	scene->lights = NULL;
 	scene->num_objects = 0;
-	scene->objects = 0;
+	scene->objects = NULL;
 	scene->path = path;
 	scene->selected_object = NULL;
+	scene->mod_time = modtime;
 }
 
-static void			parse_scene_header()
+static void			parse_scene_header(char *line, t_scene *scene)
 {
-
+	if (ft_strnequ(line, "OBJECTS", 6) && !scene->num_objects)
+	{
+		scene->num_objects = ft_atoi(line + 7);
+		scene->objects = (t_object*)malloc(sizeof(t_object) * scene->num_objects);
+	}
+	else if (ft_strnequ(line, "LIGHTS", 5) && !scene->num_lights)
+	{
+		scene->num_lights = ft_atoi(line + 6);
+		scene->lights = (t_light*)malloc(sizeof(t_light) * scene->num_lights);
+	}
+	else if (ft_strnequ(line, "COLOR", 5))
+		scene->ambient_color = ft_parse_rgba(line);
 }
 
 int					read_scene(t_scene *scene, char *path)
@@ -60,27 +72,15 @@ int					read_scene(t_scene *scene, char *path)
 	int			light_index;
 	t_obj_type	type;
 
-	init_scene(scene, path);
-	fd = open(path, O_RDWR);
-	scene->mod_time = check_mod_time(scene->path);
-	if (fd < 3)
+	if ((fd = open(path, O_RDWR)) < 3)
 		panic("error opening scene file");
+	init_scene(scene, path, check_mod_time(scene->path));
 	obj_index = 0;
 	light_index = 0;
 	while (ft_get_next_line(fd, &line))
 	{
-		if (ft_strnequ(line, "OBJECTS", 6) && !scene->num_objects)
-		{
-			scene->num_objects = ft_atoi(line + 7);
-			scene->objects = (t_object*)malloc(sizeof(t_object) * scene->num_objects);
-		}
-		else if (ft_strnequ(line, "LIGHTS", 5) && !scene->num_lights)
-		{
-			scene->num_lights = ft_atoi(line + 6);
-			scene->lights = (t_light*)malloc(sizeof(t_light) * scene->num_lights);
-		}
-		else if (ft_strnequ(line, "COLOR", 5))
-			scene->ambient_color = ft_parse_rgba(line);
+		if (!scene->num_objects || !scene->num_lights)
+			parse_scene_header(line, scene);
 		else
 		{
 			type = parse_object_type(line);

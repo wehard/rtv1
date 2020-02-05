@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 17:26:13 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 18:42:46 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	render(t_env *env, t_scene *scene)
 	int			i;
 
 	init_camera(&scene->camera, scene->camera.pos, scene->camera.look_at,
-		scene->camera.fov, scene->camera.aspect);
+		scene->camera.fov);
 	i = 0;
 	while (i < NUM_THREADS)
 	{

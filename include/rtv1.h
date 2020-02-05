@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 18:16:33 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 18:42:24 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ t_mlx_img		*create_mlx_image(t_env *env, int width, int height);
 void			clear_mlx_img(t_mlx_img *img);
 void			put_pixel_mlx_img(t_mlx_img *img, int x, int y, int c);
 
-int				init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov, double aspect);
+int				init_camera(t_camera *camera, t_vec3 pos, t_vec3 look_at, double fov);
 t_ray			get_camera_ray(t_camera *camera, double u, double v);
 t_vec2i			world_to_screen_point(t_camera *camera, t_vec3 wp);
 
