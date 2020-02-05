@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/04 17:57:16 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 12:32:10 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,14 @@ int		trace(t_ray *ray, t_scene *scene, t_raycasthit *hit, int stop_at_first)
 	return (hit_found);
 }
 
+static double calc_ambient_strength(t_scene *scene)
+{
+	double s;
+
+	s = (scene->ambient_color.r + scene->ambient_color.g + scene->ambient_color.b) / 3;
+	return (s);
+}
+
 static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 {
 	t_rgba color;
@@ -52,7 +60,7 @@ static t_rgba shade(t_ray *ray, t_scene *scene, t_raycasthit *hit)
 	double distance;
 	double attenuation;
 
-	t_rgba ambient = ft_mul_rgba(hit->object->color, 0.18);
+	t_rgba ambient = ft_mul_rgba(hit->object->color, calc_ambient_strength(scene));
 	diffuse = ft_make_rgba(0,0,0,1);
 	specular = ft_make_rgba(0,0,0,1);
 	i = 0;

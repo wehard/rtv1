@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/04 16:34:46 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 12:14:17 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ void			draw_line(t_mlx *mlx, t_vec3 p0, t_vec3 p1, int color);
 int				key_press(int key, void *param);
 int				mouse_press(int button, int x, int y, void *param);
 
-void draw_lights(t_env *env, t_scene *scene);
+void			draw_lights(t_env *env, t_scene *scene);
+void			print_vec3(t_vec3 v);
 
 #endif

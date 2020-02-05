@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 16:58:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/04 16:43:32 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 12:15:59 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		key_press(int key, void *param)
 	return (0);
 }
 
-/*
+
 int		mouse_press(int button, int x, int y, void *param)
 {
 	t_env *env;
@@ -59,12 +59,14 @@ int		mouse_press(int button, int x, int y, void *param)
 	{
 		ray = get_camera_ray(&env->scene->camera, x, y);
 		print_vec3(ray.direction);
-		if (raycast(&ray, env->scene, &hit, 0))
+		hit.object = NULL;
+		raycast(&ray, env->scene, &hit);
+		if (hit.object != NULL)
 		{
 			ft_printf("hitinfo\n");
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "point:", hit.point.x, hit.point.y, hit.point.z);
 			ft_printf("%-10s %.3f, %.3f, %.3f\n", "normal:", hit.normal.x, hit.normal.y, hit.normal.z);
-			ft_putchar('\n');
+			ft_printf("\n");
 			t_vec2i sp = world_to_screen_point(&env->scene->camera, hit.point);
 			t_vec2i np = world_to_screen_point(&env->scene->camera, ft_add_vec3(hit.point, hit.normal));
 			draw_line(env->mlx, ft_make_vec3(sp.x, sp.y, 0), ft_make_vec3(np.x, np.y, 0), 0x00FFFF);
@@ -76,4 +78,4 @@ int		mouse_press(int button, int x, int y, void *param)
 	}
 	return (1);
 }
-*/
+

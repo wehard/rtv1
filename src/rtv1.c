@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/04 16:39:40 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 12:21:00 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include "matrix.h"
 #include <pthread.h>
 
-static void print_vec3(t_vec3 v)
+void print_vec3(t_vec3 v)
 {
 	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
 }
@@ -72,8 +72,7 @@ void *render_thread(void *env_ptr)
 	t_raycasthit	hit;
 
 	env = (t_env*)env_ptr;
-	cur.y = env->thread_index; // * (WIN_H / NUM_THREADS);
-	//env->height = (env->thread_index + 1) * (WIN_H / NUM_THREADS);
+	cur.y = env->thread_index;
 	while (cur.y < env->height)
 	{
 		cur.x = 0;
@@ -95,14 +94,10 @@ void render(t_env *env, t_scene *scene)
 {
 	pthread_t	threads[NUM_THREADS];
 	t_env		thread_env[NUM_THREADS];
-	clock_t	start;
-	clock_t	end;
-	double	cpu_time_used;
 	int		i;
 
 	init_camera(&scene->camera, scene->camera.pos, scene->camera.look_at,
 		scene->camera.fov, scene->camera.aspect);
-	start = clock();
 	i = 0;
 	while (i < NUM_THREADS)
 	{
@@ -118,9 +113,6 @@ void render(t_env *env, t_scene *scene)
 		pthread_join(threads[i], NULL);
 	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr, env->mlx_img->img, 0, 0);
 	draw_lights(env, scene);
-	end = clock();
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	ft_printf("scene rendered in: %fs\n", cpu_time_used);
 }
 
 int	main(int argc, char **argv)
@@ -139,7 +131,7 @@ int	main(int argc, char **argv)
 		return (1);
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);
 	mlx_expose_hook(env->mlx->win_ptr, update, (void*)env);
-	//mlx_hook(env->mlx->win_ptr, 4, (1L << 2), mouse_press, (void*)env);
+	mlx_hook(env->mlx->win_ptr, 4, (1L << 2), mouse_press, (void*)env);
 	render(env, env->scene);
 	mlx_loop(env->mlx->mlx_ptr);
 	return (0);
