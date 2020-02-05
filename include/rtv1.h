@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 13:25:07 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 13:33:24 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ typedef struct	s_scene
 	int			num_objects;
 	t_rgba		ambient_color;
 	t_camera	camera;
+	t_object	*selected_object;
 }				t_scene;
 
 typedef struct	s_mlx_img

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 13:23:16 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/05 13:33:52 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static void init_scene(t_scene *scene, char *path)
 	scene->num_objects = 0;
 	scene->objects = 0;
 	scene->path = path;
+	scene->selected_object = NULL;
 }
 
 int		read_scene(t_scene *scene, char *path)
