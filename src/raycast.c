@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 18:28:47 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 18:38:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void		init_color_data(t_color_data *color, t_scene *scene,
 									t_hit *hit)
 {
 	color->ambient = ft_mul_rgba(hit->object->color,
-		ft_intensity_rgba(scene->ambient_color) + 0.18);
+		ft_intensity_rgba(scene->ambient_color));
 	color->diffuse = ft_make_rgba(0, 0, 0, 1);
 	color->specular = ft_make_rgba(0, 0, 0, 1);
 	color->attenuation = 0.0;
@@ -70,10 +70,9 @@ static t_rgba	shade(t_scene *scene, t_hit *hit)
 				calc_diffuse(&scene->lights[i], hit));
 			color.specular = ft_add_rgba(color.specular,
 				calc_specular(&scene->lights[i], hit, scene->camera.pos));
-			color.diffuse = ft_mul_rgba(color.diffuse, color.attenuation);
-			color.specular = ft_mul_rgba(color.specular, color.attenuation);
 		}
-
+		color.diffuse = ft_mul_rgba(color.diffuse, color.attenuation);
+		color.specular = ft_mul_rgba(color.specular, color.attenuation);
 		i++;
 	}
 	color.out = ft_add_rgba(color.ambient, ft_add_rgba(
