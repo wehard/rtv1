@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 17:50:43 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int		intersects_cylinder(t_ray *ray, t_object *cyl, t_hit *hit)
 	{
 		if (hit->t < 0 || (hit->t2 > 0 && hit->t2 < hit->t))
 			hit->t = hit->t2;
-		if (hit->t < 0)
+		if (hit->t < 0 || hit->t > MAX_DISTANCE)
 			return (FALSE);
 		hit->point = point_on_ray(ray, hit->t);
 		hit->normal = calc_cylinder_normal(cyl, hit);

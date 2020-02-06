@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 14:11:12 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 18:08:40 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,6 @@ int				trace(t_ray *ray, t_scene *scene, t_hit *hit,
 	return (hit_found);
 }
 
-static double	calc_attenuation(t_light *light, t_hit *hit)
-{
-	double distance;
-	double attenuation;
-
-	if (light->type == POINT)
-	{
-		distance = ft_len_vec3(ft_sub_vec3(light->position, hit->point));
-		attenuation = 1.0 / (1.0 + 0.045 * distance + 0.0075 * SQR(distance));
-	}
-	else
-		attenuation = 1.0 - (hit->distance / MAX_DISTANCE);
-	return (attenuation);
-}
-
 static void		init_color_data(t_color_data *color, t_scene *scene,
 									t_hit *hit)
 {
@@ -66,6 +51,7 @@ static void		init_color_data(t_color_data *color, t_scene *scene,
 		ft_intensity_rgba(scene->ambient_color));
 	color->diffuse = ft_make_rgba(0, 0, 0, 1);
 	color->specular = ft_make_rgba(0, 0, 0, 1);
+	color->attenuation = 0.0;
 }
 
 static t_rgba	shade(t_scene *scene, t_hit *hit)
@@ -77,16 +63,16 @@ static t_rgba	shade(t_scene *scene, t_hit *hit)
 	i = 0;
 	while (i < scene->num_lights)
 	{
-		color.attenuation = calc_attenuation(&scene->lights[i], hit);
+		color.attenuation = 1.0 - (hit->distance / MAX_DISTANCE);
 		if (!is_in_shadow(&scene->lights[i], scene, hit))
 		{
 			color.diffuse = ft_add_rgba(color.diffuse,
 				calc_diffuse(&scene->lights[i], hit));
 			color.specular = ft_add_rgba(color.specular,
 				calc_specular(&scene->lights[i], hit, scene->camera.pos));
-			color.diffuse = ft_mul_rgba(color.diffuse, color.attenuation);
-			color.specular = ft_mul_rgba(color.specular, color.attenuation);
 		}
+		color.diffuse = ft_mul_rgba(color.diffuse, color.attenuation);
+		color.specular = ft_mul_rgba(color.specular, color.attenuation);
 		i++;
 	}
 	color.out = ft_add_rgba(color.ambient, ft_add_rgba(

@@ -1,27 +1,26 @@
 OBJECTS 6
 LIGHTS 2
-COLOR .1 .1 .1
+COLOR 0 0 0
 CAMERA
-pos 0.0 10.0 20.0
-fov 45
+pos 0.0 2.0 10.0
+fov 60
 look_at 0 0 0
 #
 LIGHT
 type 1
-pos -10 10 10
+pos -6 5 10
 col 1 1 1
-int 1
+int .5
 #
 LIGHT
-type 0
-pos 20 10 30
+type 1
+pos 6 5 10
 col 1 1 1
-int 0
+int .5
 #
 PLANE
 pos 0 -2 0
 rot 0 0 0
-sca 10 10 10
 col .1 0.3 0.5
 # red
 SPHERE

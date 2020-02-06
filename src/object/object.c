@@ -6,11 +6,12 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 17:41:53 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 21:53:16 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 17:49:25 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
+#include "libft.h"
 #include <math.h>
 #include "vector.h"
 

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:00:58 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 18:08:25 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ int				intersects_cone(t_ray *ray, t_object *cone, t_hit *hit)
 		* ft_dot_vec3(ray->direction, cone_dir) * ft_dot_vec3(x, cone_dir));
 	q.c = ft_dot_vec3(x, cone_dir);
 	q.c = ft_dot_vec3(x, x) - (1 + cone->radius * cone->radius) * q.c * q.c;
-	if (solve_quadratic(q, &hit->t, &hit->t2) && (hit->t > 0))
+	if (solve_quadratic(q, &hit->t, &hit->t2) && (hit->t > 0) &&
+		(hit->t < MAX_DISTANCE))
 	{
 		hit->point = point_on_ray(ray, hit->t);
 		hit->normal = calc_cone_normal(cone, hit);

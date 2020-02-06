@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 15:48:26 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 17:09:28 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define WIN_W 800
 # define WIN_H 600
 # define MAX_RAY_DEPTH 5
-# define MAX_DISTANCE 1000
+# define MAX_DISTANCE 500
 # define MIN_DISTANCE 0.1
 # define SHADOW_BIAS 0.001
 # define REFLECT_BIAS 0.001

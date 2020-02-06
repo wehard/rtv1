@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 12:45:18 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 14:39:17 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 16:25:19 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	display_light_info(t_mlx *mlx, t_light *l)
 	char buf[150];
 
 	ft_bzero(buf, 150);
-	ft_sprintf(buf, "light: %p type: %d intensity: %.3f",
-		l, l->type, l->intensity);
+	ft_sprintf(buf, "light: %p type: %d int: %.3f pos: %.3f, %.3f, %.3f",
+		l, l->type, l->intensity, l->position.x, l->position.y, l->position.z);
 	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, WIN_H - 25, 0xFFFFFF, buf);
 }
 

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 11:11:04 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 19:12:58 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 17:51:54 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int			intersects_plane(t_ray *ray, t_object *plane, t_hit *hit)
 		return (FALSE);
 	t = ft_dot_vec3(ft_sub_vec3(plane->position, ray->origin),
 		plane->normal) / d;
-	if (t > 0.0001)
+	if (t > 0.0001 && t < MAX_DISTANCE)
 	{
 		hit->t = t;
 		hit->point = point_on_ray(ray, hit->t);
