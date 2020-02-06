@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 21:49:19 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 22:36:38 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 13:39:59 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "ft_get_next_line.h"
 #include "ft_printf.h"
 
-int		parse_camera(int fd, t_camera *camera)
+int			parse_camera(int fd, t_camera *camera)
 {
 	char	*line;
 	t_vec3	pos;

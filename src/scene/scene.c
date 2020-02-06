@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 12:56:49 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 13:43:45 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static t_obj_type	parse_object_type(char *line)
 static void			init_scene(t_scene *scene, char *path, time_t modtime)
 {
 	scene->ambient_color = RGBA_BLACK;
+	scene->a_color_read = 0;
 	scene->num_lights = 0;
 	scene->lights = NULL;
 	scene->num_objects = 0;
@@ -64,6 +65,11 @@ static void			parse_scene_header(char *line, t_scene *scene)
 		scene->num_lights = ft_atoi(line + 6);
 		scene->lights = (t_light*)malloc(sizeof(t_light) * scene->num_lights);
 	}
+	else if (ft_strnequ(line, "COLOR", 5))
+	{
+		scene->ambient_color = ft_parse_rgba(line);
+		scene->a_color_read = 1;
+	}
 }
 
 int					read_scene(t_scene *sc, char *path)
@@ -77,10 +83,8 @@ int					read_scene(t_scene *sc, char *path)
 	init_scene(sc, path, check_mod_time(sc->path));
 	while (ft_get_next_line(fd, &line))
 	{
-		if (!sc->num_objects || !sc->num_lights)
+		if (!sc->num_objects || !sc->num_lights || !sc->a_color_read)
 			parse_scene_header(line, sc);
-		else if (ft_strnequ(line, "COLOR", 5))
-			sc->ambient_color = ft_parse_rgba(line);
 		else
 		{
 			type = parse_object_type(line);
