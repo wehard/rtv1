@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 21:49:19 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 13:39:59 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 15:43:49 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,15 @@
 #include "libft.h"
 #include "ft_get_next_line.h"
 #include "ft_printf.h"
+
+static void	verify_camera(t_camera *c)
+{
+	double len;
+
+	len = ft_len_vec3(ft_sub_vec3(c->pos, c->look_at));
+	if (len < 0.0001)
+		panic("check camera position and look_at!");
+}
 
 int			parse_camera(int fd, t_camera *camera)
 {
@@ -35,6 +44,7 @@ int			parse_camera(int fd, t_camera *camera)
 		else if (line[0] == '#')
 		{
 			init_camera(camera, pos, look_at, fov);
+			verify_camera(camera);
 			free(line);
 			return (1);
 		}

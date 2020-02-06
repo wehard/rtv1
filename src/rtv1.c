@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 12:38:12 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 15:54:30 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,16 @@ int		update(void *param)
 	newtime = check_mod_time(env->scene->path);
 	if (env->scene->mod_time < newtime)
 	{
-		env->scene->mod_time = newtime;
 		ft_printf("scene modified\n");
-		if (read_scene(env->scene, env->scene->path))
+		free(env->scene->lights);
+		free(env->scene->objects);
+		//free(env->scene);
+		//if (!(env->scene = (t_scene*)malloc(sizeof(t_scene))))
+		//	panic("env->scene malloc failed!");
+		if (read_scene(env->scene, env->scene->path, newtime))
 			render(env, env->scene);
 		else
-			ft_printf("error: failed to read scene!\n");
+			panic("failed to read scene!\n");
 	}
 	return (1);
 }
@@ -114,12 +118,15 @@ int		main(int argc, char **argv)
 	}
 	ft_sprintf(window_title, "RTv1 - %s", argv[1]);
 	env = init_env(WIN_W, WIN_H, window_title);
-	if (!read_scene(env->scene, argv[1]))
+	if (!read_scene(env->scene, argv[1], check_mod_time(argv[1])))
+	{
+		panic("scene read failed!");
 		return (1);
+	}
+	render(env, env->scene);
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);
 	mlx_expose_hook(env->mlx->win_ptr, update, (void*)env);
 	mlx_hook(env->mlx->win_ptr, 4, (1L << 2), mouse_press, (void*)env);
-	render(env, env->scene);
 	mlx_loop(env->mlx->mlx_ptr);
 	return (0);
 }

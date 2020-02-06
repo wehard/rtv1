@@ -2,15 +2,15 @@ OBJECTS 1
 LIGHTS 1
 COLOR 0 0 0
 CAMERA
-pos 0.0 0.0 30.0
+pos 0 0 30
 fov 60.0
 look_at 0 0 0
 #
 LIGHT
 type 1
-pos 10 20 20
+pos 10 20 10
 col 1 1 1
-int 3
+int 2
 #
 SPHERE
 pos 0 0 0

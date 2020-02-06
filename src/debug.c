@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 12:45:18 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 12:55:13 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 14:39:17 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,6 @@ void		draw_debug_info(t_env *env, t_scene *scene)
 	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 35, 0xFFFFFF, buf);
 	if (scene->selected_light)
 		display_light_info(env->mlx, scene->selected_light);
-	if (scene->selected_object)
+	else if (scene->selected_object)
 		display_object_info(env->mlx, scene->selected_object);
 }

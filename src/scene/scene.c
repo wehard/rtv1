@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 13:43:45 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 15:50:51 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,10 @@ static t_obj_type	parse_object_type(char *line)
 	return (-1);
 }
 
-static void			init_scene(t_scene *scene, char *path, time_t modtime)
+static void			init_scene(t_scene *scene, char *path, time_t modtime, int fd)
 {
+	if (scene->fd > 0)
+		close(scene->fd);
 	scene->ambient_color = RGBA_BLACK;
 	scene->a_color_read = 0;
 	scene->num_lights = 0;
@@ -50,6 +52,7 @@ static void			init_scene(t_scene *scene, char *path, time_t modtime)
 	scene->l_index = 0;
 	scene->o_index = 0;
 	scene->selected_light = NULL;
+	scene->fd = fd;
 }
 
 static void			parse_scene_header(char *line, t_scene *scene)
@@ -72,7 +75,7 @@ static void			parse_scene_header(char *line, t_scene *scene)
 	}
 }
 
-int					read_scene(t_scene *sc, char *path)
+int					read_scene(t_scene *sc, char *path, time_t modtime)
 {
 	int			fd;
 	char		*line;
@@ -80,7 +83,7 @@ int					read_scene(t_scene *sc, char *path)
 
 	if ((fd = open(path, O_RDWR)) < 3)
 		panic("error opening scene file");
-	init_scene(sc, path, check_mod_time(sc->path));
+	init_scene(sc, path, modtime, fd);
 	while (ft_get_next_line(fd, &line))
 	{
 		if (!sc->num_objects || !sc->num_lights || !sc->a_color_read)

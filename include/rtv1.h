@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 13:42:27 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 15:48:26 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ typedef struct	s_env
 t_env			*init_env(int width, int height, char *title);
 void			del_env_exit(t_env *env);
 
-int				read_scene(t_scene *scene, char *path);
+int				read_scene(t_scene *scene, char *path, time_t modtime);
 int				parse_light(int fd, t_light *light);
 int				parse_object(int fd, t_obj_type type, t_object *object);
 int				parse_camera(int fd, t_camera *camera);
