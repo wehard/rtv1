@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:37:20 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 22:04:55 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 11:46:03 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 #  define KEY_1			18
 #  define KEY_2			19
 #  define KEY_3			20
+#  define KEY_I			34
 
 # else
 

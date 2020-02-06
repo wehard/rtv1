@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 18:12:08 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 22:35:54 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 12:53:39 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "ft_printf.h"
 #include <math.h>
 
-void	init_light(t_light *light)
+void		init_light(t_light *light)
 {
 	light->type = 0;
 	light->position = ft_make_vec3(0, 0, 0);

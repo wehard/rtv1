@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 22:51:18 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 12:56:49 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static void			init_scene(t_scene *scene, char *path, time_t modtime)
 	scene->mod_time = modtime;
 	scene->l_index = 0;
 	scene->o_index = 0;
+	scene->selected_light = NULL;
 }
 
 static void			parse_scene_header(char *line, t_scene *scene)
@@ -65,7 +66,7 @@ static void			parse_scene_header(char *line, t_scene *scene)
 	}
 }
 
-int					read_scene(t_scene *scene, char *path)
+int					read_scene(t_scene *sc, char *path)
 {
 	int			fd;
 	char		*line;
@@ -73,27 +74,26 @@ int					read_scene(t_scene *scene, char *path)
 
 	if ((fd = open(path, O_RDWR)) < 3)
 		panic("error opening scene file");
-	init_scene(scene, path, check_mod_time(scene->path));
+	init_scene(sc, path, check_mod_time(sc->path));
 	while (ft_get_next_line(fd, &line))
 	{
-		if (!scene->num_objects || !scene->num_lights)
-			parse_scene_header(line, scene);
+		if (!sc->num_objects || !sc->num_lights)
+			parse_scene_header(line, sc);
 		else if (ft_strnequ(line, "COLOR", 5))
-			scene->ambient_color = ft_parse_rgba(line);
+			sc->ambient_color = ft_parse_rgba(line);
 		else
 		{
 			type = parse_object_type(line);
 			if (type == CAMERA || type == LIGHT)
-				type == CAMERA ? (parse_camera(fd, &scene->camera)) :
-					parse_light(fd, &(scene->lights)[scene->l_index++]);
+				type == CAMERA ? (parse_camera(fd, &sc->camera)) :
+					parse_light(fd, &(sc->lights)[sc->l_index++]);
 			else if (type >= 0 && type < 4)
-				parse_object(fd, type, &(scene->objects)[scene->o_index++]);
+				parse_object(fd, type, &(sc->objects)[sc->o_index++]);
 		}
 		free(line);
 	}
 	close(fd);
-	return ((scene->num_lights == scene->l_index) &&
-		(scene->num_objects == scene->o_index));
+	return (sc->num_lights == sc->l_index && sc->num_objects == sc->o_index);
 }
 
 time_t				check_mod_time(char *path)

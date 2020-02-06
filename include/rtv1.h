@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:50:07 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 22:36:09 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 12:38:52 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 
 # define SQR(value) value * value
 # define NUM_THREADS 72
-# define WIN_W 1280
-# define WIN_H 720
+# define WIN_W 800
+# define WIN_H 600
 # define MAX_RAY_DEPTH 5
 # define MAX_DISTANCE 1000
 # define MIN_DISTANCE 0.1
@@ -183,6 +183,7 @@ int				parse_object(int fd, t_obj_type type, t_object *object);
 int				parse_camera(int fd, t_camera *camera);
 void			render(t_env *env, t_scene *scene);
 int				update(void *param);
+void			refresh(t_env *env);
 
 void			init_light(t_light *light);
 void			rotate_light(t_light *light, t_vec3 rot);

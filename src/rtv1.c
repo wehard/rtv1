@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 22:10:15 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 12:38:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,15 @@ int		update(void *param)
 		else
 			ft_printf("error: failed to read scene!\n");
 	}
-	return (0);
+	return (1);
+}
+
+void	refresh(t_env *env)
+{
+	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr,
+		env->mlx_img->img, 0, 0);
+	if (env->debug)
+		draw_debug_info(env, env->scene);
 }
 
 void	*render_thread(void *env_ptr)
@@ -90,10 +98,7 @@ void	render(t_env *env, t_scene *scene)
 	}
 	while (i--)
 		pthread_join(threads[i], NULL);
-	mlx_put_image_to_window(env->mlx->mlx_ptr, env->mlx->win_ptr,
-		env->mlx_img->img, 0, 0);
-	if (env->debug)
-		draw_debug_info(env, scene);
+	refresh(env);
 }
 
 int		main(int argc, char **argv)

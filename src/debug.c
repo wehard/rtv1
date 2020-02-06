@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 12:45:18 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 23:02:05 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 12:55:13 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 #include "mlx.h"
 #include "ft_printf.h"
 
-void	print_vec3(t_vec3 v)
+void		print_vec3(t_vec3 v)
 {
 	ft_printf("%.3f, %.3f, %.3f\n", v.x, v.y, v.z);
 }
 
-void	print_object_info(t_object *object)
+void		print_object_info(t_object *object)
 {
 	ft_printf("type: %d\n", object->type);
 	ft_printf("pos: %.3f, %.3f, %.3f\n", object->position.x,
@@ -40,26 +40,44 @@ void	print_object_info(t_object *object)
 	ft_printf("radius: %.3f\n", object->radius);
 }
 
-void	draw_debug_info(t_env *env, t_scene *scene)
+static void	display_light_info(t_mlx *mlx, t_light *l)
 {
-	t_mlx *mlx;
-
-	mlx = env->mlx;
 	char buf[150];
 
 	ft_bzero(buf, 150);
+	ft_sprintf(buf, "light: %p type: %d intensity: %.3f",
+		l, l->type, l->intensity);
+	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, WIN_H - 25, 0xFFFFFF, buf);
+}
+
+static void	display_object_info(t_mlx *mlx, t_object *object)
+{
+	char buf[150];
+
+	ft_bzero(buf, 150);
+	ft_sprintf(buf, "object: %p pos: %.1f, %.1f, %.1f rot: %.1f, %.1f, %.1f",
+		object, object->position.x, object->position.y, object->position.z,
+		object->rotation.x, object->rotation.y, object->rotation.z);
+	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, WIN_H - 25, 0xFFFFFF, buf);
+}
+
+void		draw_debug_info(t_env *env, t_scene *scene)
+{
+	t_mlx	*mlx;
+	char	buf[150];
+
+	mlx = env->mlx;
+	ft_bzero(buf, 150);
 	ft_sprintf(buf, "num_lights: %d", scene->num_lights);
-	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 10, 0xFFFFFF, buf);
+	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 5, 0xFFFFFF, buf);
 	ft_bzero(buf, 150);
 	ft_sprintf(buf, "num_objects: %d", scene->num_objects);
 	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 20, 0xFFFFFF, buf);
 	ft_bzero(buf, 150);
 	ft_sprintf(buf, "threads: %d", NUM_THREADS);
-	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 30, 0xFFFFFF, buf);
+	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 35, 0xFFFFFF, buf);
 	if (scene->selected_light)
-	{
-		ft_bzero(buf, 150);
-		ft_sprintf(buf, "light: %p intensity: %.3f", scene->selected_light, scene->selected_light->intensity);
-		mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, WIN_H - 10, 0xFFFFFF, buf);
-	}
+		display_light_info(env->mlx, scene->selected_light);
+	if (scene->selected_object)
+		display_object_info(env->mlx, scene->selected_object);
 }

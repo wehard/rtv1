@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 20:45:58 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 11:45:35 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,6 @@ static double	calc_attenuation(t_light *light, t_hit *hit)
 	else
 		attenuation = 1.0 - (hit->distance / MAX_DISTANCE);
 	return (attenuation);
-}
-
-static double	ft_intensity_rgba(t_rgba c)
-{
-	return ((c.r + c.g + c.b) / 3.0);
 }
 
 static void		init_color_data(t_color_data *color, t_scene *scene,

@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 22:02:48 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 12:55:26 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void		del_env_exit(t_env *env)
 	exit(EXIT_SUCCESS);
 }
 
-void	panic(char *message)
+void		panic(char *message)
 {
 	ft_printf("panic: %s\n", message);
 	exit(EXIT_FAILURE);
