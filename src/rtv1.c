@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 15:54:30 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 16:01:42 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "vector.h"
 #include "matrix.h"
 #include <pthread.h>
+#include <unistd.h>
 
 int		update(void *param)
 {
@@ -36,9 +37,8 @@ int		update(void *param)
 		ft_printf("scene modified\n");
 		free(env->scene->lights);
 		free(env->scene->objects);
-		//free(env->scene);
-		//if (!(env->scene = (t_scene*)malloc(sizeof(t_scene))))
-		//	panic("env->scene malloc failed!");
+		if (env->scene->fd > 0)
+			close(env->scene->fd);
 		if (read_scene(env->scene, env->scene->path, newtime))
 			render(env, env->scene);
 		else

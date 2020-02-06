@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 14:36:46 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 16:00:27 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_env		*init_env(int width, int height, char *title)
 	if (!(env->scene = (t_scene*)malloc(sizeof(t_scene))))
 		panic("env->scene malloc failed!");
 	env->debug = 0;
+	env->scene->fd = 0;
 	return (env);
 }
 

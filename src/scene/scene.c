@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/11 12:46:06 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 15:50:51 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 16:04:53 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,9 @@ static t_obj_type	parse_object_type(char *line)
 	return (-1);
 }
 
-static void			init_scene(t_scene *scene, char *path, time_t modtime, int fd)
+static void			init_scene(t_scene *scene, char *path,
+						time_t modtime, int fd)
 {
-	if (scene->fd > 0)
-		close(scene->fd);
 	scene->ambient_color = RGBA_BLACK;
 	scene->a_color_read = 0;
 	scene->num_lights = 0;
