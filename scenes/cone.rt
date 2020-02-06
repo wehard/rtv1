@@ -10,7 +10,7 @@ LIGHT
 type 1
 pos 5 7 10
 col 1 1 1
-int 2
+int 1
 #
 CONE
 pos 0 6 0
