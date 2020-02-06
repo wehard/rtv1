@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 16:10:39 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 11:45:35 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 14:11:12 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,10 @@ static void		init_color_data(t_color_data *color, t_scene *scene,
 	color->specular = ft_make_rgba(0, 0, 0, 1);
 }
 
-static t_rgba	shade(t_ray *ray, t_scene *scene, t_hit *hit)
+static t_rgba	shade(t_scene *scene, t_hit *hit)
 {
 	t_color_data	color;
 	int				i;
-	double			distance;
 
 	init_color_data(&color, scene, hit);
 	i = 0;
@@ -101,6 +100,6 @@ t_rgba			raycast(t_ray *ray, t_scene *scene, t_hit *hit)
 
 	color = scene->ambient_color;
 	if (trace(ray, scene, hit, FALSE))
-		color = shade(ray, scene, hit);
+		color = shade(scene, hit);
 	return (ft_clamp_rgba(color));
 }

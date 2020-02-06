@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/02/05 22:29:42 by wkorande         ###   ########.fr        #
+#    Updated: 2020/02/06 14:07:09 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,9 +39,9 @@ OBJS = $(SRC:.c=.o)
 
 INCL = include
 
-LIBFT = ../libft
+LIBFT = libft
 
-FLAGS = #-Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
@@ -57,12 +57,12 @@ linux:
 	gcc -g $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lXext -lX11 -lm -pthread
 
 clean:
-	#make clean -C $(LIBFT)
+	make clean -C $(LIBFT)
 	@printf "Removing objects\n"
 	@rm -f $(OBJS)
 
 fclean : clean
-	#make fclean -C $(LIBFT)
+	make fclean -C $(LIBFT)
 	@printf "Removing $(NAME)\n"
 	@rm -f $(NAME)
 

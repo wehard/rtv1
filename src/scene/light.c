@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 18:12:08 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 12:53:39 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/06 14:07:43 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ t_rgba		calc_diffuse(t_light *light, t_hit *hit)
 	t_rgba diffuse;
 	t_vec3 light_dir;
 	double ndotl;
-	double distance;
-	double attenuation;
 
 	if (light->type == POINT)
 		light_dir = ft_normalize_vec3(ft_sub_vec3(light->position, hit->point));
