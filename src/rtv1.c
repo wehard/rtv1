@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/09 17:49:25 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 16:01:42 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/07 17:34:22 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ int		main(int argc, char **argv)
 	mlx_hook(env->mlx->win_ptr, 2, (1L << 0), key_press, (void*)env);
 	mlx_expose_hook(env->mlx->win_ptr, update, (void*)env);
 	mlx_hook(env->mlx->win_ptr, 4, (1L << 2), mouse_press, (void*)env);
+	mlx_hook(env->mlx->win_ptr, 17, 0, close_window, (void*)env);
 	mlx_loop(env->mlx->mlx_ptr);
 	return (0);
 }

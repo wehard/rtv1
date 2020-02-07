@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 01:15:38 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 17:50:43 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/07 17:25:28 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,6 @@ void	rotate_cylinder(t_object *c, t_vec3 rot)
 	c->end = ft_add_vec3(c->position, res);
 	c->start = c->position;
 }
-
-/*
-** if (ray->origin_object && ft_dot_vec3(ray->direction,\
-**			ft_sub_vec3(cyl->end, cyl->start)) < 0) // shadow ray
-**	return (FALSE);
-*/
 
 int		intersects_cylinder(t_ray *ray, t_object *cyl, t_hit *hit)
 {

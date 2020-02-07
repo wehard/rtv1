@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 17:30:56 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 16:09:30 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/07 17:34:06 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ void		del_env_exit(t_env *env)
 	free(env->mlx_img);
 	free(env->mlx);
 	free(env);
+	exit(EXIT_SUCCESS);
+}
+
+int 		close_window(void *param)
+{
+	(void)param;
 	exit(EXIT_SUCCESS);
 }
 

@@ -6,21 +6,13 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:00:58 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/06 18:08:25 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/07 17:25:24 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
 #include <math.h>
-
-/*
-** O ray origin
-** D ray direction
-** C cone tip
-** V cone direction
-** theta half cone angle
-*/
 
 static t_vec3	calc_cone_normal(t_object *cone, t_hit *hit)
 {
