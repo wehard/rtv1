@@ -6,7 +6,7 @@
 #    By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 13:58:13 by wkorande          #+#    #+#              #
-#    Updated: 2020/02/06 18:31:05 by wkorande         ###   ########.fr        #
+#    Updated: 2020/02/07 13:51:30 by wkorande         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,12 +57,12 @@ linux:
 	gcc -g $(FLAGS) -o $(NAME) -I$(INCL) -I $(LIBFT)/includes $(SRCS) -L$(LIBFT) -lft -lmlx -lXext -lX11 -lm -pthread
 
 clean:
-	#make clean -C $(LIBFT)
+	make clean -C $(LIBFT)
 	@printf "Removing objects\n"
 	@rm -f $(OBJS)
 
 fclean : clean
-	#make fclean -C $(LIBFT)
+	make fclean -C $(LIBFT)
 	@printf "Removing $(NAME)\n"
 	@rm -f $(NAME)
 
