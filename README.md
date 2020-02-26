@@ -1,9 +1,10 @@
 # RTv1
 
-<img src="https://github.com/wehard/rtv1/blob/master/assets/rtv1_banner.png?raw=true"/>
 
 ### Objective
 Implement Raytracing protocol to render a scene from a specific angle and position. The scene is composed of simple geometric shapes and is illuminated by the lighting system defined in the scene file.
+
+<img src="https://github.com/wehard/rtv1/blob/master/assets/rtv1_banner.png?raw=true"/>
 
 ### Features
 - Shapes
