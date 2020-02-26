@@ -1,5 +1,5 @@
 OBJECTS 8
-LIGHTS 2
+LIGHTS 3
 COLOR .1 .1 .1
 CAMERA
 fov 60.0
@@ -8,12 +8,20 @@ look_at 0 10 10
 #
 LIGHT
 type 0
-rot -80 -45 0
+rot -80 -65 0
+col 1 0 0
 int 1
 #
 LIGHT
 type 0
-rot -80 45 0
+rot -70 0 0
+col 0 1 0
+int 1
+#
+LIGHT
+type 0
+rot -80 65 0
+col 0 0 1
 int 1
 #
 PLANE
@@ -33,8 +41,8 @@ rot -140 0 0
 #
 SPHERE
 pos 0 6 6
-col .9 .1 .1
-rad 3.0
+col .5 .5 .5
+rad 7.0
 #
 CYLINDER
 pos -8 0 8
