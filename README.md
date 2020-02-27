@@ -1,14 +1,16 @@
 # RTv1
 
-
-### Objective
-Implement Raytracing protocol to render a scene from a specific angle and position. The scene is composed of simple geometric shapes and is illuminated by the lighting system defined in the scene file.
-
 <img src="https://github.com/wehard/rtv1/blob/master/assets/rtv1_banner.png?raw=true"/>
 
-### Build instructions
 
-Dependencies
+## Objective
+
+Implement Raytracing protocol to render a scene from a specific angle and position. The scene is composed of simple geometric shapes and is illuminated by the lighting system defined in the scene file.
+
+
+## Build instructions
+
+### Dependencies
 - The project uses ```libmlx``` which is not included in the source at the moment. (Will add soon)
 - git@github.com:wehard/libft.git as a submodule. Remember to init.
 
@@ -18,7 +20,7 @@ make
 ./RTv1 scenes/sphere.rt
 ```
 
-### Features
+## Features
 - Shapes
 	- Plane, Sphere, Cylinder, Cone
 	- Translation, rotation and scaling of shapes
@@ -37,7 +39,7 @@ make
 	- Supports hot-reloading
 
 
-### Scene definition
+## Scene definition
 
 All sections are need to end with a closing ```#```
 ```
@@ -49,7 +51,7 @@ OBJECT
 #
 ```
 
-#### Header
+### Header
 Camera is defined in the header. [There can be only one!](https://www.youtube.com/watch?v=_J3VeogFUOs)
 ```
 OBJECTS <integer> (number of objects, must match actual objects defined below)
@@ -60,7 +62,7 @@ fov 60.0
 pos 0.0 30 160.0
 look_at 0 0 0
 ```
-#### Lights
+### Lights
 
 Lights are defined as:
 
@@ -72,7 +74,7 @@ dir <x> <y> <z> (for point light this is ignored for obvious reasons)
 col <r> <g> <b>
 ```
 
-#### Objects
+### Objects
 
 Objects are defined using their type and properties. Some objecs ignore some of the properties if they don't need them.
 
