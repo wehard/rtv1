@@ -15,7 +15,7 @@ Implement Raytracing protocol to render a scene from a specific angle and positi
 - git@github.com:wehard/libft.git as a submodule. Remember to init.
 
 ```sh
-git clone git@github.com:wehard/rtv1.git && git submodule update --init
+git clone https://github.com/wehard/rtv1.git && git submodule update --init
 make
 ./RTv1 scenes/sphere.rt
 ```
