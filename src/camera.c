@@ -6,7 +6,7 @@
 /*   By: wkorande <wkorande@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 11:29:59 by wkorande          #+#    #+#             */
-/*   Updated: 2020/02/05 21:50:31 by wkorande         ###   ########.fr       */
+/*   Updated: 2020/02/27 07:44:25 by wkorande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		init_camera(t_camera *cam, t_vec3 pos, t_vec3 look_at, double fov)
 	cam->look_at = look_at;
 	cam->fov = fov;
 	cam->aspect = (double)WIN_W / (double)WIN_H;
-	ci.world_up = ft_make_vec3(0, 1, 0);
+	ci.world_up = ft_make_vec3(0, 1, 0.001);
 	ci.w = ft_normalize_vec3(ft_sub_vec3(cam->pos, cam->look_at));
 	ci.u = ft_normalize_vec3(ft_cross_vec3(ci.world_up, ci.w));
 	ci.v = ft_cross_vec3(ci.w, ci.u);
