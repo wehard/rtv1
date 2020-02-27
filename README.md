@@ -6,6 +6,14 @@ Implement Raytracing protocol to render a scene from a specific angle and positi
 
 <img src="https://github.com/wehard/rtv1/blob/master/assets/rtv1_banner.png?raw=true"/>
 
+### Build & run
+
+```git clone git@github.com:wehard/rtv1.git && git update submodule --init```
+
+```make```
+
+```./RTv1 scenes/sphere.rt```
+
 ### Features
 - Shapes
 	- Plane, Sphere, Cylinder, Cone
