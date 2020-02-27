@@ -12,11 +12,11 @@ Dependencies
 - The project uses ```libmlx``` which is not included in the source at the moment. (Will add soon)
 - git@github.com:wehard/libft.git as a submodule. Remember to init.
 
-```git clone git@github.com:wehard/rtv1.git && git update submodule --init```
-
-```make```
-
-```./RTv1 scenes/sphere.rt```
+```sh
+git clone git@github.com:wehard/rtv1.git && git update submodule --init
+make
+./RTv1 scenes/sphere.rt
+```
 
 ### Features
 - Shapes
